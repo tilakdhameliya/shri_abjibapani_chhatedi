@@ -118,6 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _bottomNavigation(BuildContext context) {
+    double screenWidthSize = Get.width;
+    bool isSmallDeviceWidth = screenWidthSize >= 350;
     return GetBuilder<HomeController>(builder: (logic) {
       return SafeArea(
         child: Container(
@@ -165,7 +167,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         "Photos",
                         style: TextStyle(
-                          overflow: TextOverflow.ellipsis,
                           decoration: (logic.isPhoto)
                               ? TextDecoration.underline
                               : TextDecoration.none,
@@ -174,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isPhoto)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: 11.5,
+                          fontSize: (isSmallDeviceWidth)?9:11,
                         ),
                       ),
                     ],
@@ -209,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isAudio)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: 11,
+                          fontSize: (isSmallDeviceWidth)?9:11,
                         ),
                       )
                     ],
@@ -244,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isNews)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: 11,
+                          fontSize: (isSmallDeviceWidth)?9:11,
                         ),
                       )
                     ],
@@ -278,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isDivyaDarshan)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: 11,
+                          fontSize: (isSmallDeviceWidth)?9:11,
                         ),
                       )
                     ],
@@ -310,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: Font.poppins,
                           color: Colors.black,
                           fontWeight: FontWeight.w400,
-                          fontSize: 11,
+                          fontSize: (isSmallDeviceWidth)?9:11,
                         ),
                       )
                     ],

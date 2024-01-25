@@ -1,3 +1,5 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -54,50 +56,130 @@ class _AudioListScreenState extends State<AudioListScreen> {
               Get.back();
             },
             icon: const Icon(Icons.arrow_back_rounded),),
-          const SizedBox(width: 85),
-          Text(logic.audioListName,
-            style: TextStyle(
-              fontFamily: Font.poppins,
-              fontWeight: FontWeight.w600,
-              fontSize: 19,
-            ),)
+          Expanded(
+            child: Text(logic.audioListName,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: Font.poppins,
+                fontWeight: FontWeight.w600,
+                fontSize: 19,
+              ),),
+          )
         ],
       ),
     );
   }
 
   _centerView(AudioListController logic){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
-      child: Column(
-        children: [
-          Image.network(logic.audioImage),
-          Expanded(
-            child: ListView.builder(
-              itemCount: logic.audioTrack.length,
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return _listItem(logic,index);
-              },),
+    return Expanded(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+          child: Column(
+            children: [
+              Image.network(logic.audioImage),
+              const SizedBox(height: 15),
+              ListView.builder(
+                itemCount: logic.audioTrack.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return _listItem(logic, index);
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   _listItem(AudioListController logic, int index){
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-          color: (index % 2 == 0) ? CColor.viewGray : Colors.white),
+        borderRadius: BorderRadius.circular(7),
+          color: (index % 2 == 0) ? CColor.viewGray.withOpacity(0.6) : Colors.white),
       child: Row(
         children: [
-          SvgPicture.asset("assets/image/play.svg"),
-          Text(logic.audioTrack[index].name.toString()),
-          SvgPicture.asset("assets/image/download.svg"),
+          InkWell(
+              onTap: () async {
+                if(logic.audioTrack[index].isPlay == false) {
+                  await logic.playAudio(logic.audioTrack[index].url.toString());
+                  logic.audioTrack[index].isPlay = true;
+                  await logic.player.play();
+                }else if(logic.audioTrack[index].isPlay == true){
+                  logic.audioTrack[index].isPlay = false;
+                  await logic.player.pause();
+                }
+                setState(() {});
+              },
+              child: SvgPicture.asset((logic.audioTrack[index].isPlay == true)?"assets/image/stop.svg":"assets/image/play.svg", height: 35,color: CColor.red)),
+          const SizedBox(width: 15),
+          Expanded(
+              child: Text(
+            logic.audioTrack[index].name.toString(),
+            style: TextStyle(
+                fontFamily: Font.poppins,
+                fontWeight: FontWeight.w500,
+                fontSize: 16.5,
+              ),
+            ),
+          ),
+          SvgPicture.asset("assets/image/download.svg",color: CColor.red),
         ],
       ),
     );
   }
+
+  StreamBuilder<DurationState> audioProgressBar(
+      AudioListController logic) {
+    return StreamBuilder<DurationState>(
+      stream: logic.durationState,
+      builder: (context, snapshot) {
+        final durationState = snapshot.data;
+        final progress = durationState?.progress ?? Duration.zero;
+        final buffered = durationState?.buffered ?? Duration.zero;
+        final total = durationState?.total ?? Duration.zero;
+        return ProgressBar(
+          progress: progress,
+          buffered: buffered,
+          total: total,
+          onSeek: (duration) {
+
+          },
+          onDragUpdate: (details) {
+            debugPrint('${details.timeStamp}, ${details.localPosition}');
+          },
+          barHeight: 5.0,
+          baseBarColor: Colors.grey.withOpacity(0.2),
+          progressBarColor: CColor.theme,
+          bufferedBarColor: CColor.theme.withOpacity(0.2),
+          thumbColor: CColor.viewGray,
+          thumbGlowColor: Colors.green.withOpacity(0.3),
+          barCapShape: BarCapShape.round,
+          thumbRadius: 10.0,
+          thumbCanPaintOutsideBar: true,
+          timeLabelLocation: TimeLabelLocation.none,
+          timeLabelType: TimeLabelType.totalTime,
+          timeLabelTextStyle: TextStyle(
+              fontSize: 8, color: Theme
+              .of(context)
+              .textTheme
+              .bodyLarge
+              ?.color),
+          timeLabelPadding: 10,
+        );
+      },
+    );
+  }
+}
+
+class DurationState {
+  const DurationState({this.progress, this.buffered, this.total});
+
+  final Duration? progress;
+  final Duration? buffered;
+  final Duration? total;
 }

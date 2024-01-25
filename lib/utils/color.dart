@@ -27,7 +27,8 @@ class CColor {
   static const txtColor333 = Color(0xff333333);
 
   /*Custom Color*/
-  static const theme = Color(0xffF05454);
+  static const theme = Color(0xffd57070);
   static const viewGray = Color(0xffe0e0e0);
+  static const red = Color(0xffd57070);
 
 }

@@ -25,6 +25,7 @@ class AudioTrackModel {
 class AudioAlbumTracks {
   String? name;
   String? url;
+  bool? isPlay = false;
 
   AudioAlbumTracks({this.name, this.url});
 
