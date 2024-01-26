@@ -28,9 +28,6 @@ class _NewsScreenState extends State<NewsScreen> {
               statusBarIconBrightness: Brightness.dark,
               systemNavigationBarIconBrightness: Brightness.dark),
           child: Scaffold(
-            bottomSheet: (Constant.isShowBottomSheet)
-                ? Utils.customBottomSheet(context)
-                : const SizedBox(),
             backgroundColor: Colors.white,
             body: Column(
               children: [const SizedBox(height: 65), _centerView(logic)],

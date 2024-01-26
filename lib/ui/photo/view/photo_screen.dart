@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:satsang/ui/photo/controller/photo_controller.dart';
 import 'package:satsang/utils/utils.dart';
 
+import '../../../routes/app_routes.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/font.dart';
 
@@ -39,37 +40,45 @@ class _PhotosScreenState extends State<PhotosScreen> {
         itemCount: Constant.photoAlbum.length,
         itemBuilder: (BuildContext context, int index) {
           return _gridItem(context, index,logic);
-        },  crossAxisCount: 2,
+        },
+        crossAxisSpacing: 5,
+        mainAxisSpacing: 5, crossAxisCount: 2,
+
       ),
     );
   }
 
   _gridItem(BuildContext context, int index, PhotosController logic) {
-    return Container(
-      // height: 80,
-      width: index % 3 == 0? Get.width:Get.width * 0.5 ,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(colors: [Colors.black,Colors.white],begin: Alignment.bottomCenter,end: Alignment.center)
-      ),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Image.network(Constant.photoAlbum[index].previewImage.toString(),
-            fit: BoxFit.cover,
-          ),
-          Text(
-            "${Constant.photoAlbum[index].name}",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: Font.poppins,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 11.5,
+    return Wrap(
+      children: [
+        InkWell(
+          onTap: () {
+            Get.toNamed(AppRoutes.subImage,
+                arguments: [Constant.photoAlbum[index].images,Constant.photoAlbum[index].name]);
+          },
+          child: Container(
+            height: 150,
+            alignment: Alignment.bottomCenter,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(Constant.photoAlbum[index].previewImage.toString()),
+                ),
+               ),
+            child: Text(
+              "${Constant.photoAlbum[index].name}",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: Font.poppins,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 11.5,
+              ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

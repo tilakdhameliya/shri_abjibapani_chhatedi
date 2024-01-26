@@ -24,10 +24,13 @@ import 'package:satsang/ui/news_detail/binding/news_detail_binding.dart';
 import 'package:satsang/ui/news_detail/view/news_detail_screen.dart';
 import 'package:satsang/ui/photo/binding/photo_binding.dart';
 import 'package:satsang/ui/photo/view/photo_screen.dart';
+import 'package:satsang/ui/photo_view/binding/photo_view_binding.dart';
+import 'package:satsang/ui/photo_view/view/photo_view_screen.dart';
 import 'package:satsang/ui/sub_audio/binding/aub_audio_binding.dart';
 import 'package:satsang/ui/sub_audio/view/sub_audio_screen.dart';
+import 'package:satsang/ui/sub_image/binding/sub_image_binding.dart';
+import 'package:satsang/ui/sub_image/view/sub_image_screen.dart';
 import 'package:sizer/sizer.dart';
-
 import '../ui/facebook/binding/facebook_binding.dart';
 import '../ui/home/binding/home_binding.dart';
 import '../ui/splash/binding/splash_binding.dart';
@@ -49,6 +52,36 @@ class AppPages {
         },
       ),
       binding: SplashBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.subImage,
+      page: () => Sizer(
+        builder: (context, orientation, deviceType) {
+          return  const AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              // statusBarColor: isDarkMode ? CColor.black : CColor.white12,
+            ),
+            child: SubImageScreen(),
+          );
+        },
+      ),
+      binding: SubImageBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.photoView,
+      page: () => Sizer(
+        builder: (context, orientation, deviceType) {
+          return  const AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              // statusBarColor: isDarkMode ? CColor.black : CColor.white12,
+            ),
+            child: PhotoViewScreen(),
+          );
+        },
+      ),
+      binding: PhotoViewBinding(),
       transition: Transition.noTransition,
     ),
     GetPage(

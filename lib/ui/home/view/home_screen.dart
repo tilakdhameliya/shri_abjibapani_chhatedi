@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _bottomNavigation(BuildContext context) {
     double screenWidthSize = Get.width;
-    bool isSmallDeviceWidth = screenWidthSize >= 350;
+    bool isSmallDeviceWidth = screenWidthSize <= 350;
     return GetBuilder<HomeController>(builder: (logic) {
       return SafeArea(
         child: Container(
@@ -291,6 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 onTap: () {
                   logic.more(4, context);
+                  setState(() {});
                 },
                 child: Container(
                   width: 50,

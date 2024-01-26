@@ -1,4 +1,7 @@
 
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import '../model/audio/audio_album_model.dart';
 import '../model/books/books_model.dart';
 import '../model/magazine/magazine_model.dart';
@@ -14,7 +17,8 @@ class Constant {
   static const responseRequired = 422;
   static const responseNotFound = 404;
 
-
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
   static bool isShowBottomSheet = false;
 
@@ -41,5 +45,7 @@ class Constant {
   static List<MurtiMagazines> magazines = [];
   static List<Ebooks> eBooks = [];
 
+
+  static PageController photoController = PageController(initialPage: 0,keepPage: true);
 
 }

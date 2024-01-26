@@ -87,12 +87,8 @@ class _SubAudioScreenState extends State<SubAudioScreen> {
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
           onTap: () async {
-            await logic.repo
-                .getAudioTrack(logic.subAudio[index].name.toString())
-                .then((value) {
-              Get.toNamed(AppRoutes.audioList,
-                  arguments: [value.audioAlbumTracks, logic.subAudio[index].name.toString(),logic.subAudio[index].image.toString()]);
-            });
+            Get.toNamed(AppRoutes.audioList,
+                arguments: [logic.subAudio[index].name.toString(),logic.subAudio[index].image.toString()]);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),

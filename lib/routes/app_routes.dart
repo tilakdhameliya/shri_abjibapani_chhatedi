@@ -19,5 +19,7 @@ class AppRoutes {
   static const String photoScreen = '/photoScreen';
   static const String subAudio = '/subAudio';
   static const String audioList = '/audioList';
+  static const String subImage = '/subImage';
+  static const String photoView = '/photoView';
 
 }

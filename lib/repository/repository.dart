@@ -53,7 +53,11 @@ class Repository {
 
       if (response.statusCode == Constant.responseSuccessCode) {
         var res = response.data;
-        return AudioTrackModel.fromJson(jsonDecode(res));
+        if(res != "") {
+          return AudioTrackModel.fromJson(jsonDecode(res));
+        }else{
+          return AudioTrackModel();
+        }
       } else if (response.statusCode == Constant.responseFailureCode) {
         var res = response.data;
         try {
