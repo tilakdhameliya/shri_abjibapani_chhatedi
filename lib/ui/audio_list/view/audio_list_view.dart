@@ -162,14 +162,14 @@ class _AudioListScreenState extends State<AudioListScreen> {
                 }
                 if (logic.version! > 32) {
                   if (Constant.isNotification || !Constant.isNotification) {
-                    logic.downloadPdf(context,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
+                    logic.downloadAudio(context,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
                     setState(() {});
                   }
                 } else {
                   if (Constant.isStorage) {
                     logic.showAlertDialogPermission(context, "storagePermission", true,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
                   } else {
-                    logic.downloadPdf(context,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
+                    logic.downloadAudio(context,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
                   }
               }
             },

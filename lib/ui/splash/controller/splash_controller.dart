@@ -1,11 +1,14 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:satsang/routes/app_routes.dart';
 import '../../../../utils/constant.dart';
 import '../../../../utils/debugs.dart';
 import '../../../../utils/network_connectivity.dart';
 import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../utils/offline_popup.dart';
+import '../../../utils/preference.dart';
 
 
 class SplashController extends GetxController {
@@ -14,28 +17,6 @@ class SplashController extends GetxController {
   String string = '';
   bool isLoadData = true;
   ResumeData repo = ResumeData();
-
-
-
-/*  Future<void> initializeNotifications() async {
-    const initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-
-    const initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-
-    await Constant.flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (notificationResponse) async {
-        final String? payload = notificationResponse.payload;
-        if (notificationResponse.payload != null) {
-          debugPrint('notification payload: $payload');
-        }
-        await Utils.sendData(payload.toString());
-      },
-    );
-  }*/
 
 
   @override
@@ -62,6 +43,7 @@ class SplashController extends GetxController {
       Debug.printLog("connection status=====>>>>>>>$string");
       if (string == "Online" && isLoadData) {
         isLoadData = false;
+        getPermission();
         moveToScreen();
       } else if (string == "Offline" && Constant.isOffline) {
         isLoadData = true;
@@ -78,9 +60,26 @@ class SplashController extends GetxController {
     });
     await repo.getPhotoAlbum().then((value) {
       Constant.photoAlbum = value.photoAlbums!;
+/*      for (int i = 0; i < Constant.photoAlbum.length; i++) {
+        final photo =
+        Image.network(Constant.photoAlbum[i].previewImage.toString());
+        precacheImage(photo.image, Get.context!);
+        for (int j = 0; j < Constant.photoAlbum[i].images!.length; j++) {
+          final image = Image.network(
+              Constant.photoAlbum[i].images![j].thumbUrl.toString());
+          precacheImage(image.image, Get.context!);
+          final fullImage = Image.network(
+              Constant.photoAlbum[i].images![j].imageUrl.toString());
+          precacheImage(fullImage.image, Get.context!);
+        }
+      }*/
     });
     await repo.getNews().then((value) {
       Constant.newsList = value.news!;
+/*      for (int i = 0; i < Constant.newsList.length; i++) {
+        final newsPhoto = Image.network(Constant.newsList[i].thumb.toString());
+        precacheImage(newsPhoto.image, Get.context!);
+      }*/
     });
     await repo.getMagazine().then((value) {
       Constant.magazines = value.murtiMagazines!;
@@ -93,5 +92,37 @@ class SplashController extends GetxController {
     });
     Get.offAllNamed(AppRoutes.homeScreen);
     Debug.printLog("hello world");
+  }
+
+  getPermission() async {
+    Constant.isGetNotificationPermission =
+    Preference.shared.getBool(Preference.isGetNotificationPermission)!;
+    Constant.isGetStoragePermission =
+    Preference.shared.getBool(Preference.isGetStoragePermission)!;
+
+    Constant.isNotification =
+    Preference.shared.getBool(Preference.isNotification)!;
+    Constant.isStorage = Preference.shared.getBool(Preference.isStorage)!;
+
+    if (!Constant.isGetNotificationPermission) {
+      var notificationPermission = await Permission.notification.request();
+      Constant.isNotification = notificationPermission.isDenied;
+      Preference.shared
+          .setBool(Preference.isNotification, Constant.isNotification);
+      Preference.shared.setBool(Preference.isGetNotificationPermission,
+          !Constant.isGetNotificationPermission);
+      Constant.isGetNotificationPermission =
+      Preference.shared.getBool(Preference.isGetNotificationPermission)!;
+    }
+
+    if (!Constant.isGetStoragePermission) {
+      var storagePermission = await Permission.storage.request();
+      Constant.isStorage = storagePermission.isDenied;
+      Preference.shared.setBool(Preference.isStorage, Constant.isStorage);
+      Preference.shared.setBool(
+          Preference.isGetStoragePermission, !Constant.isGetStoragePermission);
+      Constant.isGetStoragePermission =
+      Preference.shared.getBool(Preference.isGetStoragePermission)!;
+    }
   }
 }

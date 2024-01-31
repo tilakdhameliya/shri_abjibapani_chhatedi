@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:satsang/ui/sub_image/controller/sub_image_controller.dart';
 
@@ -19,6 +20,14 @@ class _SubImageScreenState extends State<SubImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: CColor.white,
+          elevation: 0,
+          toolbarHeight: 0,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
+          ),
+        ),
         body: SafeArea(
           child: GetBuilder<SubImageController>(
             builder: (logic) {
@@ -109,7 +118,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
                 Container(
                   height: 70,
                   width: 95,
-                  margin: const EdgeInsets.only(right: 10),
+                  margin: const EdgeInsets.only(right:20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(

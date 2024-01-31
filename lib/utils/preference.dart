@@ -76,14 +76,7 @@ class Preference {
 
   static int currentAdCount = 1;
 
-  static const String baseURL = "BASE_URL";
-  static const String downloadUrl = "DOWNLOAD_URL";
-  static const String shareUrl = "SHARE_URL";
-  static const String termsUrl = "TERMS_URL";
-  static const String interAdsKey = "INTER_ADS_URL";
-  static const String isShowAd = "SHOW_AD_URL";
-  static const String isShowBanner = "SHOW_BANNER_URL";
-  static const String isShowOpenAd = "SHOW_OPEN_URL";
+  static const String isDownloaded = "PDF_DOWNLOADED";
   static var baseUrl = "";
 
   // ------------------ SINGLETON -----------------------

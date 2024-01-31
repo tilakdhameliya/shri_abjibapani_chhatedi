@@ -31,7 +31,7 @@ class AudioListController extends GetxController {
   int resumeNumber = 0;
   int nullResumeNumber = 0;
 
-  String downloadedResumeName = "";
+  String downloadedAudioName = "";
   ResumeData repo = ResumeData();
 
   @override
@@ -114,7 +114,7 @@ class AudioListController extends GetxController {
 
   int? version;
 
-  downloadPdf(context, int index, url, fileName) async {
+  downloadAudio(context, int index, url, fileName) async {
     audioTrack[index].isLoader = true;
     update();
 
@@ -127,7 +127,7 @@ class AudioListController extends GetxController {
     List<String> list = [];
     int cnt = 0;
 
-    downloadedResumeName =
+    downloadedAudioName =
         Preference.shared.getString(Preference.downloadedResumeName) ?? "";
     nullResumeNumber =
         Preference.shared.getInt(Preference.nullResumeNumber) ?? 0;
@@ -204,7 +204,7 @@ class AudioListController extends GetxController {
           }
           Debug.printLog("Count total =================> $count $total");
           if (count == total) {
-            downloadPdfAndView(savePath,index);
+            downloadAudioAndNotification(savePath,index);
             update();
           }
         },
@@ -218,42 +218,6 @@ class AudioListController extends GetxController {
 
   double? progress = 0;
   bool isProgress = false;
-
-  /*void showDownloadProgress(received, total, String savePath) async {
-    // // isLoading.value = false;
-    isDownloadComplete = true;
-    update();
-    if (total != -1) {
-      isProgress = true;
-      progress = (received / total * 100);
-      // downloadBox();
-      update();
-
-      if (received == total) {
-        isProgress = false;
-        debugPrint("$progress $received  $total");
-        progress = 0;
-         downloadPdfAndView(savePath);
-
-        if (downloadedResumeName == "") {
-          downloadedResumeName = fileName!;
-          Preference.shared
-              .setString(Preference.downloadedResumeName, downloadedResumeName);
-        } else {
-          downloadedResumeName = "$downloadedResumeName,$fileName";
-          Preference.shared
-              .setString(Preference.downloadedResumeName, downloadedResumeName);
-        }
-
-        if (fileName == "") {
-          nullResumeNumber++;
-          Preference.shared
-              .setInt(Preference.nullResumeNumber, nullResumeNumber);
-        }
-      }
-    }
-    update();
-  }*/
 
 
   Future<int?> getAndroidVersion() async {
@@ -294,7 +258,7 @@ class AudioListController extends GetxController {
                       : permission == "notificationPermission"
                           ? "You have to turn on notification permission for this function from the setting."
                           : isPermanentlyDenied
-                              ? "To download resume, You need to go settings and allow storage."
+                              ? "To download audio, You need to go settings and allow storage."
                               : "",
                   style: TextStyle(
                     fontSize: 15,
@@ -331,17 +295,17 @@ class AudioListController extends GetxController {
                             audioTrack[index].isLoader = false;
                             Get.back();
                             await Permission.storage.request().then(
-                                  (value) => downloadPdf(context, index, url,fileName),
+                                  (value) => downloadAudio(context, index, url,fileName),
                                 );
                           } else if (permission == "notificationPermission") {
                             audioTrack[index].isLoader = false;
                             await Permission.notification.request().then(
-                                  (value) => downloadPdf(context, index, url,fileName),
+                                  (value) => downloadAudio(context, index, url,fileName),
                                 );
                           } else if (isPermanentlyDenied) {
                             openAppSettings();
                           } else {
-                            downloadPdf(context, index, url,fileName);
+                            downloadAudio(context, index, url,fileName);
                           }
                         },
                         child: Text(
@@ -363,7 +327,7 @@ class AudioListController extends GetxController {
     );
   }
 
-  downloadPdfAndView(String savePath,index) {
+  downloadAudioAndNotification(String savePath,index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     showDownloadNotification(savePath);
     /* Get.snackbar(
@@ -396,6 +360,5 @@ class AudioListController extends GetxController {
     audioTrack[index].isLoader = false;
     update();
   }
-
 
 }

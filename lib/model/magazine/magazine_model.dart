@@ -25,6 +25,7 @@ class MagazinesModel {
 class MurtiMagazines {
   String? name;
   String? url;
+  bool? isLoader = false;
 
   MurtiMagazines({this.name, this.url});
 

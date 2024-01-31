@@ -23,40 +23,45 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-      return  AnnotatedRegion(
-          value: SystemUiOverlayStyle(
-              statusBarColor:
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+          statusBarColor:
               (Constant.isShowBottomSheet) ? Colors.transparent : CColor.white,
-              systemNavigationBarColor: CColor.white,
-              statusBarIconBrightness: Brightness.dark,
-              systemNavigationBarIconBrightness: Brightness.dark),
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            bottomSheet: (Constant.isShowBottomSheet)
-                ? Utils.customBottomSheet(context)
-                : const SizedBox(),
-            bottomNavigationBar: _bottomNavigation(context),
-            body: GetBuilder<HomeController>(builder: (logic) {
-              return SafeArea(
-                child: Stack(
-                  children: [
-                    _centerView(logic),
-                    _header(logic),
-                    (Constant.isShowBottomSheet)
-                        ? Opacity(
-                            opacity: 0.6,
-                            child: ModalBarrier(
-                                color: Colors.black,
-                                onDismiss: () {
-                                  Constant.isShowBottomSheet = false;
-                                  setState(() {});
-                                }),
-                          )
-                        : const SizedBox()
-                  ],
-                ),
-              );
-            })));
+          systemNavigationBarColor: CColor.white,
+          statusBarIconBrightness: Brightness.dark,
+          systemNavigationBarIconBrightness: Brightness.dark),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        bottomSheet: (Constant.isShowBottomSheet)
+            ? Utils.customBottomSheet(context)
+            : const SizedBox(),
+        resizeToAvoidBottomInset: true,
+        bottomNavigationBar: _bottomNavigation(context),
+        body: GetBuilder<HomeController>(
+          builder: (logic) {
+            return SafeArea(
+              child: Stack(
+                children: [
+                  _centerView(logic),
+                  _header(logic),
+                  (Constant.isShowBottomSheet)
+                      ? Opacity(
+                          opacity: 0.6,
+                          child: ModalBarrier(
+                              color: Colors.black,
+                              onDismiss: () {
+                                Constant.isShowBottomSheet = false;
+                                setState(() {});
+                              }),
+                        )
+                      : const SizedBox()
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   _header(HomeController logic) {
@@ -175,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isPhoto)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: (isSmallDeviceWidth)?9:11,
+                          fontSize: (isSmallDeviceWidth) ? 9 : 11,
                         ),
                       ),
                     ],
@@ -210,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isAudio)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: (isSmallDeviceWidth)?9:11,
+                          fontSize: (isSmallDeviceWidth) ? 9 : 11,
                         ),
                       )
                     ],
@@ -245,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isNews)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: (isSmallDeviceWidth)?9:11,
+                          fontSize: (isSmallDeviceWidth) ? 9 : 11,
                         ),
                       )
                     ],
@@ -279,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isDivyaDarshan)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: (isSmallDeviceWidth)?9:11,
+                          fontSize: (isSmallDeviceWidth) ? 9 : 11,
                         ),
                       )
                     ],
@@ -312,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: Font.poppins,
                           color: Colors.black,
                           fontWeight: FontWeight.w400,
-                          fontSize: (isSmallDeviceWidth)?9:11,
+                          fontSize: (isSmallDeviceWidth) ? 9 : 11,
                         ),
                       )
                     ],
@@ -360,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             children: [
                               SvgPicture.asset("assets/image/pray.svg",
-                                  height:28),
+                                  height: 28),
                               Text(
                                 "Photos",
                                 style: TextStyle(
@@ -413,8 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           child: Column(
                             children: [
-                              SvgPicture.asset(
-                                  "assets/image/video-square.svg",
+                              SvgPicture.asset("assets/image/video-square.svg",
                                   height: 30),
                               Text(
                                 "Divya Darshan",
@@ -466,9 +470,10 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
         );
       },
-    )/*.then((value) {
+    ) /*.then((value) {
       logic.isOpenSheet = false;
       setState(() {});
-    })*/;
+    })*/
+        ;
   }
 }

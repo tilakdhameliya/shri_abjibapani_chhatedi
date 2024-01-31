@@ -58,6 +58,7 @@ class Images {
   String? imageUrl;
   String? thumbUrl;
   String? imageDescription;
+  bool? isSelected = false;
 
   Images({this.title, this.imageUrl, this.thumbUrl, this.imageDescription});
 

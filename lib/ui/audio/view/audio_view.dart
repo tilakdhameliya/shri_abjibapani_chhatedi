@@ -27,9 +27,6 @@ class _AudioViewScreenState extends State<AudioViewScreen> {
         }));
   }
 
-
-
-
   _centerView(AudioController logic){
     return Column(
       children: [
