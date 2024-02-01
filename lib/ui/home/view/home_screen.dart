@@ -7,7 +7,9 @@ import 'package:satsang/ui/home/controller/home_controller.dart';
 import 'package:satsang/ui/news/view/news_screen.dart';
 import 'package:satsang/ui/photo/view/photo_screen.dart';
 import 'package:satsang/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/font.dart';
@@ -30,16 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
           systemNavigationBarColor: CColor.white,
           statusBarIconBrightness: Brightness.dark,
           systemNavigationBarIconBrightness: Brightness.dark),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        bottomSheet: (Constant.isShowBottomSheet)
-            ? Utils.customBottomSheet(context)
-            : const SizedBox(),
-        resizeToAvoidBottomInset: true,
-        bottomNavigationBar: _bottomNavigation(context),
-        body: GetBuilder<HomeController>(
-          builder: (logic) {
-            return SafeArea(
+      child: GetBuilder<HomeController>(
+        builder: (logic) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            bottomSheet: (Constant.isShowBottomSheet)
+                ? _bottomSheet(logic, context)
+                : const SizedBox(),
+            resizeToAvoidBottomInset: true,
+            bottomNavigationBar: _bottomNavigation(context),
+            body: SafeArea(
               child: Stack(
                 children: [
                   _centerView(logic),
@@ -57,9 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       : const SizedBox()
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -114,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               PhotosScreen(),
               AudioViewScreen(),
               NewsScreen(),
-              const DivyaDarshanScreen(),
+              DivyaDarshanScreen(),
             ],
           ),
         );
@@ -139,8 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     0.0,
                     1.2,
                   ),
-                  blurRadius: 2,
-                  spreadRadius: 0.5),
+                  blurRadius: 5,
+                  spreadRadius: 0.7),
               const BoxShadow(
                 color: Colors.white,
                 offset: Offset(0.0, 0.0),
@@ -157,9 +159,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
                   logic.photoScreen(0);
                 },
-                child: Container(
+                child: SizedBox(
                   width: 50,
                   child: Column(
                     children: [
@@ -191,9 +195,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
                   logic.audioScreen(1);
                 },
-                child: Container(
+                child: SizedBox(
                   width: 50,
                   child: Column(
                     children: [
@@ -226,9 +232,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
                   logic.newsScreen(2);
                 },
-                child: Container(
+                child: SizedBox(
                   width: 50,
                   child: Column(
                     children: [
@@ -261,9 +269,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
                   logic.divyaDarshan(3);
                 },
-                child: Container(
+                child: SizedBox(
                   width: 55,
                   child: Column(
                     children: [
@@ -295,10 +305,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
+                  Constant.isShowBottomSheet = false;
                   logic.more(4, context);
                   setState(() {});
                 },
-                child: Container(
+                child: SizedBox(
                   width: 50,
                   child: Column(
                     children: [
@@ -332,148 +343,305 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _bottomSheet(HomeController logic, BuildContext context) {
-    logic.isOpenSheet = true;
-    showModalBottomSheet<void>(
-      backgroundColor: CColor.white,
-      context: context,
-      isScrollControlled: true,
-      useRootNavigator: true,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: GetBuilder<HomeController>(builder: (logic) {
-            return Wrap(
-              children: [
-                Column(
+    return Container(
+      height: 230,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Text(
+            "Abjibapani Chhatedi",
+            style: TextStyle(
+              overflow: TextOverflow.ellipsis,
+              fontFamily: Font.poppins,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 30),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () {},
+                child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/image.svg",
+                          height: 23),
+                    ),
+                    const SizedBox(height: 3),
                     Text(
-                      "Satsang",
+                      "Daily Satsang",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
                         fontFamily: Font.poppins,
                         color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11.5,
                       ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/image/pray.svg",
-                                  height: 28),
-                              Text(
-                                "Photos",
-                                style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontFamily: Font.poppins,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/image/pray.svg",
-                                  height: 30),
-                              Text(
-                                "News",
-                                style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontFamily: Font.poppins,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/image/newspaper.svg",
-                                  height: 30),
-                              Text(
-                                "Audio",
-                                style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontFamily: Font.poppins,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/image/video-square.svg",
-                                  height: 30),
-                              Text(
-                                "Divya Darshan",
-                                style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontFamily: Font.poppins,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: Container(
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                    (logic.isOpenSheet)
-                                        ? "assets/image/close.svg"
-                                        : "assets/image/expand.svg",
-                                    height: 23),
-                                Text(
-                                  (logic.isOpenSheet) ? "Close" : "More",
-                                  style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontFamily: Font.poppins,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 10,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
-              ],
-            );
-          }),
-        );
-      },
-    ) /*.then((value) {
-      logic.isOpenSheet = false;
-      setState(() {});
-    })*/
-        ;
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  Get.toNamed(AppRoutes.loginScreen);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/audio.svg",
+                          height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Registration",
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  Get.toNamed(AppRoutes.contactScreen);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child:
+                          SvgPicture.asset("assets/image/news.svg", height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Contact Us",
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  Get.toNamed(AppRoutes.nityaNiyamScreen);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/video.svg",
+                          height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Nitya Niyam",
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  Get.toNamed(AppRoutes.magazineScreen);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child:
+                          SvgPicture.asset("assets/image/book.svg", height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Magazine",
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  Get.toNamed(AppRoutes.eBooks);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/essay.svg",
+                          height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "E-Books",
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {},
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/calender.svg",
+                          height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Calender",
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () async {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  String url =
+                      'https://youtube.com/@AbjibapaniChhatedi?si=REwY4mPKMgLfHjs_';
+                  await launch(url);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/video.svg",
+                          height: 23),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Videos",
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () async {
+                  Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  String url =
+                      'https://www.facebook.com/abjibapanichhatedi?mibextid=ZbWKwL';
+                  await launch(url);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/facebook.svg",
+                          height: 25),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Facebook",
+                      style: TextStyle(
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
   }
 }

@@ -65,8 +65,10 @@ class Preference {
   static const String isCreateResume = "isCreateResume";
   static const String isGetNotificationPermission = "isGetNotificationPermission";
   static const String isGetStoragePermission = "isGetStoragePermission";
+  static const String isGetPhotoPermission = "isGetPhotoPermission";
   static const String isNotification = "isNotification";
   static const String isStorage = "isStorage";
+  static const String isPhoto = "isPhoto";
   static const String isFirstTime = "isFirstTime";
 
   static const int totalAttemptCountInter = 1;

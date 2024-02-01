@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/debugs.dart';
@@ -117,7 +118,6 @@ class MagazineController extends GetxController {
       savePath = '/storage/emulated/0/download/$filename.pdf';
     }
     downloadFilePah = savePath;
-
     outputFile = File(savePath);
 
     var dio = Dio();
@@ -126,7 +126,11 @@ class MagazineController extends GetxController {
     try {
       update();
       if(await outputFile.exists()) {
+        Constant.magazines[index].isLoader = false;
+        Get.toNamed(AppRoutes.pdfView,
+            arguments: [savePath,Constant.magazines[index].name]);
         print("hello world");
+        update();
       }else{
         var response = await dio.download(
           url,
@@ -139,13 +143,14 @@ class MagazineController extends GetxController {
               }
             } else {
               update();
-              Fluttertoast.showToast(msg: "Resume Not Download");
+              Fluttertoast.showToast(msg: "Pdf Not Download");
             }
             Debug.printLog("Count total =================> $count $total");
           },
         );
       }
     } catch (e) {
+      Constant.magazines[index].isLoader = false;
       debugPrint(e.toString());
     }
     update();
@@ -266,6 +271,8 @@ class MagazineController extends GetxController {
   downloadAudioAndNotification(String savePath, index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     showDownloadNotification(savePath);
+    Get.toNamed(AppRoutes.pdfView,
+        arguments: [savePath,Constant.magazines[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
     Constant.magazines[index].isLoader = false;
     update();

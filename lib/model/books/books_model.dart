@@ -25,6 +25,7 @@ class Ebooks {
   String? name;
   String? url;
   String? image;
+  bool? isLoader = false;
 
   Ebooks({this.name, this.url, this.image});
 

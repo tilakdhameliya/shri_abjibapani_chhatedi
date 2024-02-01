@@ -30,5 +30,7 @@ class CColor {
   static const theme = Color(0xffd57070);
   static const viewGray = Color(0xffe0e0e0);
   static const red = Color(0xffd57070);
+  static const grayText = Color(0xFF807E87);
+  static const dividerLine = Color(0xFFF0EFF4);
 
 }

@@ -113,7 +113,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return _listItem(logic, index);
+                        return _listItem(logic, index,context);
                       },
                     ),
                   ],
@@ -123,7 +123,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
           );
   }
 
-  _listItem(MagazineController logic, int index) {
+  _listItem(MagazineController logic, int index,BuildContext context) {
     return Column(
       children: [
         InkWell(

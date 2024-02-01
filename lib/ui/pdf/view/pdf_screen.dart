@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:get/get.dart';
 
-import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
-import '../controller/nitya_niyam_controller.dart';
+import '../controller /pdf_controller.dart';
 
-class NityaNiyamScreen extends StatefulWidget {
-  const NityaNiyamScreen({super.key});
+class PdfScreen extends StatefulWidget {
+   PdfScreen({super.key});
+
+  final PdfController pdfController  = Get.put(PdfController());
 
   @override
-  State<NityaNiyamScreen> createState() => _NityaNiyamScreenState();
+  State<PdfScreen> createState() => _PdfScreenState();
 }
 
-class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
+class _PdfScreenState extends State<PdfScreen> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<NityaNiyamController>(builder: (logic) {
+    return GetBuilder<PdfController>(builder: (logic) {
       return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -31,7 +32,7 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
     });
   }
 
-  _header(NityaNiyamController logic) {
+  _header(PdfController logic) {
     return Container(
       padding: const EdgeInsets.all(10),
       width: Get.width,
@@ -57,7 +58,7 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
           ),
           Expanded(
             child: Text(
-              "Nitya Niyam",
+              logic.name,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: Font.poppins,
@@ -71,42 +72,38 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
     );
   }
 
-  _centerView(NityaNiyamController logic) {
+  _centerView(PdfController logic){
     return Expanded(
       child: Stack(
         alignment: Alignment.center,
         children: [
-          (logic.isLoading)
-              ? const Center(
-                  child: CircularProgressIndicator(color: Colors.black),
-                )
-              : PDFView(
-                  filePath: logic.path,
-                  enableSwipe: true,
-                  autoSpacing: true,
-                  pageFling: true,
-                  onRender: (pages) {
-                    setState(() {
-                      pages = pages;
-                      logic.isReady = true;
-                    });
-                  },
-                  onError: (error) {
-                    Debug.printLog("helllooooo ${error.toString()}");
-                  },
-                  onPageError: (page, error) {
-                    logic.errorMessage = '$page: ${error.toString()}';
-                    Debug.printLog('$page: ${error.toString()}');
-                  },
-                  onViewCreated: (PDFViewController pdfViewController) {
-                    logic.controller.complete(pdfViewController);
-                  },
-                  onPageChanged: (int? page, int? total) {},
-                ),
+          PDFView(
+            filePath: logic.path,
+            enableSwipe: true,
+            autoSpacing: true,
+            pageFling: true,
+            onRender: (pages) {
+              setState(() {
+                pages = pages;
+                logic.isReady = true;
+              });
+            },
+            onError: (error) {
+              print("helllooooo ${error.toString()}");
+            },
+            onPageError: (page, error) {
+              logic.errorMessage = '$page: ${error.toString()}';
+              print('$page: ${error.toString()}');
+            },
+            onViewCreated: (PDFViewController pdfViewController) {
+              logic.controller.complete(pdfViewController);
+            },
+            onPageChanged: (int? page, int? total) {},
+          ),
           logic.errorMessage.isEmpty
               ? !logic.isReady
                   ? const Center(
-                      child: CircularProgressIndicator(color: Colors.black),
+                      child: CircularProgressIndicator(),
                     )
                   : Container()
               : Center(

@@ -6,9 +6,13 @@ class AppRoutes {
   static const String newsScreen = '/newsScreen';
   static const String newsDetailScreen = '/newsDetailScreen';
   static const String videoScreen = '/videoScreen';
+  static const String eBooks = '/eBooks';
+  static const String pdfView = '/pdfView';
   static const String magazineScreen = '/magazineScreen';
+  static const String nityaNiyamScreen = '/nityaNiyamScreen';
   static const String subMagazineScreen = '/subMagazineScreen';
   static const String registrationScreen = '/registrationScreen';
+  static const String loginScreen = '/loginScreen';
   static const String tithiCalenderScreen = '/tithiCalenderScreen';
   static const String audioScreen = '/audioScreen';
   static const String subAudioScreen = '/subAudioScreen';

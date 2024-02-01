@@ -32,8 +32,10 @@ class Constant {
   static bool isEmail = false;
   static bool isNotification = false;
   static bool isStorage = false;
+  static bool isPhoto = false;
   static bool isGetNotificationPermission = false;
   static bool isGetStoragePermission = false;
+  static bool isGetPhotoPermission = false;
   static bool isShowDropDown = false;
   static bool isOffline = true;
 
@@ -47,5 +49,8 @@ class Constant {
 
 
   static PageController photoController = PageController(initialPage: 0,keepPage: true);
+  static TextEditingController mobileNoController = TextEditingController();
+  static TextEditingController birthDateController = TextEditingController();
+  static TextEditingController uniqueIDController = TextEditingController();
 
 }

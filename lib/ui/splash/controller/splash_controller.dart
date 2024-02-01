@@ -97,8 +97,8 @@ class SplashController extends GetxController {
   getPermission() async {
     Constant.isGetNotificationPermission =
     Preference.shared.getBool(Preference.isGetNotificationPermission)!;
-    Constant.isGetStoragePermission =
-    Preference.shared.getBool(Preference.isGetStoragePermission)!;
+    Constant.isGetStoragePermission = Preference.shared.getBool(Preference.isGetStoragePermission)!;
+    Constant.isGetPhotoPermission = Preference.shared.getBool(Preference.isGetPhotoPermission)!;
 
     Constant.isNotification =
     Preference.shared.getBool(Preference.isNotification)!;
@@ -123,6 +123,16 @@ class SplashController extends GetxController {
           Preference.isGetStoragePermission, !Constant.isGetStoragePermission);
       Constant.isGetStoragePermission =
       Preference.shared.getBool(Preference.isGetStoragePermission)!;
+    }
+
+    if(!Constant.isGetPhotoPermission){
+      var storagePermission = await Permission.photos.request();
+      Constant.isPhoto = storagePermission.isDenied;
+      Preference.shared.setBool(Preference.isPhoto, Constant.isPhoto);
+      Preference.shared.setBool(
+          Preference.isGetPhotoPermission, !Constant.isGetPhotoPermission);
+      Constant.isGetPhotoPermission =
+      Preference.shared.getBool(Preference.isGetPhotoPermission)!;
     }
   }
 }
