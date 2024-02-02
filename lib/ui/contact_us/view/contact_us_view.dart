@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:satsang/utils/color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../utils/constant.dart';
 import '../../../utils/font.dart';
 import '../controller/contact_us_controller.dart';
 
@@ -36,7 +37,7 @@ class _ContactScreenState extends State<ContactScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       width: Get.width,
-      height: 65,
+      height: 62,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -50,19 +51,23 @@ class _ContactScreenState extends State<ContactScreen> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            onTap: () {
               Get.back();
             },
-            icon: const Icon(Icons.arrow_back_rounded),
+            child: const Icon(Icons.arrow_back_rounded),
           ),
           Expanded(
-            child: Text(
-              "Contact Us",
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            child: Center(
+              child: Text(
+                "Contact Us",
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 17,
+                ),
               ),
             ),
           )
@@ -120,7 +125,8 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
               decoration: BoxDecoration(
-                border: Border.all(color: CColor.viewGray,width: 2)
+                border: Border.all(color: CColor.viewGray,width: 1.5),
+                  borderRadius: BorderRadius.circular(3)
               ),
               child: Row(
                 children: [
@@ -134,7 +140,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         fontFamily: Font.poppins,
                         color: CColor.grayText,
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -155,7 +161,8 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
               decoration: BoxDecoration(
-                  border: Border.all(color: CColor.viewGray,width: 2)
+                  border: Border.all(color: CColor.viewGray,width: 1.5),
+                  borderRadius: BorderRadius.circular(3)
               ),
               child: Row(
                 children: [
@@ -169,7 +176,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         fontFamily: Font.poppins,
                         color: CColor.grayText,
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -190,7 +197,8 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
               decoration: BoxDecoration(
-                  border: Border.all(color: CColor.viewGray,width: 2)
+                  border: Border.all(color: CColor.viewGray,width: 1.5),
+                  borderRadius: BorderRadius.circular(3)
               ),
               child: Row(
                 children: [
@@ -204,7 +212,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         fontFamily: Font.poppins,
                         color: CColor.grayText,
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -218,28 +226,30 @@ class _ContactScreenState extends State<ContactScreen> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
-              String url = "tel:+91 9099049285";
-              await launch(url);
+              String email = Uri.encodeComponent("info@abjibapanichhatedi.org");
+              Uri mail = Uri.parse("mailto:$email");
+              launchUrl(mail);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
               decoration: BoxDecoration(
-                  border: Border.all(color: CColor.viewGray,width: 2)
+                  border: Border.all(color: CColor.viewGray,width: 1.5),
+                  borderRadius: BorderRadius.circular(3)
               ),
               child: Row(
                 children: [
                   SvgPicture.asset("assets/image/sms.svg",
-                      height: 23),
+                      height: 25),
                   Expanded(
                     child: Text(
-                      "+91 info@abjibapanichhatedi.org",
+                      "info@abjibapanichhatedi.org",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: Font.poppins,
                         color: CColor.grayText,
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -251,14 +261,16 @@ class _ContactScreenState extends State<ContactScreen> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
-              String url = "tel:+91 9099049285";
+              String url =
+                  'https://www.abjibapanichhatedi.org';
               await launch(url);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
               decoration: BoxDecoration(
-                  border: Border.all(color: CColor.viewGray,width: 2)
+                  border: Border.all(color: CColor.viewGray,width: 1.5),
+                borderRadius: BorderRadius.circular(3)
               ),
               child: Row(
                 children: [
@@ -266,13 +278,13 @@ class _ContactScreenState extends State<ContactScreen> {
                       height: 23),
                   Expanded(
                     child: Text(
-                      "+91 https://www.abjibapanichhatedi.org",
+                      "https://www.abjibapanichhatedi.org",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: Font.poppins,
                         color: CColor.grayText,
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: 13,
                       ),
                     ),
                   ),

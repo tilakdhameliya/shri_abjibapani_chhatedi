@@ -27,6 +27,7 @@ class AudioAlbumTracks {
   String? url;
   bool? isPlay = false;
   bool? isLoader = false;
+  bool? isPlayLoader = false;
 
 
   AudioAlbumTracks({this.name, this.url});

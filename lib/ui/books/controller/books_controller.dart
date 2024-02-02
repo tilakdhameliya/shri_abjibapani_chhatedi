@@ -18,6 +18,7 @@ import '../../../utils/font.dart';
 
 class BookController extends GetxController {
   bool isLoading = false;
+  bool isCom = false;
   int resumeNumber = 0;
   int nullResumeNumber = 0;
   String downloadedAudioName = "";
@@ -63,7 +64,7 @@ class BookController extends GetxController {
   int? version;
 
   downloadAudio(context, int index, url, fileName) async {
-    Constant.eBooks[index].isLoader = true;
+    isCom = true;
     update();
 
     if (Platform.isAndroid) {
@@ -84,9 +85,16 @@ class BookController extends GetxController {
           update();
         }
       } else {
-        if (!Constant.isStorage) {
-          var downloadUrl = url;
-          download(downloadUrl, fileName, index);
+        if (Constant.isStorage) {
+          showAlertDialogPermission(
+              context,
+              "storagePermission",
+              true,
+              index,
+              Constant.magazines[index].url,
+              Constant.magazines[index].name);
+        } else {
+          download(url, fileName, index);
         }
       }
     } else if (Platform.isIOS) {
@@ -107,7 +115,7 @@ class BookController extends GetxController {
       var dir = await getApplicationDocumentsDirectory();
       savePath = "${dir.path}/$filename.pdf";
     } else {
-      savePath = '/storage/emulated/0/download/$filename.pdf';
+      savePath = '/storage/emulated/0/download/abjibapani chhatedi/$filename.pdf';
     }
     downloadFilePah = savePath;
     outputFile = File(savePath);
@@ -119,11 +127,13 @@ class BookController extends GetxController {
       update();
       if (await outputFile.exists()) {
         Constant.eBooks[index].isLoader = false;
+        isCom = false;
         Get.toNamed(AppRoutes.pdfView,
             arguments: [savePath,Constant.eBooks[index].name]);
         print("hello world");
         update();
       } else {
+        Constant.eBooks[index].isLoader = true;
         var response = await dio.download(
           url,
           savePath,
@@ -262,11 +272,13 @@ class BookController extends GetxController {
 
   downloadAudioAndNotification(String savePath, index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
+
     showDownloadNotification(savePath);
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath,Constant.eBooks[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
     Constant.eBooks[index].isLoader = false;
+    isCom = false;
     update();
   }
 }

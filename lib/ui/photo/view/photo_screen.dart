@@ -53,6 +53,13 @@ class _PhotosScreenState extends State<PhotosScreen> {
       children: [
         InkWell(
           onTap: () {
+            for (int i = 0; i < Constant.photoAlbum.length; i++) {
+              for (int j = 0; j < Constant.photoAlbum[i].images!.length; j++) {
+                final fullImage = Image.network(
+                    Constant.photoAlbum[i].images![j].imageUrl.toString());
+                precacheImage(fullImage.image, Get.context!);
+              }
+            }
             Get.toNamed(AppRoutes.subImage,
                 arguments: [Constant.photoAlbum[index].images,Constant.photoAlbum[index].name]);
           },

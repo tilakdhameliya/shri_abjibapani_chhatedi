@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
             fontFamily: Font.poppins,
             color: Colors.black,
             fontWeight: FontWeight.w600,
-            fontSize: 21,
+            fontSize: 19,
           ),
         ),
       ),
@@ -105,20 +105,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _centerView(HomeController logic) {
     return GetBuilder<HomeController>(
       builder: (logic) {
-        return Expanded(
-          child: PageView(
-            controller: logic.pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (index) {
-              logic.onPageChangeFromBody(index);
-            },
-            children: [
-              PhotosScreen(),
-              AudioViewScreen(),
-              NewsScreen(),
-              DivyaDarshanScreen(),
-            ],
-          ),
+        return PageView(
+          controller: logic.pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          onPageChanged: (index) {
+            logic.onPageChangeFromBody(index);
+          },
+          children: [
+            PhotosScreen(),
+            AudioViewScreen(),
+            NewsScreen(),
+            DivyaDarshanScreen(),
+          ],
         );
       },
     );

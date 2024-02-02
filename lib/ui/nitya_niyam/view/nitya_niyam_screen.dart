@@ -49,20 +49,24 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            onTap: () {
               Get.back();
             },
-            icon: const Icon(Icons.arrow_back_rounded),
+            child: const Icon(Icons.arrow_back_rounded),
           ),
           Expanded(
-            child: Text(
-              "Nitya Niyam",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            child: Center(
+              child: Text(
+                "Nitya Niyam",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
               ),
             ),
           )
@@ -72,48 +76,46 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
   }
 
   _centerView(NityaNiyamController logic) {
-    return Expanded(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          (logic.isLoading)
-              ? const Center(
-                  child: CircularProgressIndicator(color: Colors.black),
-                )
-              : PDFView(
-                  filePath: logic.path,
-                  enableSwipe: true,
-                  autoSpacing: true,
-                  pageFling: true,
-                  onRender: (pages) {
-                    setState(() {
-                      pages = pages;
-                      logic.isReady = true;
-                    });
-                  },
-                  onError: (error) {
-                    Debug.printLog("helllooooo ${error.toString()}");
-                  },
-                  onPageError: (page, error) {
-                    logic.errorMessage = '$page: ${error.toString()}';
-                    Debug.printLog('$page: ${error.toString()}');
-                  },
-                  onViewCreated: (PDFViewController pdfViewController) {
-                    logic.controller.complete(pdfViewController);
-                  },
-                  onPageChanged: (int? page, int? total) {},
-                ),
-          logic.errorMessage.isEmpty
-              ? !logic.isReady
-                  ? const Center(
-                      child: CircularProgressIndicator(color: Colors.black),
-                    )
-                  : Container()
-              : Center(
-                  child: Text(logic.errorMessage),
-                )
-        ],
-      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        (logic.isLoading)
+            ? const Center(
+                child: CircularProgressIndicator(color: Colors.black),
+              )
+            : PDFView(
+                filePath: logic.path,
+                enableSwipe: true,
+                autoSpacing: true,
+                pageFling: true,
+                onRender: (pages) {
+                  setState(() {
+                    pages = pages;
+                    logic.isReady = true;
+                  });
+                },
+                onError: (error) {
+                  Debug.printLog(" error  ${error.toString()}");
+                },
+                onPageError: (page, error) {
+                  logic.errorMessage = '$page: ${error.toString()}';
+                  Debug.printLog('$page: ${error.toString()}');
+                },
+                onViewCreated: (PDFViewController pdfViewController) {
+                  logic.controller.complete(pdfViewController);
+                },
+                onPageChanged: (int? page, int? total) {},
+              ),
+        logic.errorMessage.isEmpty
+            ? !logic.isReady
+                ? const Center(
+                    child: CircularProgressIndicator(color: Colors.black),
+                  )
+                : Container()
+            : Center(
+                child: Text(logic.errorMessage),
+              )
+      ],
     );
   }
 }

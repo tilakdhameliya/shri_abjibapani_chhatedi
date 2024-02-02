@@ -37,9 +37,6 @@ class AudioListController extends GetxController {
   @override
   void onInit() {
     if (Get.arguments != null) {
-      // if (Get.arguments[0] != null) {
-      //   audioTrack = Get.arguments[0];
-      // }
       if (Get.arguments[0] != null) {
         audioListName = Get.arguments[0];
       }
@@ -60,6 +57,31 @@ class AudioListController extends GetxController {
       update();
     });
     super.onReady();
+  }
+
+  play(int index) async {
+    audioTrack[index].isPlayLoader = true;
+    update();
+    if (audioTrack[index].isPlay == false) {
+      await playAudio(audioTrack[index].url.toString());
+      var playIndex =
+          audioTrack.indexWhere((element) => element.isPlay == true);
+      if (playIndex > -1) {
+        audioTrack[playIndex].isPlay = false;
+      }
+      audioTrack[index].isPlayLoader = false;
+      audioTrack[index].isPlay = true;
+      await player.play().then((value) {
+        audioTrack[index].isPlayLoader = false;
+        update();
+      });
+      update();
+    } else if (audioTrack[index].isPlay == true) {
+      audioTrack[index].isPlay = false;
+      audioTrack[index].isPlayLoader = false;
+      await player.pause();
+    }
+    update();
   }
 
   playAudio(String url) {

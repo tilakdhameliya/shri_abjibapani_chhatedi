@@ -67,7 +67,6 @@ class _SubImageScreenState extends State<SubImageScreen> {
             },
             child: Container(
               padding: const EdgeInsets.all(10),
-              // color: Colors.green,
               child: const Icon(Icons.arrow_back_rounded)
             ),
           ),
@@ -92,7 +91,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
   _centerView(SubImageController logic){
     return Expanded(
       child: ListView.builder(
-        itemCount: logic.images.length,
+        itemCount: logic.subImages.length,
         shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
@@ -109,7 +108,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
           highlightColor: Colors.transparent,
           onTap: () {
             Get.toNamed(AppRoutes.photoView,
-                arguments: [index,logic.images]);
+                arguments: [index,logic.subImages]);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
@@ -124,7 +123,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
                       image: DecorationImage(
                         fit: BoxFit.cover,
                     image: NetworkImage(
-                        logic.images[index].thumbUrl.toString()),
+                        logic.subImages[index].thumbUrl.toString()),
                   )),
                 ),
                 Expanded(
@@ -142,7 +141,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
             ),
           ),
         ),
-        (index == logic.images.length - 1)
+        (index == logic.subImages.length - 1)
             ? const SizedBox()
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),

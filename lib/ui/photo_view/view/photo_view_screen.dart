@@ -134,7 +134,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
       child: PageView.builder(
         controller: Constant.photoController,
         scrollDirection: Axis.horizontal,
-        itemCount: logic.images.length,
+        itemCount: logic.images.length ,
         onPageChanged: (index) {
           logic.currentIndex = index;
           setState(() {});
@@ -157,37 +157,32 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   }
 
   _imageView(PhotoViewController logic) {
-    return Container(
+    return SizedBox(
       height: 80,
-      child: Expanded(
-        child: ListView.builder(
-          itemCount: logic.images.length,
-          controller: logic.imageController,
-          // itemExtent: 80,
-          // padding: EdgeInsets.symmetric(horizontal: (Get.width - 70) / 2),
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (BuildContext context, int index) {
-            return InkWell(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onTap: (){
-                Constant.photoController.animateToPage(index, duration: const Duration(milliseconds: 250), curve: Curves.linear);
-              },
-              child: Container(
+      child: ListView.builder(
+        itemCount: logic.images.length,
+        controller: logic.imageController,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: (){
+              Constant.photoController.animateToPage(index, duration: const Duration(milliseconds: 250), curve: Curves.linear);
+            },
+            child: Container(
                 width: 70,
                 margin: const EdgeInsets.all(5),
-                child:CachedNetworkImage(
+                child: CachedNetworkImage(
                   imageUrl: logic.images[index].imageUrl.toString(),
                   fit: BoxFit.fitHeight,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(color: Colors.black),
-                  ),
+                  // placeholder: (context, url) => Center(
+                  //   child: SvgPicture.asset("assets/image/gallery.svg"),
+                  // ),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
-                )
-              ),
-            );
-          },
-        ),
+                )),
+          );
+        },
       ),
     );
   }

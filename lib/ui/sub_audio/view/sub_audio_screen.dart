@@ -51,18 +51,24 @@ class _SubAudioScreenState extends State<SubAudioScreen> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            onTap: () {
               Get.back();
             },
-            icon: const Icon(Icons.arrow_back_rounded),),
-          const SizedBox(width: 85),
-          Text(logic.albumName,
-            style: TextStyle(
-            fontFamily: Font.poppins,
-            fontWeight: FontWeight.w600,
-            fontSize: 19,
-          ),)
+            child: const Icon(Icons.arrow_back_rounded),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(logic.albumName,
+                style: TextStyle(
+                fontFamily: Font.poppins,
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),),
+            ),
+          )
         ],
       ),
     );
@@ -122,12 +128,12 @@ class _SubAudioScreenState extends State<SubAudioScreen> {
         (index == logic.subAudio.length - 1)
             ? const SizedBox()
             : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Divider(
-              height: 15,
-              color: CColor.viewGray.withOpacity(0.7),
-              thickness: 1.5),
-        )
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Divider(
+                    height: 15,
+                    color: CColor.viewGray.withOpacity(0.7),
+                    thickness: 1.5),
+              )
       ],
     );
   }

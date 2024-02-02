@@ -62,20 +62,24 @@ class _BookScreenState extends State<BookScreen> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            // highlightColor: Colors.transparent,
+            // splashColor: Colors.transparent,
+            onTap: () {
               Get.back();
             },
-            icon: const Icon(Icons.arrow_back_rounded),
+            child: const Icon(Icons.arrow_back_rounded),
           ),
           Expanded(
-            child: Text(
-              "E-books",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            child: Center(
+              child: Text(
+                "E-books",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
               ),
             ),
           )
@@ -121,56 +125,20 @@ class _BookScreenState extends State<BookScreen> {
     return Column(
       children: [
         InkWell(
-          // splashColor: Colors.transparent,
-          // highlightColor: Colors.transparent,
-          onTap: () async {
-            if (Constant.isStorage) {
-              if (await Permission.storage.isGranted) {
-                Preference.shared.setBool(Preference.isStorage, false);
-                Constant.isStorage =
-                    Preference.shared.getBool(Preference.isStorage)!;
-              }
-            }
-            if (Platform.isAndroid) {
-              await logic
-                  .getAndroidVersion()
-                  .then((value) => logic.version = value);
-            }
-            if (logic.version! > 32) {
-              if (Constant.isNotification || !Constant.isNotification) {
-                logic.downloadAudio(
-                    context,
-                    index,
-                    Constant.eBooks[index].url,
-                    Constant.eBooks[index].name);
-                setState(() {});
-              }
-            } else {
-              if (Constant.isStorage) {
-                logic.showAlertDialogPermission(
-                    context,
-                    "storagePermission",
-                    true,
-                    index,
-                    Constant.eBooks[index].url,
-                    Constant.eBooks[index].name);
-              } else {
-                logic.downloadAudio(
-                    context,
-                    index,
-                    Constant.eBooks[index].url,
-                    Constant.eBooks[index].name);
-              }
+          onTap: ()  {
+            if(!logic.isCom) {
+              logic.downloadAudio(context, index, Constant.eBooks[index].url,
+                  Constant.eBooks[index].name);
             }
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             child: Row(
               children: [
                 Container(
                   height: 70,
                   width: 95,
-                  margin: const EdgeInsets.only(right:20),
+                  margin: const EdgeInsets.only(right: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(

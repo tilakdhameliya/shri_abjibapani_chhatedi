@@ -64,20 +64,22 @@ class _MagazineScreenState extends State<MagazineScreen> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Get.back();
             },
-            icon: const Icon(Icons.arrow_back_rounded),
+            child: const Icon(Icons.arrow_back_rounded),
           ),
           Expanded(
-            child: Text(
-              "Magazines",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            child: Center(
+              child: Text(
+                "Magazines",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
               ),
             ),
           )
@@ -104,8 +106,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 child: Column(
                   children: [
                     ListView.builder(
@@ -113,7 +114,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return _listItem(logic, index,context);
+                        return _listItem(logic, index, context);
                       },
                     ),
                   ],
@@ -123,55 +124,18 @@ class _MagazineScreenState extends State<MagazineScreen> {
           );
   }
 
-  _listItem(MagazineController logic, int index,BuildContext context) {
+  _listItem(MagazineController logic, int index, BuildContext context) {
     return Column(
       children: [
         InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () async {
-            if (Constant.isStorage) {
-              if (await Permission.storage.isGranted) {
-                Preference.shared.setBool(Preference.isStorage, false);
-                Constant.isStorage =
-                    Preference.shared.getBool(Preference.isStorage)!;
-              }
-            }
-            if (Platform.isAndroid) {
-              await logic
-                  .getAndroidVersion()
-                  .then((value) => logic.version = value);
-            }
-            if (logic.version! > 32) {
-              if (Constant.isNotification || !Constant.isNotification) {
-                logic.downloadAudio(
-                    context,
-                    index,
-                    Constant.magazines[index].url,
-                    Constant.magazines[index].name);
-                setState(() {});
-              }
-            } else {
-              if (Constant.isStorage) {
-                logic.showAlertDialogPermission(
-                    context,
-                    "storagePermission",
-                    true,
-                    index,
-                    Constant.magazines[index].url,
-                    Constant.magazines[index].name);
-              } else {
-
-                logic.downloadAudio(
-                    context,
-                    index,
-                    Constant.magazines[index].url,
-                    Constant.magazines[index].name);
-              }
+          onTap: () {
+            if (!logic.isCom) {
+              logic.downloadAudio(context, index, Constant.magazines[index].url,
+                  Constant.magazines[index].name);
             }
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 17),
             child: Row(
               children: [
                 Expanded(
@@ -204,7 +168,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Divider(
-                    height: 15,
+                    height: 0,
                     color: CColor.viewGray.withOpacity(0.7),
                     thickness: 1.5),
               )

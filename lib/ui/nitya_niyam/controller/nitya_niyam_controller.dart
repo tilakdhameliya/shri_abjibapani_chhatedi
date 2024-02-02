@@ -31,7 +31,7 @@ class NityaNiyamController extends GetxController {
 
   @override
   void onInit() {
-    downloadPdf("Nitya Niyam");
+    downloadPdf("Nitya_Niyam");
     super.onInit();
   }
 
@@ -267,7 +267,7 @@ class NityaNiyamController extends GetxController {
 
   downloadAudioAndNotification(String savePath) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
-    showDownloadNotification(savePath);
+    // showDownloadNotification(savePath);
     path = savePath;
     Fluttertoast.showToast(msg: "Download pdf successfully");
     isLoading = false;

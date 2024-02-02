@@ -23,7 +23,8 @@ class AudioListScreen extends StatefulWidget {
 class _AudioListScreenState extends State<AudioListScreen> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: GetBuilder<AudioListController>(
           builder: (logic) {
@@ -35,7 +36,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
             );
           },
         ),
-      ),);
+      ),
+    );
   }
 
   _header(AudioListController logic) {
@@ -56,19 +58,26 @@ class _AudioListScreenState extends State<AudioListScreen> {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            onTap: () {
               Get.back();
             },
-            icon: const Icon(Icons.arrow_back_rounded),),
+            child: const Icon(Icons.arrow_back_rounded),
+          ),
           Expanded(
-            child: Text(logic.audioListName,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                fontWeight: FontWeight.w600,
-                fontSize: 19,
-              ),),
+            child: Center(
+              child: Text(
+                logic.audioListName,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 19,
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -78,70 +87,70 @@ class _AudioListScreenState extends State<AudioListScreen> {
   _centerView(AudioListController logic) {
     return (logic.isLoading)
         ? const Expanded(
-          child: Center(
-            child: SizedBox(
-              height: 45,
-              width: 45,
-              child: CircularProgressIndicator(
-                color: Colors.black,
-                strokeWidth: 3,
+            child: Center(
+              child: SizedBox(
+                height: 45,
+                width: 45,
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  strokeWidth: 3,
+                ),
               ),
             ),
-          ),
-        )
+          )
         : Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
-          child: Column(
-            children: [
-              Image.network(logic.audioImage),
-              const SizedBox(height: 15),
-              ListView.builder(
-                itemCount: logic.audioTrack.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return _listItem(logic, index);
-                },
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                child: Column(
+                  children: [
+                    Image.network(logic.audioImage),
+                    const SizedBox(height: 15),
+                    ListView.builder(
+                      itemCount: logic.audioTrack.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return _listItem(logic, index);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 
-  _listItem(AudioListController logic, int index){
+  _listItem(AudioListController logic, int index) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7),
-          color: (index % 2 == 0) ? CColor.viewGray.withOpacity(0.6) : Colors.white),
+          borderRadius: BorderRadius.circular(7),
+          color: (index % 2 == 0)
+              ? CColor.viewGray.withOpacity(0.6)
+              : Colors.white),
       child: Row(
         children: [
           InkWell(
               onTap: () async {
-                if(logic.audioTrack[index].isPlay == false) {
-                  await logic.playAudio(logic.audioTrack[index].url.toString());
-                  if(index != 0) {
-                    logic.audioTrack[index - 1].isPlay = false;
-                  }
-                  logic.audioTrack[index].isPlay = true;
-                  await logic.player.play();
-                }else if(logic.audioTrack[index].isPlay == true){
-                  logic.audioTrack[index].isPlay = false;
-                  await logic.player.pause();
-                }
+                logic.play(index);
                 setState(() {});
               },
-              child: SvgPicture.asset((logic.audioTrack[index].isPlay == true)?"assets/image/stop.svg":"assets/image/play.svg", height: 35,color: CColor.red)),
+              child: (logic.audioTrack[index].isPlayLoader == true)
+                  ? const SizedBox(height: 25,width: 25,child: CircularProgressIndicator(color: CColor.theme,strokeWidth: 1.5,))
+                  : SvgPicture.asset(
+                      (logic.audioTrack[index].isPlay == true)
+                          ? "assets/image/stop.svg"
+                          : "assets/image/play.svg",
+                      height: 35,
+                      color: CColor.red)),
           const SizedBox(width: 15),
           Expanded(
-              child: Text(
-            logic.audioTrack[index].name.toString(),
-            style: TextStyle(
+            child: Text(
+              logic.audioTrack[index].name.toString(),
+              style: TextStyle(
                 fontFamily: Font.poppins,
                 fontWeight: FontWeight.w500,
                 fontSize: 16.5,
@@ -149,28 +158,44 @@ class _AudioListScreenState extends State<AudioListScreen> {
             ),
           ),
           InkWell(
-              onTap: () async {
+            onTap: () async {
+              if (Constant.isStorage) {
+                if (await Permission.storage.isGranted) {
+                  Preference.shared.setBool(Preference.isStorage, false);
+                  Constant.isStorage =
+                      Preference.shared.getBool(Preference.isStorage)!;
+                }
+              }
+              if (Platform.isAndroid) {
+                await logic
+                    .getAndroidVersion()
+                    .then((value) => logic.version = value);
+              }
+              if (logic.version! > 32) {
+                if (Constant.isNotification || !Constant.isNotification) {
+                  logic.downloadAudio(
+                      context,
+                      index,
+                      logic.audioTrack[index].url,
+                      logic.audioTrack[index].name);
+                  setState(() {});
+                }
+              } else {
                 if (Constant.isStorage) {
-                  if (await Permission.storage.isGranted) {
-                    Preference.shared.setBool(Preference.isStorage, false);
-                    Constant.isStorage =
-                    Preference.shared.getBool(Preference.isStorage)!;
-                  }
-                }
-                if (Platform.isAndroid) {
-                  await logic.getAndroidVersion().then((value) => logic.version = value);
-                }
-                if (logic.version! > 32) {
-                  if (Constant.isNotification || !Constant.isNotification) {
-                    logic.downloadAudio(context,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
-                    setState(() {});
-                  }
+                  logic.showAlertDialogPermission(
+                      context,
+                      "storagePermission",
+                      true,
+                      index,
+                      logic.audioTrack[index].url,
+                      logic.audioTrack[index].name);
                 } else {
-                  if (Constant.isStorage) {
-                    logic.showAlertDialogPermission(context, "storagePermission", true,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
-                  } else {
-                    logic.downloadAudio(context,index,logic.audioTrack[index].url,logic.audioTrack[index].name);
-                  }
+                  logic.downloadAudio(
+                      context,
+                      index,
+                      logic.audioTrack[index].url,
+                      logic.audioTrack[index].name);
+                }
               }
             },
             child: (logic.audioTrack[index].isLoader == true)
@@ -189,7 +214,6 @@ class _AudioListScreenState extends State<AudioListScreen> {
       ),
     );
   }
-
 
   _loaderOpacity(AudioListController logic) {
     return logic.isLoading
@@ -225,8 +249,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
         : Container();
   }
 
-  StreamBuilder<DurationState> audioProgressBar(
-      AudioListController logic) {
+  StreamBuilder<DurationState> audioProgressBar(AudioListController logic) {
     return StreamBuilder<DurationState>(
       stream: logic.durationState,
       builder: (context, snapshot) {
@@ -238,9 +261,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
           progress: progress,
           buffered: buffered,
           total: total,
-          onSeek: (duration) {
-
-          },
+          onSeek: (duration) {},
           onDragUpdate: (details) {
             debugPrint('${details.timeStamp}, ${details.localPosition}');
           },
@@ -256,11 +277,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
           timeLabelLocation: TimeLabelLocation.none,
           timeLabelType: TimeLabelType.totalTime,
           timeLabelTextStyle: TextStyle(
-              fontSize: 8, color: Theme
-              .of(context)
-              .textTheme
-              .bodyLarge
-              ?.color),
+              fontSize: 8, color: Theme.of(context).textTheme.bodyLarge?.color),
           timeLabelPadding: 10,
         );
       },

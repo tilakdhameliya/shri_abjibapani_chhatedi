@@ -18,6 +18,7 @@ import '../../../utils/preference.dart';
 
 class MagazineController extends GetxController {
   bool isLoading = false;
+  bool isCom = false;
   int resumeNumber = 0;
   int nullResumeNumber = 0;
   String downloadedAudioName = "";
@@ -62,7 +63,8 @@ class MagazineController extends GetxController {
   int? version;
 
   downloadAudio(context, int index, url, fileName) async {
-    Constant.magazines[index].isLoader = true;
+    isCom = true;
+
     update();
 
     if (Platform.isAndroid) {
@@ -71,20 +73,11 @@ class MagazineController extends GetxController {
       });
     }
 
-    List<String> list = [];
-    int cnt = 0;
-
-    downloadedAudioName =
-        Preference.shared.getString(Preference.downloadedResumeName) ?? "";
-    nullResumeNumber =
-        Preference.shared.getInt(Preference.nullResumeNumber) ?? 0;
-
-    resumeNumber = cnt;
     if (Platform.isAndroid) {
       if (version! > 32) {
         if (await Permission.notification.isGranted) {
           var downloadUrl = url;
-            download(downloadUrl, fileName, index);
+          download(downloadUrl, fileName, index);
           update();
         } else {
           var downloadUrl = url;
@@ -92,9 +85,11 @@ class MagazineController extends GetxController {
           update();
         }
       } else {
-        if (!Constant.isStorage) {
-          var downloadUrl = url;
-          download(downloadUrl, fileName, index);
+        if (Constant.isStorage) {
+          showAlertDialogPermission(context, "storagePermission", true, index,
+              Constant.magazines[index].url, Constant.magazines[index].name);
+        } else {
+          download(url, fileName, index);
         }
       }
     } else if (Platform.isIOS) {
@@ -115,7 +110,8 @@ class MagazineController extends GetxController {
       var dir = await getApplicationDocumentsDirectory();
       savePath = "${dir.path}/$filename.pdf";
     } else {
-      savePath = '/storage/emulated/0/download/$filename.pdf';
+      savePath =
+          '/storage/emulated/0/download/abjibapani chhatedi/$filename.pdf';
     }
     downloadFilePah = savePath;
     outputFile = File(savePath);
@@ -125,13 +121,14 @@ class MagazineController extends GetxController {
 
     try {
       update();
-      if(await outputFile.exists()) {
+      if (await outputFile.exists()) {
         Constant.magazines[index].isLoader = false;
+        isCom = false;
         Get.toNamed(AppRoutes.pdfView,
-            arguments: [savePath,Constant.magazines[index].name]);
-        print("hello world");
+            arguments: [savePath, Constant.magazines[index].name]);
         update();
-      }else{
+      } else {
+        Constant.magazines[index].isLoader = true;
         var response = await dio.download(
           url,
           savePath,
@@ -271,8 +268,9 @@ class MagazineController extends GetxController {
   downloadAudioAndNotification(String savePath, index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     showDownloadNotification(savePath);
+    isCom = false;
     Get.toNamed(AppRoutes.pdfView,
-        arguments: [savePath,Constant.magazines[index].name]);
+        arguments: [savePath, Constant.magazines[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
     Constant.magazines[index].isLoader = false;
     update();
