@@ -37,6 +37,8 @@ import 'package:satsang/ui/sub_audio/binding/aub_audio_binding.dart';
 import 'package:satsang/ui/sub_audio/view/sub_audio_screen.dart';
 import 'package:satsang/ui/sub_image/binding/sub_image_binding.dart';
 import 'package:satsang/ui/sub_image/view/sub_image_screen.dart';
+import 'package:satsang/ui/tithi_calender/binding/tithi_calender_binding.dart';
+import 'package:satsang/ui/tithi_calender/view/tithi_calender_screen.dart';
 import 'package:sizer/sizer.dart';
 import '../ui/facebook/binding/facebook_binding.dart';
 import '../ui/home/binding/home_binding.dart';
@@ -76,6 +78,21 @@ class AppPages {
         },
       ),
       binding: SubImageBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.tithiCalenderScreen,
+      page: () => Sizer(
+        builder: (context, orientation, deviceType) {
+          return  const AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              // statusBarColor: isDarkMode ? CColor.black : CColor.white12,
+            ),
+            child: TithiCalenderScreen(),
+          );
+        },
+      ),
+      binding: TithiCalenderBinding(),
       transition: Transition.noTransition,
     ),
     GetPage(

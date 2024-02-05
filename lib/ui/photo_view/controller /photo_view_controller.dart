@@ -19,9 +19,6 @@ class PhotoViewController extends GetxController{
   List<Images> images = [];
   int currentIndex = 0;
   bool isLoader = false;
-  int resumeNumber = 0;
-  int nullResumeNumber = 0;
-  String downloadedPhotoName = "";
   bool isSelected = false;
   ScrollController imageController = ScrollController();
 
@@ -76,20 +73,21 @@ class PhotoViewController extends GetxController{
     return file;
   }
 
-saveImage() {
-  isLoader = true;
-  update();
-  String url = images[index].imageUrl.toString();
-  GallerySaver.saveImage(url).then((value){
-    if(value == true){
-      Fluttertoast.showToast(msg: "Image Save successfully");
-      isLoader = false;
-    }else{
-      Fluttertoast.showToast(msg: "Image not save");
-      isLoader = false;
-    }
-  });
-  isLoader = false;
-  update();
-}
+  saveImage(int index) {
+    isLoader = true;
+    update();
+    String url = images[index].imageUrl.toString();
+    GallerySaver.saveImage(url).then((value) {
+      if (value == true) {
+        Fluttertoast.showToast(msg: "Image Save successfully");
+        isLoader = false;
+        update();
+      } else {
+        Fluttertoast.showToast(msg: "Image not save");
+        isLoader = false;
+        update();
+      }
+    });
+    update();
+  }
 }

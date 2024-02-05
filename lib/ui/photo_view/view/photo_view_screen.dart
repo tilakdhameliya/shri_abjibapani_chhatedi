@@ -6,6 +6,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:satsang/model/photo/photo_album_model.dart';
@@ -13,6 +15,7 @@ import 'package:satsang/utils/constant.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../utils/color.dart';
+import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
 import '../../../utils/preference.dart';
 import '../controller /photo_view_controller.dart';
@@ -34,7 +37,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
             statusBarIconBrightness: Brightness.light,
             systemNavigationBarIconBrightness: Brightness.light),
         child: Scaffold(
-          resizeToAvoidBottomInset: true,
+            resizeToAvoidBottomInset: true,
             backgroundColor: Colors.black,
             appBar: AppBar(
               backgroundColor: CColor.black,
@@ -113,7 +116,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
-              imageDialog(context, logic);
+              imageDialog(context, logic,logic.currentIndex);
             },
             child: Container(
               padding: const EdgeInsets.all(10),
@@ -134,7 +137,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
       child: PageView.builder(
         controller: Constant.photoController,
         scrollDirection: Axis.horizontal,
-        itemCount: logic.images.length ,
+        itemCount: logic.images.length,
         onPageChanged: (index) {
           logic.currentIndex = index;
           setState(() {});
@@ -158,7 +161,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
 
   _imageView(PhotoViewController logic) {
     return SizedBox(
-      height: 80,
+      height: 90,
       child: ListView.builder(
         itemCount: logic.images.length,
         controller: logic.imageController,
@@ -167,20 +170,25 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
           return InkWell(
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
-            onTap: (){
-              Constant.photoController.animateToPage(index, duration: const Duration(milliseconds: 250), curve: Curves.linear);
+            onTap: () {
+              Constant.photoController.jumpToPage(index);
             },
             child: Container(
-                width: 70,
-                margin: const EdgeInsets.all(5),
-                child: CachedNetworkImage(
-                  imageUrl: logic.images[index].imageUrl.toString(),
-                  fit: BoxFit.fitHeight,
-                  // placeholder: (context, url) => Center(
-                  //   child: SvgPicture.asset("assets/image/gallery.svg"),
-                  // ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                )),
+              width: 70,
+              margin: EdgeInsets.only(
+                  right: 5,
+                  left: 5,
+                  top: (logic.currentIndex == index) ? 5 : 10,
+                  bottom: (logic.currentIndex == index) ? 5 : 10),
+              decoration: BoxDecoration(
+                border: Border.all(color:(logic.currentIndex == index)? Colors.white:Colors.transparent,width: 2),
+                image: DecorationImage(
+                    image: NetworkImage(
+                      logic.images[index].thumbUrl.toString(),
+                    ),
+                    fit: BoxFit.fitHeight),
+              ),
+            ),
           );
         },
       ),
@@ -188,7 +196,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   }
 
   Future<void> imageDialog(
-      BuildContext context, PhotoViewController logic) async {
+      BuildContext context, PhotoViewController logic,int index) async {
     return showDialog<void>(
       context: context,
       useSafeArea: true,
@@ -231,7 +239,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                         InkWell(
                           onTap: () {
                             Get.back();
-                            logic.saveImage();
+                            logic.saveImage(index);
+                            setState(() {});
                           },
                           child: Container(
                             width: Get.width,
@@ -255,7 +264,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                           onTap: () {
                             Get.back();
                             logic.shareImage(
-                                logic.images[logic.index].imageUrl.toString(),
+                                logic.images[index].imageUrl.toString(),
                                 context);
                           },
                           child: Container(
@@ -294,7 +303,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   }
 
   _loader(PhotoViewController logic) {
-    return logic.isLoader
+    return  logic.isLoader
         ? WillPopScope(
             onWillPop: () async {
               return false;

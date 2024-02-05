@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import '../model/audio/audio_album_model.dart';
 import '../model/books/books_model.dart';
+import '../model/calender/tithi_calender_model.dart';
 import '../model/magazine/magazine_model.dart';
 import '../model/news/news_model.dart';
 import '../model/photo/photo_album_model.dart';
@@ -46,6 +46,8 @@ class Constant {
   static List<News> newsList = [];
   static List<MurtiMagazines> magazines = [];
   static List<Ebooks> eBooks = [];
+  static HeaderLines tithiCalender = HeaderLines();
+  static String dailyQuote = "";
 
 
   static PageController photoController = PageController(initialPage: 0,keepPage: true);

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -53,13 +54,6 @@ class _PhotosScreenState extends State<PhotosScreen> {
       children: [
         InkWell(
           onTap: () {
-            for (int i = 0; i < Constant.photoAlbum.length; i++) {
-              for (int j = 0; j < Constant.photoAlbum[i].images!.length; j++) {
-                final fullImage = Image.network(
-                    Constant.photoAlbum[i].images![j].imageUrl.toString());
-                precacheImage(fullImage.image, Get.context!);
-              }
-            }
             Get.toNamed(AppRoutes.subImage,
                 arguments: [Constant.photoAlbum[index].images,Constant.photoAlbum[index].name]);
           },

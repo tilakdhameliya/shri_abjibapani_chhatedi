@@ -303,7 +303,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  Constant.isShowBottomSheet = false;
                   logic.more(4, context);
                   setState(() {});
                 },
@@ -369,7 +368,10 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onTap: () {},
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(AppRoutes.dailySatsangScreen);
+                },
                 child: Column(
                   children: [
                     Padding(
@@ -392,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              InkWell(
+              /*InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
@@ -421,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-              ),
+              ),*/
               InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
@@ -464,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/video.svg",
+                      child: SvgPicture.asset("assets/image/nitya_niyam.svg",
                           height: 23),
                     ),
                     const SizedBox(height: 3),
@@ -551,7 +553,10 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
-                onTap: () {},
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(AppRoutes.tithiCalenderScreen);
+                },
                 child: Column(
                   children: [
                     Padding(

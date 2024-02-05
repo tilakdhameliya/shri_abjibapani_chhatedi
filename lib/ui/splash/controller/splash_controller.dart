@@ -1,13 +1,19 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:satsang/model/calender/tithi_calender_model.dart';
 import 'package:satsang/routes/app_routes.dart';
 import '../../../../utils/constant.dart';
 import '../../../../utils/debugs.dart';
 import '../../../../utils/network_connectivity.dart';
 import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../utils/offline_popup.dart';
+import 'package:flutter/services.dart' as root_bundle;
 import '../../../utils/preference.dart';
 
 
@@ -73,13 +79,18 @@ class SplashController extends GetxController {
           precacheImage(fullImage.image, Get.context!);
         }
       }*/
+      for (int i = 0; i < Constant.photoAlbum.length; i++) {
+        final fullImage =
+            Image.network(Constant.photoAlbum[i].previewImage.toString());
+        precacheImage(fullImage.image, Get.context!);
+      }
     });
     await repo.getNews().then((value) {
       Constant.newsList = value.news!;
-/*      for (int i = 0; i < Constant.newsList.length; i++) {
+      for (int i = 0; i < Constant.newsList.length; i++) {
         final newsPhoto = Image.network(Constant.newsList[i].thumb.toString());
         precacheImage(newsPhoto.image, Get.context!);
-      }*/
+      }
     });
     await repo.getMagazine().then((value) {
       Constant.magazines = value.murtiMagazines!;
@@ -90,6 +101,7 @@ class SplashController extends GetxController {
     await repo.getAudioAlbum().then((value) {
       Constant.audioSection = value.audioSections!;
     });
+    await getJsonData();
     Get.offAllNamed(AppRoutes.homeScreen);
     Debug.printLog("hello world");
   }
@@ -133,6 +145,24 @@ class SplashController extends GetxController {
           Preference.isGetPhotoPermission, !Constant.isGetPhotoPermission);
       Constant.isGetPhotoPermission =
       Preference.shared.getBool(Preference.isGetPhotoPermission)!;
+    }
+  }
+
+  getJsonData() async {
+    final jsondata = await DefaultAssetBundle.of(Get.context!)
+        .loadString("assets/tithi_calender.json");
+    final list = jsonDecode(jsondata);
+    if (list != null) {
+      Constant.tithiCalender = HeaderLines.fromJson(list["HeaderLines"]);
+      var now = DateTime.now();
+      var formatter = DateFormat('yyyy-MM-dd');
+      String currentDate = formatter.format(now);
+
+      for (int i = 0; i < Constant.tithiCalender.headerLine!.length; i++) {
+        if (currentDate == Constant.tithiCalender.headerLine![i].date) {
+          Constant.dailyQuote = Constant.tithiCalender.headerLine![i].suvichar.toString();
+        }
+      }
     }
   }
 }
