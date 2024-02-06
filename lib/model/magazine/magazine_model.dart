@@ -26,6 +26,7 @@ class MurtiMagazines {
   String? name;
   String? url;
   bool? isLoader = false;
+  bool? isDownload = false;
 
   MurtiMagazines({this.name, this.url});
 

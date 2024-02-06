@@ -352,33 +352,7 @@ class AudioListController extends GetxController {
   downloadAudioAndNotification(String savePath,index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     showDownloadNotification(savePath);
-    /* Get.snackbar(
-      'Success',
-      'File downloaded successfully',
-      colorText: CColor.black,
-      margin: const EdgeInsets.only(bottom: 5),
-      duration: const Duration(days: 50),
-      mainButton: TextButton(
-        onPressed: () async {
-          if (Platform.isAndroid) {
-            Utils.sendData(savePath);
-          } else if (Platform.isIOS) {
-            await OpenFile.open(savePath);
-          }
-        },
-        child: Text(
-          "View",
-          style: TextStyle(
-            fontFamily: Font.poppins,
-            fontSize: 16,
-            color: CColor.theme,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.white,
-    );*/
+    audioTrack[index].isDownload = true;
     audioTrack[index].isLoader = false;
     update();
   }

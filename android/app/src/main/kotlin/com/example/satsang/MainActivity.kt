@@ -28,9 +28,9 @@ class MainActivity: FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
 
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "resumePath").setMethodCallHandler {
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "pdfPath").setMethodCallHandler {
                 call, result ->
-            if(call.method == "resumePathMethod") {
+            if(call.method == "pdfPathMethod") {
                 var path = (call.arguments as HashMap<*, *>)["path"]
                 val file: File = File(path.toString())
                 val target = Intent(Intent.ACTION_VIEW)

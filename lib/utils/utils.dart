@@ -27,9 +27,9 @@ class Utils {
   }
 
   static Future<void> sendData(String path) async {
-    const platform = MethodChannel("resumePath");
+    const platform = MethodChannel("pdfPath");
     try {
-      await platform.invokeMethod('resumePathMethod', {"path": path});
+      await platform.invokeMethod('pdfPathMethod', {"path": path});
     } on PlatformException catch (e) {
       Debug.printLog("e.message....${e.message}");
     }

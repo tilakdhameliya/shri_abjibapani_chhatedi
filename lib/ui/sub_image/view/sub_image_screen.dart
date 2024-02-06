@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:satsang/ui/sub_image/controller/sub_image_controller.dart';
-
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
-import '../../../utils/constant.dart';
 import '../../../utils/font.dart';
 
 class SubImageScreen extends StatefulWidget {
@@ -90,67 +89,108 @@ class _SubImageScreenState extends State<SubImageScreen> {
 
   _centerView(SubImageController logic){
     return Expanded(
-      child: ListView.builder(
-        itemCount: logic.subImages.length,
-        shrinkWrap: true,
+      child: MasonryGridView.count(
         physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 15),
+        shrinkWrap: true,
+        itemCount: logic.subImages.length,
         itemBuilder: (BuildContext context, int index) {
-          return _listItem(logic,index);
-        },),
+          return _gridItem(context, index,logic);
+        },
+        crossAxisSpacing: 5,
+        mainAxisSpacing: 5, crossAxisCount: 2,
+
+      ),
     );
   }
 
-  _listItem(SubImageController logic, int index) {
-    return Column(
+  _gridItem(BuildContext context, int index, SubImageController logic) {
+    return Wrap(
       children: [
         InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
           onTap: () {
             Get.toNamed(AppRoutes.photoView,
                 arguments: [index,logic.subImages]);
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            child: Row(
-              children: [
-                Container(
-                  height: 70,
-                  width: 95,
-                  margin: const EdgeInsets.only(right:20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                    image: NetworkImage(
-                        logic.subImages[index].thumbUrl.toString()),
-                  )),
-                ),
-                Expanded(
-                  child: Text(
-                    "${index + 1}",
-                    style: TextStyle(
-                      fontFamily: Font.poppins,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 17,
-                    ),
-                  ),
-                ),
-                const Icon(Icons.arrow_forward_ios_rounded)
-              ],
+            height: 150,
+            alignment: Alignment.bottomCenter,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(logic.subImages[index].thumbUrl.toString()),
+              ),
             ),
           ),
         ),
-        (index == logic.subImages.length - 1)
-            ? const SizedBox()
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Divider(
-                    height: 15,
-                    color: CColor.viewGray.withOpacity(0.7),
-                    thickness: 1.5),
-              )
       ],
     );
   }
+
+  // _centerView(SubImageController logic){
+  //   return Expanded(
+  //     child: ListView.builder(
+  //       itemCount: logic.subImages.length,
+  //       shrinkWrap: true,
+  //       physics: const BouncingScrollPhysics(),
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return _listItem(logic,index);
+  //       },),
+  //   );
+  // }
+  //
+  // _listItem(SubImageController logic, int index) {
+  //   return Column(
+  //     children: [
+  //       InkWell(
+  //         splashColor: Colors.transparent,
+  //         highlightColor: Colors.transparent,
+  //         onTap: () {
+  //           Get.toNamed(AppRoutes.photoView,
+  //               arguments: [index,logic.subImages]);
+  //         },
+  //         child: Container(
+  //           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+  //           child: Row(
+  //             children: [
+  //               Container(
+  //                 height: 70,
+  //                 width: 95,
+  //                 margin: const EdgeInsets.only(right:20),
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(15),
+  //                     image: DecorationImage(
+  //                       fit: BoxFit.cover,
+  //                   image: NetworkImage(
+  //                       logic.subImages[index].thumbUrl.toString()),
+  //                 )),
+  //               ),
+  //               Expanded(
+  //                 child: Text(
+  //                   "${index + 1}",
+  //                   style: TextStyle(
+  //                     fontFamily: Font.poppins,
+  //                     fontWeight: FontWeight.w600,
+  //                     fontSize: 17,
+  //                   ),
+  //                 ),
+  //               ),
+  //               const Icon(Icons.arrow_forward_ios_rounded)
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //       (index == logic.subImages.length - 1)
+  //           ? const SizedBox()
+  //           : Padding(
+  //               padding: const EdgeInsets.symmetric(horizontal: 15),
+  //               child: Divider(
+  //                   height: 15,
+  //                   color: CColor.viewGray.withOpacity(0.7),
+  //                   thickness: 1.5),
+  //             )
+  //     ],
+  //   );
+  // }
 }

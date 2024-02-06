@@ -3,7 +3,8 @@ import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:satsang/utils/color.dart';
-import '../../../utils/font.dart';
+import 'package:satsang/utils/constant.dart';
+import 'package:satsang/utils/font.dart';
 import '../controller/tithi_calender_controller.dart';
 
 class TithiCalenderScreen extends StatefulWidget {
@@ -79,30 +80,46 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
   }
 
   _centerView(TithiCalenderController logic) {
+    List<String> string = [];
+    List<String> stringDate = [];
+    for (int i = 0; i < Constant.tithiCalender.headerLine!.length; i++) {
+      var tithi = Constant.tithiCalender.headerLine![i].tithi.toString();
+      string.add(tithi);
+      var date = Constant.tithiCalender.headerLine![i].date.toString();
+      stringDate.add(date);
+    }
+    final List<NeatCleanCalendarEvent> eventList = [];
+    for(int i = 0; i < string.length; i++) {
+      var element = NeatCleanCalendarEvent(
+        string[i],
+        startTime: DateFormat("yyyy-MM-dd").parse(stringDate[i]),
+        endTime: DateFormat("yyyy-MM-dd").parse(stringDate[i]),
+        color: Colors.transparent,
+      );
+      eventList.add(element);
+    }
+
     return Expanded(
       child: Calendar(
-        weekDays: ['Sun', 'Sat', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        eventsList: [
-        ],
+        weekDays: const ['Sun', 'Sat', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        eventsList: eventList,
         isExpandable: true,
-        eventDoneColor: Colors.green,
+        isExpanded: true,
         selectedColor: CColor.theme,
         selectedTodayColor: CColor.theme,
         todayColor: Colors.blue,
         hideTodayIcon: true,
-        eventColor: Colors.red,
+        displayMonthTextStyle: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 13,fontFamily: Font.poppins),
+        bottomBarTextStyle:  TextStyle(
+            color: Colors.black, fontWeight: FontWeight.w600, fontSize: 13,fontFamily: Font.poppins),
         locale: 'en_US',
         expandableDateFormat: 'EEEE, MMMM dd, yyyy',
-        onDateSelected: (value) {
-          var now = DateTime.now();
-          var formatter = DateFormat('yyyy-MM-dd');
-          String currentDate = formatter.format(now);
-          String selectedDate = formatter.format(value);
-          if (selectedDate == currentDate) {}
-        },
-
-        dayOfWeekStyle: const TextStyle(
-            color: Colors.black, fontWeight: FontWeight.w800, fontSize: 11),
+        bottomBarArrowColor: Colors.transparent,
+        eventTileHeight: 250,
+        eventDoneColor: Colors.transparent,
+        dayOfWeekStyle:  TextStyle(
+            color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w800, fontSize: 12,fontFamily: Font.poppins),
       ),
     );
   }

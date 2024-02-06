@@ -123,6 +123,7 @@ class MagazineController extends GetxController {
       update();
       if (await outputFile.exists()) {
         Constant.magazines[index].isLoader = false;
+        Constant.magazines[index].isDownload = true;
         isCom = false;
         Get.toNamed(AppRoutes.pdfView,
             arguments: [savePath, Constant.magazines[index].name]);
@@ -269,6 +270,7 @@ class MagazineController extends GetxController {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     showDownloadNotification(savePath);
     isCom = false;
+    Constant.magazines[index].isDownload = true;
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath, Constant.magazines[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");

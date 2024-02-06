@@ -124,93 +124,96 @@ class _AudioListScreenState extends State<AudioListScreen> {
   }
 
   _listItem(AudioListController logic, int index) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(7),
-          color: (index % 2 == 0)
-              ? CColor.viewGray.withOpacity(0.6)
-              : Colors.white),
-      child: Row(
-        children: [
-          InkWell(
-              onTap: () async {
-                logic.play(index);
-                setState(() {});
-              },
-              child: (logic.audioTrack[index].isPlayLoader == true)
-                  ? const SizedBox(height: 25,width: 25,child: CircularProgressIndicator(color: CColor.theme,strokeWidth: 1.5,))
-                  : SvgPicture.asset(
-                      (logic.audioTrack[index].isPlay == true)
-                          ? "assets/image/stop.svg"
-                          : "assets/image/play.svg",
-                      height: 35,
-                      color: CColor.red)),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Text(
-              logic.audioTrack[index].name.toString(),
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                fontWeight: FontWeight.w500,
-                fontSize: 16.5,
+    return InkWell(
+      onTap: (){
+        logic.play(index);
+        setState(() {});
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(7),
+            color: (index % 2 == 0)
+                ? CColor.viewGray.withOpacity(0.6)
+                : Colors.white),
+        child: Row(
+          children: [
+            (logic.audioTrack[index].isPlayLoader == true)
+                ? const SizedBox(height: 25,width: 25,child: CircularProgressIndicator(color: CColor.theme,strokeWidth: 1.5,))
+                : SvgPicture.asset(
+                    (logic.audioTrack[index].isPlay == true)
+                        ? "assets/image/stop.svg"
+                        : "assets/image/play.svg",
+                    height: 35,
+                    color: CColor.red),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Text(
+                logic.audioTrack[index].name.toString(),
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.5,
+                ),
               ),
             ),
-          ),
-          InkWell(
-            onTap: () async {
-              if (Constant.isStorage) {
-                if (await Permission.storage.isGranted) {
-                  Preference.shared.setBool(Preference.isStorage, false);
-                  Constant.isStorage =
-                      Preference.shared.getBool(Preference.isStorage)!;
-                }
-              }
-              if (Platform.isAndroid) {
-                await logic
-                    .getAndroidVersion()
-                    .then((value) => logic.version = value);
-              }
-              if (logic.version! > 32) {
-                if (Constant.isNotification || !Constant.isNotification) {
-                  logic.downloadAudio(
-                      context,
-                      index,
-                      logic.audioTrack[index].url,
-                      logic.audioTrack[index].name);
-                  setState(() {});
-                }
-              } else {
+            InkWell(
+              onTap: () async {
                 if (Constant.isStorage) {
-                  logic.showAlertDialogPermission(
-                      context,
-                      "storagePermission",
-                      true,
-                      index,
-                      logic.audioTrack[index].url,
-                      logic.audioTrack[index].name);
-                } else {
-                  logic.downloadAudio(
-                      context,
-                      index,
-                      logic.audioTrack[index].url,
-                      logic.audioTrack[index].name);
+                  if (await Permission.storage.isGranted) {
+                    Preference.shared.setBool(Preference.isStorage, false);
+                    Constant.isStorage =
+                        Preference.shared.getBool(Preference.isStorage)!;
+                  }
                 }
-              }
-            },
-            child: (logic.audioTrack[index].isLoader == true)
-                ? const SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: CircularProgressIndicator(
-                      color: CColor.theme,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : SvgPicture.asset("assets/image/download.svg",
-                    color: CColor.red),
-          ),
-        ],
+                if (Platform.isAndroid) {
+                  await logic
+                      .getAndroidVersion()
+                      .then((value) => logic.version = value);
+                }
+                if (logic.version! > 32) {
+                  if (Constant.isNotification || !Constant.isNotification) {
+                    logic.downloadAudio(
+                        Get.context!,
+                        index,
+                        logic.audioTrack[index].url,
+                        logic.audioTrack[index].name);
+                    setState(() {});
+                  }
+                } else {
+                  if (Constant.isStorage) {
+                    logic.showAlertDialogPermission(
+                        Get.context!,
+                        "storagePermission",
+                        true,
+                        index,
+                        logic.audioTrack[index].url,
+                        logic.audioTrack[index].name);
+                  } else {
+                    logic.downloadAudio(
+                        Get.context!,
+                        index,
+                        logic.audioTrack[index].url,
+                        logic.audioTrack[index].name);
+                  }
+                }
+              },
+              child: (logic.audioTrack[index].isLoader == true)
+                  ? const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator(
+                        color: CColor.theme,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : (logic.audioTrack[index].isDownload == false)
+                      ? SvgPicture.asset("assets/image/download.svg",
+                          color: CColor.red)
+                      : const SizedBox(),
+            ),
+          ],
+        ),
       ),
     );
   }

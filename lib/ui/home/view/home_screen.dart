@@ -277,8 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(2.0),
-                        child: SvgPicture.asset("assets/image/video.svg",
-                            height: 23),
+                        child: SvgPicture.asset("assets/image/darshan.svg",
+                            height: 25),
                       ),
                       const SizedBox(height: 3),
                       Text(
@@ -316,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             (Constant.isShowBottomSheet)
                                 ? "assets/image/close.svg"
                                 : "assets/image/more.svg",
-                            height: 22),
+                            height: 25),
                       ),
                       const SizedBox(height: 3),
                       Text(
@@ -376,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/image.svg",
+                      child: SvgPicture.asset("assets/image/satsang.svg",
                           height: 23),
                     ),
                     const SizedBox(height: 3),
@@ -437,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.all(2.0),
                       child:
-                          SvgPicture.asset("assets/image/news.svg", height: 23),
+                          SvgPicture.asset("assets/image/cell-phone.svg", height: 25),
                     ),
                     const SizedBox(height: 3),
                     Text(

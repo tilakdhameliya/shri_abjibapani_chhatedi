@@ -157,8 +157,8 @@ class _MagazineScreenState extends State<MagazineScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    : SvgPicture.asset("assets/image/download.svg",
-                        color: CColor.red)
+                    :(Constant.magazines[index].isDownload == false)? SvgPicture.asset("assets/image/download.svg",
+                        color: CColor.red):const SizedBox()
               ],
             ),
           ),

@@ -28,6 +28,7 @@ class AudioAlbumTracks {
   bool? isPlay = false;
   bool? isLoader = false;
   bool? isPlayLoader = false;
+  bool? isDownload = false;
 
 
   AudioAlbumTracks({this.name, this.url});
