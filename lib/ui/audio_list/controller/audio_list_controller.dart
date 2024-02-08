@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,6 @@ import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
-import '../../../utils/preference.dart';
 import '../view/audio_list_view.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
@@ -28,8 +28,7 @@ class AudioListController extends GetxController {
   final player = AudioPlayer();
   List<AudioAlbumTracks> audioTrack = [];
   Stream<DurationState>? durationState;
-  int resumeNumber = 0;
-  int nullResumeNumber = 0;
+  int playIndex = 0;
 
   String downloadedAudioName = "";
   ResumeData repo = ResumeData();
@@ -60,6 +59,7 @@ class AudioListController extends GetxController {
   }
 
   play(int index) async {
+    playIndex = index;
     audioTrack[index].isPlayLoader = true;
     update();
     if (audioTrack[index].isPlay == false) {
@@ -69,8 +69,13 @@ class AudioListController extends GetxController {
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
       }
-      audioTrack[index].isPlayLoader = false;
+      // audioTrack[index].isPlayLoader = false;
       audioTrack[index].isPlay = true;
+   /*   var item = MediaItem(
+        id: audioTrack[index].url.toString(),
+        duration: const Duration(milliseconds: 100),
+         title: audioTrack[index].name.toString(),
+      );*/
       await player.play().then((value) {
         audioTrack[index].isPlayLoader = false;
         update();
@@ -82,6 +87,20 @@ class AudioListController extends GetxController {
       await player.pause();
     }
     update();
+  }
+
+  stop() async {
+      var index =
+      audioTrack.indexWhere((element) => element.isPlay == true);
+      await playAudio(audioTrack[index].url.toString());
+      if (index > -1) {
+        audioTrack[index].isPlay = false;
+      }
+      audioTrack[playIndex].isPlayLoader = false;
+      audioTrack[playIndex].isPlay = true;
+      await player.stop();
+      await player.pause();
+      update();
   }
 
   playAudio(String url) {
@@ -146,50 +165,28 @@ class AudioListController extends GetxController {
       });
     }
 
-    List<String> list = [];
-    int cnt = 0;
-
-    downloadedAudioName =
-        Preference.shared.getString(Preference.downloadedResumeName) ?? "";
-    nullResumeNumber =
-        Preference.shared.getInt(Preference.nullResumeNumber) ?? 0;
-
-    for (int i = 0; i < list.length; i++) {
-      if (list[i] == fileName) {
-        cnt++;
-      }
-    }
-
-    resumeNumber = cnt;
     if (Platform.isAndroid) {
       if (version! > 32) {
         if (await Permission.notification.isGranted) {
-          // var downloadUrl = "https://stq7twcobd.execute-api.us-east-1.amazonaws.com/api/resume/pdf/${Preference.shared.getString(Preference.resumeId)}";
           var downloadUrl = url;
-          download(
-            downloadUrl,
-            fileName,index);
+          download(downloadUrl, fileName, index);
           update();
         } else {
           var downloadUrl = url;
-          download(
-            downloadUrl,
-              fileName,index);
+          download(downloadUrl, fileName, index);
           update();
         }
       } else {
-        if (!Constant.isStorage) {
-          var downloadUrl = url;
-          download(
-            downloadUrl,
-              fileName,index);
+        if (Constant.isStorage) {
+          showAlertDialogPermission(
+              context, "storagePermission", true, index, url, fileName);
+        } else {
+          download(url, fileName, index);
         }
       }
     } else if (Platform.isIOS) {
       var downloadUrl = url;
-      download(
-        downloadUrl,
-          fileName,index);
+      download(downloadUrl, fileName, index);
     }
   }
 
@@ -351,7 +348,8 @@ class AudioListController extends GetxController {
 
   downloadAudioAndNotification(String savePath,index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
-    showDownloadNotification(savePath);
+    // showDownloadNotification(savePath);
+    Fluttertoast.showToast(msg: "Download successfully!");
     audioTrack[index].isDownload = true;
     audioTrack[index].isLoader = false;
     update();

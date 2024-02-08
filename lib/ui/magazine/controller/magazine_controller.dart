@@ -86,8 +86,8 @@ class MagazineController extends GetxController {
         }
       } else {
         if (Constant.isStorage) {
-          showAlertDialogPermission(context, "storagePermission", true, index,
-              Constant.magazines[index].url, Constant.magazines[index].name);
+          showAlertDialogPermission(
+              context, "storagePermission", true, index, url, fileName);
         } else {
           download(url, fileName, index);
         }

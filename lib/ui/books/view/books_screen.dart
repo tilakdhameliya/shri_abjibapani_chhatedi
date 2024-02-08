@@ -63,12 +63,17 @@ class _BookScreenState extends State<BookScreen> {
       child: Row(
         children: [
           InkWell(
-            // highlightColor: Colors.transparent,
-            // splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
             onTap: () {
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.black,
+                )),
           ),
           Expanded(
             child: Center(
@@ -166,8 +171,8 @@ class _BookScreenState extends State<BookScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    : SvgPicture.asset("assets/image/download.svg",
-                        color: CColor.red)
+                    : (Constant.eBooks[index].isDownload == false)?SvgPicture.asset("assets/image/download.svg",
+                        color: CColor.red):const SizedBox()
               ],
             ),
           ),

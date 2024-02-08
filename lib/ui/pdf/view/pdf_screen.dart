@@ -58,7 +58,12 @@ class _PdfScreenState extends State<PdfScreen> {
             onTap: () {
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.black,
+                )),
           ),
           Expanded(
             child: Center(

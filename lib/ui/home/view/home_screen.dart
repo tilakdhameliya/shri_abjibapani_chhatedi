@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: (logic.isDivyaDarshan)
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          fontSize: (isSmallDeviceWidth) ? 9 : 11,
+                          fontSize: (isSmallDeviceWidth) ? 9 : 10,
                         ),
                       )
                     ],

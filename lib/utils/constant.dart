@@ -1,6 +1,8 @@
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../audio_handler/audio_handler.dart';
 import '../model/audio/audio_album_model.dart';
 import '../model/books/books_model.dart';
 import '../model/calender/tithi_calender_model.dart';
@@ -54,5 +56,7 @@ class Constant {
   static TextEditingController mobileNoController = TextEditingController();
   static TextEditingController birthDateController = TextEditingController();
   static TextEditingController uniqueIDController = TextEditingController();
+
+  static MyAudioHandler audioHandler = MyAudioHandler();
 
 }

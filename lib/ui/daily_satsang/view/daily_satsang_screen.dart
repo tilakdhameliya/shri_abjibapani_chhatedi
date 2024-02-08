@@ -54,12 +54,17 @@ class _DailySatsangScreenState extends State<DailySatsangScreen> {
       child: Row(
         children: [
           InkWell(
-            // highlightColor: Colors.transparent,
-            // splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
             onTap: () {
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.black,
+                )),
           ),
           Expanded(
             child: Center(
@@ -69,7 +74,7 @@ class _DailySatsangScreenState extends State<DailySatsangScreen> {
                 style: TextStyle(
                   fontFamily: Font.poppins,
                   fontWeight: FontWeight.w500,
-                  fontSize: 20,
+                  fontSize: 17,
                 ),
               ),
             ),

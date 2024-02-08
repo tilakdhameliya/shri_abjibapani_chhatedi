@@ -32,8 +32,8 @@ class BookController extends GetxController {
           NotificationDetails(iOS: iOSPlatformChannelSpecifics);
       await Constant.flutterLocalNotificationsPlugin.show(
         0,
-        'Resume Downloaded',
-        'Your resume has been downloaded successfully!',
+        'Downloaded',
+        'Downloaded successfully!',
         platformChannelSpecifics,
         payload: savePath,
       );
@@ -127,6 +127,7 @@ class BookController extends GetxController {
       update();
       if (await outputFile.exists()) {
         Constant.eBooks[index].isLoader = false;
+        Constant.eBooks[index].isDownload = true;
         isCom = false;
         Get.toNamed(AppRoutes.pdfView,
             arguments: [savePath,Constant.eBooks[index].name]);
@@ -274,6 +275,7 @@ class BookController extends GetxController {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
 
     showDownloadNotification(savePath);
+    Constant.eBooks[index].isDownload = true;
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath,Constant.eBooks[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");

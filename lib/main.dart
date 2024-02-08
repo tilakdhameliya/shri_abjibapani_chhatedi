@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -9,16 +10,21 @@ import 'package:satsang/routes/app_routes.dart';
 import 'package:satsang/utils/constant.dart';
 import 'package:satsang/utils/preference.dart';
 import 'package:satsang/utils/utils.dart';
+import 'audio_handler/audio_handler.dart';
 import 'connectivitymanager/connectivitymanager.dart';
-import 'new_resume_data_model/new_resume_data_model.dart';
-
-ResumeData repo = ResumeData();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Preference().instance();
   await InternetConnectivity().instance();
   await initializeNotifications();
+  // Constant.audioHandler = await AudioService.init(
+  //   builder: () => MyAudioHandler(),
+  //   config: const AudioServiceConfig(
+  //     androidNotificationChannelId: 'com.example.satsang',
+  //     androidNotificationChannelName: 'Music playback',
+  //   ),
+  // );
 
   runApp(const MyApp());
 }

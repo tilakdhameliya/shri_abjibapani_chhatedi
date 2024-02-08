@@ -124,7 +124,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 await launch(url);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: CColor.viewGray,width: 1.5),
@@ -146,8 +146,8 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                       ),
                     ),
-                    SvgPicture.asset("assets/image/call.svg",
-                        height: 23),
+                    /*SvgPicture.asset("assets/image/call.svg",
+                        height: 23),*/
                   ],
                 ),
               ),
@@ -160,7 +160,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 await launch(url);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: CColor.viewGray,width: 1.5),
@@ -182,8 +182,8 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                       ),
                     ),
-                    SvgPicture.asset("assets/image/call.svg",
-                        height: 23),
+                   /* SvgPicture.asset("assets/image/call.svg",
+                        height: 23),*/
                   ],
                 ),
               ),
@@ -196,7 +196,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 await launch(url);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: CColor.viewGray,width: 1.5),
@@ -218,8 +218,8 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                       ),
                     ),
-                    SvgPicture.asset("assets/image/call.svg",
-                        height: 23),
+                    /*SvgPicture.asset("assets/image/call.svg",
+                        height: 23),*/
                   ],
                 ),
               ),
@@ -233,7 +233,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 launchUrl(mail);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: CColor.viewGray,width: 1.5),
@@ -268,7 +268,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 await launch(url);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: CColor.viewGray,width: 1.5),

@@ -1,11 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:satsang/ui/audio_list/controller/audio_list_controller.dart';
 import 'package:satsang/utils/color.dart';
@@ -28,11 +26,18 @@ class _AudioListScreenState extends State<AudioListScreen> {
       body: SafeArea(
         child: GetBuilder<AudioListController>(
           builder: (logic) {
-            return Column(
-              children: [
-                _header(logic),
-                _centerView(logic),
-              ],
+            return WillPopScope(
+              onWillPop: ()async{
+                logic.stop();
+                setState(() {});
+                return true;
+              },
+              child: Column(
+                children: [
+                  _header(logic),
+                  _centerView(logic),
+                ],
+              ),
             );
           },
         ),
@@ -62,9 +67,16 @@ class _AudioListScreenState extends State<AudioListScreen> {
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () {
+              logic.stop();
+              setState(() {});
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.black,
+                )),
           ),
           Expanded(
             child: Center(
@@ -113,7 +125,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return _listItem(logic, index);
+                        return _listItem(logic, index,context);
                       },
                     ),
                   ],
@@ -123,7 +135,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
           );
   }
 
-  _listItem(AudioListController logic, int index) {
+  _listItem(AudioListController logic, int index,BuildContext context) {
     return InkWell(
       onTap: (){
         logic.play(index);
@@ -159,44 +171,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
             ),
             InkWell(
               onTap: () async {
-                if (Constant.isStorage) {
-                  if (await Permission.storage.isGranted) {
-                    Preference.shared.setBool(Preference.isStorage, false);
-                    Constant.isStorage =
-                        Preference.shared.getBool(Preference.isStorage)!;
-                  }
-                }
-                if (Platform.isAndroid) {
-                  await logic
-                      .getAndroidVersion()
-                      .then((value) => logic.version = value);
-                }
-                if (logic.version! > 32) {
-                  if (Constant.isNotification || !Constant.isNotification) {
-                    logic.downloadAudio(
-                        Get.context!,
-                        index,
-                        logic.audioTrack[index].url,
-                        logic.audioTrack[index].name);
-                    setState(() {});
-                  }
-                } else {
-                  if (Constant.isStorage) {
-                    logic.showAlertDialogPermission(
-                        Get.context!,
-                        "storagePermission",
-                        true,
-                        index,
-                        logic.audioTrack[index].url,
-                        logic.audioTrack[index].name);
-                  } else {
-                    logic.downloadAudio(
-                        Get.context!,
-                        index,
-                        logic.audioTrack[index].url,
-                        logic.audioTrack[index].name);
-                  }
-                }
+                logic.downloadAudio(context, index, logic.audioTrack[index].url,
+                    logic.audioTrack[index].name);
               },
               child: (logic.audioTrack[index].isLoader == true)
                   ? const SizedBox(
@@ -252,40 +228,6 @@ class _AudioListScreenState extends State<AudioListScreen> {
         : Container();
   }
 
-  StreamBuilder<DurationState> audioProgressBar(AudioListController logic) {
-    return StreamBuilder<DurationState>(
-      stream: logic.durationState,
-      builder: (context, snapshot) {
-        final durationState = snapshot.data;
-        final progress = durationState?.progress ?? Duration.zero;
-        final buffered = durationState?.buffered ?? Duration.zero;
-        final total = durationState?.total ?? Duration.zero;
-        return ProgressBar(
-          progress: progress,
-          buffered: buffered,
-          total: total,
-          onSeek: (duration) {},
-          onDragUpdate: (details) {
-            debugPrint('${details.timeStamp}, ${details.localPosition}');
-          },
-          barHeight: 5.0,
-          baseBarColor: Colors.grey.withOpacity(0.2),
-          progressBarColor: CColor.theme,
-          bufferedBarColor: CColor.theme.withOpacity(0.2),
-          thumbColor: CColor.viewGray,
-          thumbGlowColor: Colors.green.withOpacity(0.3),
-          barCapShape: BarCapShape.round,
-          thumbRadius: 10.0,
-          thumbCanPaintOutsideBar: true,
-          timeLabelLocation: TimeLabelLocation.none,
-          timeLabelType: TimeLabelType.totalTime,
-          timeLabelTextStyle: TextStyle(
-              fontSize: 8, color: Theme.of(context).textTheme.bodyLarge?.color),
-          timeLabelPadding: 10,
-        );
-      },
-    );
-  }
 }
 
 class DurationState {

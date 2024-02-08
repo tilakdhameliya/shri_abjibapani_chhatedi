@@ -55,7 +55,12 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
             onTap: () {
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.black,
+                )),
           ),
           Expanded(
             child: Center(
