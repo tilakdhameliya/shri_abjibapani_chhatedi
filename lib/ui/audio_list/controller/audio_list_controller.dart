@@ -1,6 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
-import 'package:audio_service/audio_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +16,7 @@ import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
+import '../../../utils/preference.dart';
 import '../view/audio_list_view.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
@@ -55,6 +55,22 @@ class AudioListController extends GetxController {
       isLoading = false;
       update();
     });
+    List<AudioAlbumTracks> audioTracksList = [];
+    var stringList =
+    Preference.shared.getStringList(Preference.downloadedAudioList);
+    if (stringList.isNotEmpty) {
+      for(var data in stringList){
+        audioTracksList.add(AudioAlbumTracks.fromJson(jsonDecode(data)));
+      }
+      for (int i = 0; i < audioTracksList.length; i++) {
+        var index = audioTrack
+            .indexWhere((element) => element.name == audioTracksList[i].name);
+        if (index > -1) {
+        audioTrack[index].isDownload = true;
+        }
+      }
+    }
+    update();
     super.onReady();
   }
 
@@ -92,8 +108,8 @@ class AudioListController extends GetxController {
   stop() async {
       var index =
       audioTrack.indexWhere((element) => element.isPlay == true);
-      await playAudio(audioTrack[index].url.toString());
       if (index > -1) {
+        await playAudio(audioTrack[index].url.toString());
         audioTrack[index].isPlay = false;
       }
       audioTrack[playIndex].isPlayLoader = false;
@@ -191,6 +207,7 @@ class AudioListController extends GetxController {
   }
 
   var downloadFilePah = "";
+  late File outputFile;
 
   Future download(String url, String filename, int index) async {
     audioTrack[index].isLoader = true;
@@ -204,33 +221,41 @@ class AudioListController extends GetxController {
       savePath = '/storage/emulated/0/download/$filename.mp3';
     }
     downloadFilePah = savePath;
+    outputFile = File(savePath);
 
     var dio = Dio();
     dio.interceptors.add(LogInterceptor());
 
     try {
       update();
-      var response = await dio.download(
-        url,
-        savePath,
-        onReceiveProgress: (count, total) {
-          if (count != 33) {
-            // showDownloadProgress(count, total, savePath);
-          } else {
-            // audioTrack[index].isLoader = false;
-            update();
-            Fluttertoast.showToast(msg: "Resume Not Download");
-          }
-          Debug.printLog("Count total =================> $count $total");
-          if (count == total) {
-            downloadAudioAndNotification(savePath,index);
-            update();
-          }
-        },
-      );
+      if (await outputFile.exists()) {
+        audioTrack[index].isLoader = false;
+        audioTrack[index].isDownload = true;
+        update();
+      } else {
+        var response = await dio.download(
+          url,
+          savePath,
+          onReceiveProgress: (count, total) {
+            if (count != 33) {
+              // showDownloadProgress(count, total, savePath);
+            } else {
+              // audioTrack[index].isLoader = false;
+              update();
+              Fluttertoast.showToast(msg: "Resume Not Download");
+            }
+            Debug.printLog("Count total =================> $count $total");
+            if (count == total) {
+              downloadAudioAndNotification(savePath, index);
+              update();
+            }
+          },
+        );
+      }
 
     } catch (e) {
       debugPrint(e.toString());
+      audioTrack[index].isLoader = false;
     }
     update();
   }
@@ -346,13 +371,21 @@ class AudioListController extends GetxController {
     );
   }
 
+  List<String> data= [];
+
   downloadAudioAndNotification(String savePath,index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     // showDownloadNotification(savePath);
     Fluttertoast.showToast(msg: "Download successfully!");
     audioTrack[index].isDownload = true;
+    var download = audioTrack.where((element) => element.isDownload == true);
+    data = download.map((track) => jsonEncode(track.toJson())).toList();
+    Preference.shared.setStringList(Preference.downloadedAudioList,
+        data);
+    Debug.printLog("------>>>> downloaded data $data");
+    Debug.printLog(
+        "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedAudioList)}");
     audioTrack[index].isLoader = false;
     update();
   }
-
 }

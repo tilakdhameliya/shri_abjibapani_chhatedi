@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,9 +8,7 @@ import 'package:satsang/ui/divya_darshan/view/divya_darshan_screen.dart';
 import 'package:satsang/ui/home/controller/home_controller.dart';
 import 'package:satsang/ui/news/view/news_screen.dart';
 import 'package:satsang/ui/photo/view/photo_screen.dart';
-import 'package:satsang/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';

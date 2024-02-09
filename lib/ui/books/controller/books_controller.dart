@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -10,11 +11,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../model/books/books_model.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
+import '../../../utils/preference.dart';
 
 class BookController extends GetxController {
   bool isLoading = false;
@@ -271,16 +274,45 @@ class BookController extends GetxController {
     );
   }
 
+  List<String> data= [];
+
   downloadAudioAndNotification(String savePath, index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
 
     showDownloadNotification(savePath);
     Constant.eBooks[index].isDownload = true;
+    var download = Constant.eBooks.where((element) => element.isDownload == true);
+    data = download.map((track) => jsonEncode(track.toJson())).toList();
+    Preference.shared.setStringList(Preference.downloadedBooksList,
+        data);
+    Debug.printLog("------>>>> downloaded data $data");
+    Debug.printLog(
+        "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedBooksList)}");
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath,Constant.eBooks[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
     Constant.eBooks[index].isLoader = false;
     isCom = false;
     update();
+  }
+
+@override
+  void onReady() {
+  List<Ebooks> booksTracksList = [];
+  var stringList =
+  Preference.shared.getStringList(Preference.downloadedBooksList);
+  if (stringList.isNotEmpty) {
+    for(var data in stringList){
+      booksTracksList.add(Ebooks.fromJson(jsonDecode(data)));
+    }
+    for (int i = 0; i < booksTracksList.length; i++) {
+      var index = Constant.eBooks
+          .indexWhere((element) => element.name == booksTracksList[i].name);
+      if (index > -1) {
+        Constant.eBooks[index].isDownload = true;
+      }
+    }
+  }
+    super.onReady();
   }
 }

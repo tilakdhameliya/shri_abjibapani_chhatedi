@@ -46,6 +46,9 @@ class Preference {
   static const String activatedCarousel = "ACTIVATED_CAROUSEL";
   static const String adImage = "AD_IMAGE";
   static const String adLogo = "AD_LOGO";
+  static const String downloadedAudioList = "DOWNLOADED_Audio_LIST";
+  static const String downloadedBooksList = "DOWNLOADED_Books_LIST";
+  static const String downloadedMagazineList = "DOWNLOADED_Magazine_LIST";
 
   static const String settingPhoto = "settingPhoto";
   static const String settingBirth = "settingBirth";
@@ -78,7 +81,6 @@ class Preference {
 
   static int currentAdCount = 1;
 
-  static const String isDownloaded = "PDF_DOWNLOADED";
   static var baseUrl = "";
 
   // ------------------ SINGLETON -----------------------
@@ -149,11 +151,19 @@ class Preference {
   }
 
   // Array get & set
-  List<String>? getStringList(String key) {
+  List<dynamic> getStringList(String key) {
+    return _pref!.read(key);
+  }
+
+  List<bool>? getBoolList(String key) {
     return _pref!.read(key);
   }
 
   Future<void> setStringList(String key, List<String> value) {
+    return _pref!.write(key, value);
+  }
+
+  Future<void> setBoolList(String key, List<bool> value) {
     return _pref!.write(key, value);
   }
 

@@ -19,7 +19,7 @@
     </queries>
 
     <application
-        android:label="satsang"
+        android:label="Abjibapani Chhatedi"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
@@ -46,7 +46,8 @@
         </activity>
 
         <activity android:name="com.ryanheise.audioservice.AudioServiceActivity"
-            tools:ignore="MissingClass"></activity>
+            tools:ignore="MissingClass">
+        </activity>
 
         <service android:name="com.ryanheise.audioservice.AudioService"
             android:foregroundServiceType="mediaPlayback"
@@ -92,7 +93,7 @@
             android:value="2" />
 
         <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
-            android:exported="true" tools:ignore="Instantiatable">
+            android:exported="true" tools:ignore="Instantiatable,MissingClass">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
