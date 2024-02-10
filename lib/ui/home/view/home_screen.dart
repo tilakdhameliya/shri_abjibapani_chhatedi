@@ -25,44 +25,45 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-          statusBarColor:
-              (Constant.isShowBottomSheet) ? Colors.transparent : CColor.white,
-          systemNavigationBarColor: CColor.white,
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarIconBrightness: Brightness.dark),
-      child: GetBuilder<HomeController>(
+    return  GetBuilder<HomeController>(
         builder: (logic) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            bottomSheet: (Constant.isShowBottomSheet)
-                ? _bottomSheet(logic, context)
-                : const SizedBox(),
-            resizeToAvoidBottomInset: true,
-            bottomNavigationBar: _bottomNavigation(context),
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  _centerView(logic),
-                  _header(logic),
-                  (Constant.isShowBottomSheet)
-                      ? Opacity(
-                          opacity: 0.6,
-                          child: ModalBarrier(
-                              color: Colors.black,
-                              onDismiss: () {
-                                Constant.isShowBottomSheet = false;
-                                setState(() {});
-                              }),
-                        )
-                      : const SizedBox()
-                ],
+          return AnnotatedRegion(
+              value: SystemUiOverlayStyle(
+                statusBarColor: (Constant.isShowBottomSheet)
+                    ? Colors.black.withOpacity(0.3)
+                    : CColor.white,
+                systemNavigationBarColor: CColor.white,
+                statusBarIconBrightness: (Constant.isShowBottomSheet)
+                  ? Brightness.light:Brightness.dark,
+                systemNavigationBarIconBrightness: Brightness.dark),
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              bottomSheet: (Constant.isShowBottomSheet)
+                  ? _bottomSheet(logic, context)
+                  : const SizedBox(),
+              resizeToAvoidBottomInset: true,
+              bottomNavigationBar: _bottomNavigation(context),
+              body: SafeArea(
+                child: Stack(
+                  children: [
+                    _centerView(logic),
+                    _header(logic),
+                    (Constant.isShowBottomSheet)
+                        ? Opacity(
+                            opacity: 0.3,
+                            child: ModalBarrier(
+                                color: Colors.black,
+                                onDismiss: () {
+                                  Constant.isShowBottomSheet = false;
+                                  setState(() {});
+                                }),
+                          )
+                        : const SizedBox()
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      ),
+            ));
+      },
     );
   }
 

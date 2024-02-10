@@ -25,61 +25,52 @@ class _PhotosScreenState extends State<PhotosScreen> {
       return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
-            child: Column(
-              children: [const SizedBox(height: 65), _centerView(logic)],
-            ),
+            child: _centerView(logic),
           ));
     });
   }
 
   _centerView(PhotosController logic){
-    return Expanded(
-      child: MasonryGridView.count(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 15),
-        shrinkWrap: true,
-        itemCount: Constant.photoAlbum.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _gridItem(context, index,logic);
-        },
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 5, crossAxisCount: 2,
-
-      ),
+    return MasonryGridView.count(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(top: 80, right: 15, left: 15, bottom: 15),
+      // shrinkWrap: true,
+      itemCount: Constant.photoAlbum.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _gridItem(context, index,logic);
+      },
+      crossAxisSpacing: 5,
+      mainAxisSpacing: 5, crossAxisCount: 2,
     );
   }
 
   _gridItem(BuildContext context, int index, PhotosController logic) {
-    return Wrap(
-      children: [
-        InkWell(
-          onTap: () {
-            Get.toNamed(AppRoutes.subImage,
-                arguments: [Constant.photoAlbum[index].images,Constant.photoAlbum[index].name]);
-          },
-          child: Container(
-            height: 150,
-            alignment: Alignment.bottomCenter,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(Constant.photoAlbum[index].previewImage.toString()),
-                ),
-               ),
-            child: Text(
-              "${Constant.photoAlbum[index].name}",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: Font.poppins,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 11.5,
-              ),
+    return InkWell(
+      onTap: () {
+        Get.toNamed(AppRoutes.subImage,
+            arguments: [Constant.photoAlbum[index].images,Constant.photoAlbum[index].name]);
+      },
+      child: Container(
+        height: 150,
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(Constant.photoAlbum[index].previewImage.toString()),
             ),
+           ),
+        child: Text(
+          "${Constant.photoAlbum[index].name}",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: Font.poppins,
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 11.5,
           ),
         ),
-      ],
+      ),
     );
   }
 }

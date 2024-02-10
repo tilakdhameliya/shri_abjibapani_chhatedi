@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -9,6 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../model/magazine/magazine_model.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
@@ -266,15 +269,44 @@ class MagazineController extends GetxController {
     );
   }
 
+  List<String> data= [];
+
   downloadAudioAndNotification(String savePath, index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     showDownloadNotification(savePath);
     isCom = false;
     Constant.magazines[index].isDownload = true;
+    var download = Constant.magazines.where((element) => element.isDownload == true);
+    data = download.map((track) => jsonEncode(track.toJson())).toList();
+    Preference.shared.setStringList(Preference.downloadedMagazineList,
+        data);
+    Debug.printLog("------>>>> downloaded data $data");
+    Debug.printLog(
+        "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedMagazineList)}");
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath, Constant.magazines[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
     Constant.magazines[index].isLoader = false;
     update();
+  }
+
+  @override
+  void onInit() {
+    List<MurtiMagazines> magazineTracksList = [];
+    var stringList =
+    Preference.shared.getStringList(Preference.downloadedMagazineList) ?? [];
+    if (stringList.isNotEmpty) {
+      for(var data in stringList){
+        magazineTracksList.add(MurtiMagazines.fromJson(jsonDecode(data)));
+      }
+      for (int i = 0; i < magazineTracksList.length; i++) {
+        var index = Constant.magazines
+            .indexWhere((element) => element.name == magazineTracksList[i].name);
+        if (index > -1) {
+          Constant.magazines[index].isDownload = true;
+        }
+      }
+    }
+    super.onInit();
   }
 }

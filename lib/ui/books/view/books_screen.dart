@@ -30,12 +30,11 @@ class _BookScreenState extends State<BookScreen> {
               children: [
                 Column(
                   children: [
-                    _header(logic),
+                    const SizedBox(height: 65),
                     _centerView(logic),
                   ],
                 ),
-                _loaderOpacity(logic),
-                _loader(logic)
+                _header(logic),
               ],
             );
           },
@@ -190,37 +189,4 @@ class _BookScreenState extends State<BookScreen> {
     );
   }
 
-  _loaderOpacity(BookController logic) {
-    return logic.isLoading
-        ? const Opacity(
-            opacity: 0.6,
-            child: ModalBarrier(dismissible: false, color: Colors.black),
-          )
-        : Container();
-  }
-
-  _loader(BookController logic) {
-    return logic.isLoading
-        ? WillPopScope(
-            onWillPop: () async {
-              return false;
-            },
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.all(35),
-                height: 88,
-                width: 88,
-                child: const CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              ),
-            ),
-          )
-        : Container();
-  }
 }

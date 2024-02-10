@@ -297,10 +297,10 @@ class BookController extends GetxController {
   }
 
 @override
-  void onReady() {
+  void onInit() {
   List<Ebooks> booksTracksList = [];
   var stringList =
-  Preference.shared.getStringList(Preference.downloadedBooksList);
+  Preference.shared.getStringList(Preference.downloadedBooksList) ?? [];
   if (stringList.isNotEmpty) {
     for(var data in stringList){
       booksTracksList.add(Ebooks.fromJson(jsonDecode(data)));
@@ -313,6 +313,6 @@ class BookController extends GetxController {
       }
     }
   }
-    super.onReady();
+  super.onInit();
   }
 }

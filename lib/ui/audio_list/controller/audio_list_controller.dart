@@ -42,12 +42,27 @@ class AudioListController extends GetxController {
       if (Get.arguments[1] != null) {
         audioImage = Get.arguments[1];
       }
+      getData();
+      List<AudioAlbumTracks> audioTracksList = [];
+      var stringList =
+          Preference.shared.getStringList(Preference.downloadedAudioList) ?? [];
+      if (stringList.isNotEmpty) {
+        for(var data in stringList){
+          audioTracksList.add(AudioAlbumTracks.fromJson(jsonDecode(data)));
+        }
+        for (int i = 0; i < audioTracksList.length; i++) {
+          var index = audioTrack
+              .indexWhere((element) => element.name == audioTracksList[i].name);
+          if (index > -1) {
+            audioTrack[index].isDownload = true;
+          }
+        }
+      }
     }
     super.onInit();
   }
 
-  @override
-  void onReady() async {
+  getData() async {
     await repo.getAudioTrack(audioListName).then((value) {
       if (value.audioAlbumTracks != null) {
         audioTrack = value.audioAlbumTracks!;
@@ -55,23 +70,6 @@ class AudioListController extends GetxController {
       isLoading = false;
       update();
     });
-    List<AudioAlbumTracks> audioTracksList = [];
-    var stringList =
-    Preference.shared.getStringList(Preference.downloadedAudioList);
-    if (stringList.isNotEmpty) {
-      for(var data in stringList){
-        audioTracksList.add(AudioAlbumTracks.fromJson(jsonDecode(data)));
-      }
-      for (int i = 0; i < audioTracksList.length; i++) {
-        var index = audioTrack
-            .indexWhere((element) => element.name == audioTracksList[i].name);
-        if (index > -1) {
-        audioTrack[index].isDownload = true;
-        }
-      }
-    }
-    update();
-    super.onReady();
   }
 
   play(int index) async {

@@ -25,6 +25,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
           toolbarHeight: 0,
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.white,
+            statusBarIconBrightness: Brightness.dark
           ),
         ),
         body: SafeArea(

@@ -32,10 +32,15 @@ class _AudioListScreenState extends State<AudioListScreen> {
                 setState(() {});
                 return true;
               },
-              child: Column(
+              child: Stack(
                 children: [
+                  Column(
+                    children: [
+                      const SizedBox(height: 65),
+                      _centerView(logic),
+                    ],
+                  ),
                   _header(logic),
-                  _centerView(logic),
                 ],
               ),
             );

@@ -151,7 +151,7 @@ class Preference {
   }
 
   // Array get & set
-  List<dynamic> getStringList(String key) {
+  List<dynamic>? getStringList(String key) {
     return _pref!.read(key);
   }
 
