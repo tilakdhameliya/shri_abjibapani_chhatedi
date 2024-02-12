@@ -1,15 +1,15 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
-import 'dart:io';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:satsang/ui/audio_list/controller/audio_list_controller.dart';
 import 'package:satsang/utils/color.dart';
-import '../../../utils/constant.dart';
+import 'package:satsang/utils/constant.dart';
+import 'package:satsang/utils/debugs.dart';
 import '../../../utils/font.dart';
-import '../../../utils/preference.dart';
 
 class AudioListScreen extends StatefulWidget {
   const AudioListScreen({super.key});
@@ -27,7 +27,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
         child: GetBuilder<AudioListController>(
           builder: (logic) {
             return WillPopScope(
-              onWillPop: ()async{
+              onWillPop: () async {
                 logic.stop();
                 setState(() {});
                 return true;
@@ -130,7 +130,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return _listItem(logic, index,context);
+                        return _listItem(logic, index, context);
                       },
                     ),
                   ],
@@ -140,99 +140,150 @@ class _AudioListScreenState extends State<AudioListScreen> {
           );
   }
 
-  _listItem(AudioListController logic, int index,BuildContext context) {
-    return InkWell(
-      onTap: (){
-        logic.play(index);
-        setState(() {});
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
-            color: (index % 2 == 0)
-                ? CColor.viewGray.withOpacity(0.6)
-                : Colors.white),
-        child: Row(
-          children: [
-            (logic.audioTrack[index].isPlayLoader == true)
-                ? const SizedBox(height: 25,width: 25,child: CircularProgressIndicator(color: CColor.theme,strokeWidth: 1.5,))
-                : SvgPicture.asset(
-                    (logic.audioTrack[index].isPlay == true)
-                        ? "assets/image/stop.svg"
-                        : "assets/image/play.svg",
-                    height: 35,
-                    color: CColor.red),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Text(
-                logic.audioTrack[index].name.toString(),
-                style: TextStyle(
-                  fontFamily: Font.poppins,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.5,
-                ),
+  _listItem(AudioListController logic, int index, BuildContext context) {
+    return GetBuilder<AudioListController>(
+        id: Constant.audioId,
+        builder: (logic) {
+          return InkWell(
+            onTap: () async {
+              logic.play(index);
+              setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: (index % 2 == 0)
+                      ? CColor.viewGray.withOpacity(0.6)
+                      : Colors.white),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      playButton(logic, index),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Text(
+                          logic.audioTrack[index].name.toString(),
+                          style: TextStyle(
+                            fontFamily: Font.poppins,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.5,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          logic.downloadAudio(
+                              context,
+                              index,
+                              logic.audioTrack[index].url,
+                              logic.audioTrack[index].name);
+                        },
+                        child: (logic.audioTrack[index].isLoader == true)
+                            ? const SizedBox(
+                                height: 25,
+                                width: 25,
+                                child: CircularProgressIndicator(
+                                  color: CColor.theme,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : (logic.audioTrack[index].isDownload == false)
+                                ? SvgPicture.asset("assets/image/download.svg",
+                                    color: CColor.red)
+                                : const SizedBox(),
+                      ),
+                    ],
+                  ),
+                  (logic.audioTrack[index].isPlay == true)
+                      ? audioProgressBar(logic, index)
+                      : const SizedBox()
+                ],
               ),
             ),
-            InkWell(
-              onTap: () async {
-                logic.downloadAudio(context, index, logic.audioTrack[index].url,
-                    logic.audioTrack[index].name);
+          );
+        });
+  }
+
+  StreamBuilder<DurationState> audioProgressBar(
+      AudioListController logic, index) {
+    return StreamBuilder<DurationState>(
+      stream: logic.durationState,
+      builder: (context, snapshot) {
+        if(snapshot.hasData){
+          final durationState = snapshot.data;
+          final progress = durationState?.progress ?? Duration.zero;
+          final buffered = durationState?.buffered ?? Duration.zero;
+          final total = durationState?.total ?? Duration.zero;
+          Debug.printLog("----->>> progress $progress");
+          return Padding(
+            padding: const EdgeInsets.only(right: 50, left: 50, top: 10),
+            child: ProgressBar(
+              progress: progress,
+              buffered: buffered,
+              total: total,
+              onSeek: (duration) {
+                logic.player.seek(duration);
               },
-              child: (logic.audioTrack[index].isLoader == true)
-                  ? const SizedBox(
-                      height: 25,
-                      width: 25,
-                      child: CircularProgressIndicator(
-                        color: CColor.theme,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : (logic.audioTrack[index].isDownload == false)
-                      ? SvgPicture.asset("assets/image/download.svg",
-                          color: CColor.red)
-                      : const SizedBox(),
+              onDragUpdate: (details) {
+                debugPrint(
+                    ' details--=-=-]]]  ${details.timeStamp}, ${details.localPosition}');
+                setState(() {});
+              },
+              barHeight: 5.0,
+              baseBarColor: Colors.grey.withOpacity(0.2),
+              progressBarColor: CColor.theme,
+              thumbColor: CColor.theme,
+              barCapShape: BarCapShape.round,
+              thumbRadius: 10.0,
+              thumbCanPaintOutsideBar: true,
+              timeLabelLocation: TimeLabelLocation.none,
+              timeLabelType: TimeLabelType.totalTime,
+              timeLabelTextStyle: TextStyle(
+                  fontSize: 8,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+              timeLabelPadding: 10,
             ),
-          ],
-        ),
-      ),
+          );
+        } else if (snapshot.hasError) {
+          return const SizedBox();
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 
-  _loaderOpacity(AudioListController logic) {
-    return logic.isLoading
-        ? const Opacity(
-            opacity: 0.6,
-            child: ModalBarrier(dismissible: false, color: Colors.black),
-          )
-        : Container();
+  StreamBuilder<PlayerState> playButton(AudioListController logic, int index) {
+    return StreamBuilder<PlayerState>(
+      stream: logic.player.playerStateStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final playerState = snapshot.data;
+          final processingState = playerState?.processingState;
+          final playing = playerState?.playing;
+          if (logic.audioTrack[index].isPlayLoader == true) {
+            return const SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator(
+                    color: CColor.theme, strokeWidth: 1.5));
+          } else if (logic.audioTrack[index].isPlay == true) {
+            return SvgPicture.asset("assets/image/stop.svg",
+                height: 35, color: CColor.red);
+          } else {
+            return SvgPicture.asset("assets/image/play.svg",
+                height: 35, color: CColor.red);
+          }
+        } else if (snapshot.hasError) {
+          return const SizedBox();
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
   }
-
-  _loader(AudioListController logic) {
-    return logic.isLoading
-        ? WillPopScope(
-            onWillPop: () async {
-              return false;
-            },
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.all(35),
-                height: 88,
-                width: 88,
-                child: const CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              ),
-            ),
-          )
-        : Container();
-  }
-
 }
 
 class DurationState {

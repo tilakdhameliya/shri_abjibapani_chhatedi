@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -75,32 +76,35 @@ class AudioListController extends GetxController {
   play(int index) async {
     playIndex = index;
     audioTrack[index].isPlayLoader = true;
-    update();
+    update([Constant.audioId]);
     if (audioTrack[index].isPlay == false) {
       await playAudio(audioTrack[index].url.toString());
       var playIndex =
           audioTrack.indexWhere((element) => element.isPlay == true);
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
+        audioTrack[playIndex].isPlayLoader = false;
+        await player.stop();
+        update([Constant.audioId]);
       }
-      // audioTrack[index].isPlayLoader = false;
       audioTrack[index].isPlay = true;
-   /*   var item = MediaItem(
-        id: audioTrack[index].url.toString(),
-        duration: const Duration(milliseconds: 100),
-         title: audioTrack[index].name.toString(),
-      );*/
       await player.play().then((value) {
         audioTrack[index].isPlayLoader = false;
-        update();
+        update([Constant.audioId]);
       });
-      update();
-    } else if (audioTrack[index].isPlay == true) {
-      audioTrack[index].isPlay = false;
       audioTrack[index].isPlayLoader = false;
-      await player.pause();
+      update([Constant.audioId]);
+    } else {
+      var playIndex =
+      audioTrack.indexWhere((element) => element.isPlay == true);
+      if (playIndex > -1) {
+        audioTrack[playIndex].isPlay = false;
+        audioTrack[index].isPlayLoader = false;
+        await player.stop();
+        update([Constant.audioId]);
+      }
     }
-    update();
+    update([Constant.audioId]);
   }
 
   stop() async {
@@ -113,8 +117,8 @@ class AudioListController extends GetxController {
       audioTrack[playIndex].isPlayLoader = false;
       audioTrack[playIndex].isPlay = true;
       await player.stop();
-      await player.pause();
-      update();
+      // await player.pause();
+      update([Constant.audioId]);
   }
 
   playAudio(String url) {

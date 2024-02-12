@@ -62,6 +62,7 @@ dependencies:
   audio_service: ^0.18.12
   flutter_neat_and_clean_calendar: ^0.3.16+36
   open_file: ^3.3.2
+  audio_video_progress_bar: ^1.0.1
 
 
 dev_dependencies:

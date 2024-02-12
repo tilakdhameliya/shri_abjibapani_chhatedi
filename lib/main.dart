@@ -1,6 +1,5 @@
+import 'dart:async';
 import 'dart:io';
-
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import 'package:satsang/routes/app_routes.dart';
 import 'package:satsang/utils/constant.dart';
 import 'package:satsang/utils/preference.dart';
 import 'package:satsang/utils/utils.dart';
-import 'audio_handler/audio_handler.dart';
 import 'connectivitymanager/connectivitymanager.dart';
 
 Future<void> main() async {
@@ -25,9 +23,10 @@ Future<void> main() async {
   //     androidNotificationChannelName: 'Music playback',
   //   ),
   // );
-
   runApp(const MyApp());
 }
+
+
 
 Future<void> initializeNotifications() async {
   const initializationSettingsAndroid =
@@ -64,6 +63,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    StreamController<int> streamController = StreamController<int>.broadcast();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
