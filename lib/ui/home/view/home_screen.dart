@@ -494,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onTap: () {
+                onTap: ()  {
                   Constant.isShowBottomSheet = false;
                   setState(() {});
                   Get.toNamed(AppRoutes.magazineScreen);

@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:satsang/model/calender/tithi_calender_model.dart';
 import 'package:satsang/routes/app_routes.dart';
@@ -15,15 +18,14 @@ import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../utils/offline_popup.dart';
 import 'package:flutter/services.dart' as root_bundle;
 import '../../../utils/preference.dart';
-
+import '../../../utils/utils.dart';
 
 class SplashController extends GetxController {
   Map source = {ConnectivityResult.none: false};
   final NetworkConnectivity networkConnectivity = NetworkConnectivity.instance;
   String string = '';
   bool isLoadData = true;
-  ResumeData repo = ResumeData();
-
+  repoData repo = repoData();
 
   @override
   void onInit() {
@@ -49,6 +51,7 @@ class SplashController extends GetxController {
       Debug.printLog("connection status=====>>>>>>>$string");
       if (string == "Online" && isLoadData) {
         isLoadData = false;
+        await initializeNotifications();
         getPermission();
         moveToScreen();
       } else if (string == "Offline" && Constant.isOffline) {
@@ -60,60 +63,31 @@ class SplashController extends GetxController {
   }
 
   moveToScreen() async {
-    await repo.getAudioAlbum().then((value) {
-      Debug.printLog("----->>> audio album $value");
-      Constant.audioAlbum = value.audioAlbums!;
-    });
     await repo.getPhotoAlbum().then((value) {
       Constant.photoAlbum = value.photoAlbums!;
-/*      for (int i = 0; i < Constant.photoAlbum.length; i++) {
-        final photo =
-        Image.network(Constant.photoAlbum[i].previewImage.toString());
-        precacheImage(photo.image, Get.context!);
-        for (int j = 0; j < Constant.photoAlbum[i].images!.length; j++) {
-          final image = Image.network(
-              Constant.photoAlbum[i].images![j].thumbUrl.toString());
-          precacheImage(image.image, Get.context!);
-          final fullImage = Image.network(
-              Constant.photoAlbum[i].images![j].imageUrl.toString());
-          precacheImage(fullImage.image, Get.context!);
-        }
-      }*/
       for (int i = 0; i < Constant.photoAlbum.length; i++) {
         final fullImage =
             Image.network(Constant.photoAlbum[i].previewImage.toString());
         precacheImage(fullImage.image, Get.context!);
       }
     });
-    await repo.getNews().then((value) {
-      Constant.newsList = value.news!;
-      for (int i = 0; i < Constant.newsList.length; i++) {
-        final newsPhoto = Image.network(Constant.newsList[i].thumb.toString());
-        precacheImage(newsPhoto.image, Get.context!);
-      }
-    });
-    await repo.getMagazine().then((value) {
-      Constant.magazines = value.murtiMagazines!;
-    });
-    await repo.getEBooks().then((value) {
-      Constant.eBooks = value.ebooks!;
-    });
     await repo.getAudioAlbum().then((value) {
       Constant.audioSection = value.audioSections!;
+      Constant.audioAlbum = value.audioAlbums!;
     });
-    await getJsonData();
     Get.offAllNamed(AppRoutes.homeScreen);
-    Debug.printLog("hello world");
   }
 
   getPermission() async {
     Constant.isGetNotificationPermission =
-    Preference.shared.getBool(Preference.isGetNotificationPermission)!;
-    Constant.isGetStoragePermission = Preference.shared.getBool(Preference.isGetStoragePermission)!;
-    Constant.isGetPhotoPermission = Preference.shared.getBool(Preference.isGetPhotoPermission)!;
+        Preference.shared.getBool(Preference.isGetNotificationPermission)!;
+    Constant.isGetStoragePermission =
+        Preference.shared.getBool(Preference.isGetStoragePermission)!;
+    Constant.isGetPhotoPermission =
+        Preference.shared.getBool(Preference.isGetPhotoPermission)!;
 
     Constant.isNotification =
-    Preference.shared.getBool(Preference.isNotification)!;
+        Preference.shared.getBool(Preference.isNotification)!;
     Constant.isStorage = Preference.shared.getBool(Preference.isStorage)!;
 
     if (!Constant.isGetNotificationPermission) {
@@ -124,7 +98,7 @@ class SplashController extends GetxController {
       Preference.shared.setBool(Preference.isGetNotificationPermission,
           !Constant.isGetNotificationPermission);
       Constant.isGetNotificationPermission =
-      Preference.shared.getBool(Preference.isGetNotificationPermission)!;
+          Preference.shared.getBool(Preference.isGetNotificationPermission)!;
     }
 
     if (!Constant.isGetStoragePermission) {
@@ -134,18 +108,45 @@ class SplashController extends GetxController {
       Preference.shared.setBool(
           Preference.isGetStoragePermission, !Constant.isGetStoragePermission);
       Constant.isGetStoragePermission =
-      Preference.shared.getBool(Preference.isGetStoragePermission)!;
+          Preference.shared.getBool(Preference.isGetStoragePermission)!;
     }
 
-    if(!Constant.isGetPhotoPermission){
+    if (!Constant.isGetPhotoPermission) {
       var storagePermission = await Permission.photos.request();
       Constant.isPhoto = storagePermission.isDenied;
       Preference.shared.setBool(Preference.isPhoto, Constant.isPhoto);
       Preference.shared.setBool(
           Preference.isGetPhotoPermission, !Constant.isGetPhotoPermission);
       Constant.isGetPhotoPermission =
-      Preference.shared.getBool(Preference.isGetPhotoPermission)!;
+          Preference.shared.getBool(Preference.isGetPhotoPermission)!;
     }
+  }
+
+  Future<void> initializeNotifications() async {
+    const initializationSettingsAndroid =
+    AndroidInitializationSettings('app_icon');
+    const DarwinInitializationSettings initializationSettingsDarwin =
+    DarwinInitializationSettings();
+
+    const initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsDarwin
+    );
+
+    await Constant.flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (notificationResponse) async {
+        final String? payload = notificationResponse.payload;
+        if (notificationResponse.payload != null) {
+          debugPrint('notification payload: $payload');
+        }
+        if (Platform.isAndroid) {
+          await Utils.sendData(payload.toString());
+        } else if (Platform.isIOS) {
+          await OpenFile.open(payload.toString());
+        }
+      },
+    );
   }
 
   getJsonData() async {
@@ -160,7 +161,8 @@ class SplashController extends GetxController {
 
       for (int i = 0; i < Constant.tithiCalender.headerLine!.length; i++) {
         if (currentDate == Constant.tithiCalender.headerLine![i].date) {
-          Constant.dailyQuote = Constant.tithiCalender.headerLine![i].suvichar.toString();
+          Constant.dailyQuote =
+              Constant.tithiCalender.headerLine![i].suvichar.toString();
         }
       }
     }

@@ -29,10 +29,10 @@ class AudioTrackModel {
 class AudioAlbumTracks {
   String? name;
   String? url;
-  bool? isPlay = false;
-  bool? isLoader = false;
-  bool? isPlayLoader = false;
-  bool? isDownload = false;
+  bool isPlay = false;
+  bool isLoader = false;
+  bool isPlayLoader = false;
+  bool isDownload = false;
 
 
   AudioAlbumTracks({this.name, this.url});

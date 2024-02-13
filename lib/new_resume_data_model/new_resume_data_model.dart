@@ -10,7 +10,7 @@ import '../model/photo/photo_album_model.dart';
 import '../repository/repository.dart';
 
 
-class ResumeData {
+class repoData {
   File? file;
   String? id = "";
 

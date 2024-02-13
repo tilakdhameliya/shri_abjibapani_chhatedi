@@ -5,7 +5,7 @@ import '../../../new_resume_data_model/new_resume_data_model.dart';
 
 class SubAudioController extends GetxController{
   List<AudioAlbums> subAudio = [];
-  ResumeData repo = ResumeData();
+  repoData repo = repoData();
   String albumName = "";
 
   @override

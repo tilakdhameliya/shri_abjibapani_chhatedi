@@ -37,7 +37,20 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _centerView(NewsController logic) {
-    return Expanded(
+    return (logic.isLoading)
+        ? const Expanded(
+      child: Center(
+        child: SizedBox(
+          height: 45,
+          width: 45,
+          child: CircularProgressIndicator(
+            color: Colors.black,
+            strokeWidth: 3,
+          ),
+        ),
+      ),
+    )
+        : Expanded(
       child: ListView.builder(
         itemCount: Constant.newsList.length,
         itemBuilder: (BuildContext context, int index) {

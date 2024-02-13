@@ -26,13 +26,13 @@ class AudioListController extends GetxController {
   String audioImage = "";
   bool isPlay = false;
   bool isLoading = true;
-  final player = AudioPlayer();
+  AudioPlayer player = AudioPlayer();
   List<AudioAlbumTracks> audioTrack = [];
-  Stream<DurationState>? durationState;
+  late Stream<DurationState> durationState;
   int playIndex = 0;
 
   String downloadedAudioName = "";
-  ResumeData repo = ResumeData();
+  repoData repo = repoData();
 
   @override
   void onInit() {
@@ -48,7 +48,7 @@ class AudioListController extends GetxController {
       var stringList =
           Preference.shared.getStringList(Preference.downloadedAudioList) ?? [];
       if (stringList.isNotEmpty) {
-        for(var data in stringList){
+        for (var data in stringList) {
           audioTracksList.add(AudioAlbumTracks.fromJson(jsonDecode(data)));
         }
         for (int i = 0; i < audioTracksList.length; i++) {
@@ -74,33 +74,42 @@ class AudioListController extends GetxController {
   }
 
   play(int index) async {
-    playIndex = index;
     audioTrack[index].isPlayLoader = true;
     update([Constant.audioId]);
-    if (audioTrack[index].isPlay == false) {
-      await playAudio(audioTrack[index].url.toString());
+    if(player.playing){
+      await player.pause();
+      await player.stop();
+    }
+    Debug.printLog("-----=====>>>>> loader");
+    player = AudioPlayer();
+    await playAudio(audioTrack[index].url.toString());
+    if (!audioTrack[index].isPlay) {
       var playIndex =
-          audioTrack.indexWhere((element) => element.isPlay == true);
+      audioTrack.indexWhere((element) => element.isPlay == true);
+      Debug.printLog("-----=====>>>>> loader start");
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
         audioTrack[playIndex].isPlayLoader = false;
-        await player.stop();
         update([Constant.audioId]);
       }
+      Debug.printLog("-----=====>>>>> loader working");
       audioTrack[index].isPlay = true;
       await player.play().then((value) {
         audioTrack[index].isPlayLoader = false;
+        Debug.printLog("-----=====>>>>> fucking loader not off");
         update([Constant.audioId]);
       });
       audioTrack[index].isPlayLoader = false;
+      Debug.printLog("-----=====>>>>> loader  off");
       update([Constant.audioId]);
     } else {
+      Debug.printLog("-----=====>>>>> loader not off");
       var playIndex =
       audioTrack.indexWhere((element) => element.isPlay == true);
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
-        audioTrack[index].isPlayLoader = false;
-        await player.stop();
+        audioTrack[playIndex].isPlayLoader = false;
+        await player.pause();
         update([Constant.audioId]);
       }
     }
@@ -108,17 +117,15 @@ class AudioListController extends GetxController {
   }
 
   stop() async {
-      var index =
-      audioTrack.indexWhere((element) => element.isPlay == true);
-      if (index > -1) {
-        await playAudio(audioTrack[index].url.toString());
-        audioTrack[index].isPlay = false;
-      }
-      audioTrack[playIndex].isPlayLoader = false;
-      audioTrack[playIndex].isPlay = true;
+    var index = audioTrack.indexWhere((element) => element.isPlay == true);
+    if (index > -1) {
+      await playAudio(audioTrack[index].url.toString());
+      audioTrack[index].isPlay = false;
+      audioTrack[index].isPlayLoader = false;
       await player.stop();
-      // await player.pause();
       update([Constant.audioId]);
+    }
+    update([Constant.audioId]);
   }
 
   playAudio(String url) {
@@ -235,7 +242,7 @@ class AudioListController extends GetxController {
         audioTrack[index].isDownload = true;
         update();
       } else {
-        var response = await dio.download(
+        /*var response =*/ await dio.download(
           url,
           savePath,
           onReceiveProgress: (count, total) {
@@ -254,7 +261,6 @@ class AudioListController extends GetxController {
           },
         );
       }
-
     } catch (e) {
       debugPrint(e.toString());
       audioTrack[index].isLoader = false;
@@ -264,7 +270,6 @@ class AudioListController extends GetxController {
 
   double? progress = 0;
   bool isProgress = false;
-
 
   Future<int?> getAndroidVersion() async {
     if (Platform.isAndroid) {
@@ -276,7 +281,7 @@ class AudioListController extends GetxController {
   }
 
   Future<void> showAlertDialogPermission(context, String permission,
-      bool isPermanentlyDenied, int index, url,fileName) async {
+      bool isPermanentlyDenied, int index, url, fileName) async {
     return showDialog<void>(
       context: Get.context!,
       builder: (BuildContext context) {
@@ -341,17 +346,19 @@ class AudioListController extends GetxController {
                             audioTrack[index].isLoader = false;
                             Get.back();
                             await Permission.storage.request().then(
-                                  (value) => downloadAudio(context, index, url,fileName),
+                                  (value) => downloadAudio(
+                                      context, index, url, fileName),
                                 );
                           } else if (permission == "notificationPermission") {
                             audioTrack[index].isLoader = false;
                             await Permission.notification.request().then(
-                                  (value) => downloadAudio(context, index, url,fileName),
+                                  (value) => downloadAudio(
+                                      context, index, url, fileName),
                                 );
                           } else if (isPermanentlyDenied) {
                             openAppSettings();
                           } else {
-                            downloadAudio(context, index, url,fileName);
+                            downloadAudio(context, index, url, fileName);
                           }
                         },
                         child: Text(
@@ -373,21 +380,27 @@ class AudioListController extends GetxController {
     );
   }
 
-  List<String> data= [];
+  List<String> data = [];
 
-  downloadAudioAndNotification(String savePath,index) {
+  downloadAudioAndNotification(String savePath, index) {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     // showDownloadNotification(savePath);
     Fluttertoast.showToast(msg: "Download successfully!");
     audioTrack[index].isDownload = true;
     var download = audioTrack.where((element) => element.isDownload == true);
     data = download.map((track) => jsonEncode(track.toJson())).toList();
-    Preference.shared.setStringList(Preference.downloadedAudioList,
-        data);
+    Preference.shared.setStringList(Preference.downloadedAudioList, data);
     Debug.printLog("------>>>> downloaded data $data");
     Debug.printLog(
         "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedAudioList)}");
     audioTrack[index].isLoader = false;
     update();
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    durationState.distinct();
+    super.dispose();
   }
 }

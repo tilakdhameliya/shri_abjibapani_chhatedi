@@ -12,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../model/magazine/magazine_model.dart';
+import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
@@ -25,6 +26,7 @@ class MagazineController extends GetxController {
   int resumeNumber = 0;
   int nullResumeNumber = 0;
   String downloadedAudioName = "";
+  repoData repo = repoData();
 
   void showDownloadNotification(String savePath) async {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -292,6 +294,7 @@ class MagazineController extends GetxController {
 
   @override
   void onInit() {
+    getData();
     List<MurtiMagazines> magazineTracksList = [];
     var stringList =
     Preference.shared.getStringList(Preference.downloadedMagazineList) ?? [];
@@ -308,5 +311,14 @@ class MagazineController extends GetxController {
       }
     }
     super.onInit();
+  }
+
+  getData() async {
+    isLoading = true;
+    await repo.getMagazine().then((value) {
+      Constant.magazines = value.murtiMagazines!;
+    });
+    isLoading = false;
+    update();
   }
 }

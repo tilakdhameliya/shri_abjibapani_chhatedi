@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:satsang/utils/constant.dart';
 import 'package:satsang/utils/utils.dart';
 
+import '../../../model/calender/tithi_calender_model.dart';
+import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../utils/color.dart';
 import '../../../utils/font.dart';
 
 class HomeController extends GetxController{
+
+
+  repoData repo = repoData();
   late PageController pageController =
   PageController(initialPage: 0, keepPage: true);
   int activePageIndex = 0;
@@ -73,4 +81,36 @@ class HomeController extends GetxController{
     Constant.isShowBottomSheet = !Constant.isShowBottomSheet;
     update();
   }
+
+  getJsonData() async {
+    final jsondata = await DefaultAssetBundle.of(Get.context!)
+        .loadString("assets/tithi_calender.json");
+    final list = jsonDecode(jsondata);
+    if (list != null) {
+      Constant.tithiCalender = HeaderLines.fromJson(list["HeaderLines"]);
+      var now = DateTime.now();
+      var formatter = DateFormat('yyyy-MM-dd');
+      String currentDate = formatter.format(now);
+
+      for (int i = 0; i < Constant.tithiCalender.headerLine!.length; i++) {
+        if (currentDate == Constant.tithiCalender.headerLine![i].date) {
+          Constant.dailyQuote = Constant.tithiCalender.headerLine![i].suvichar.toString();
+        }
+      }
+    }
+  }
+
+  @override
+  void onInit() {
+    getJsonData();
+
+    super.onInit();
+  }
+
+  getData() async {
+
+
+
+  }
+
 }
