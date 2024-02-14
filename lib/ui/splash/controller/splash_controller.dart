@@ -63,12 +63,12 @@ class SplashController extends GetxController {
   }
 
   moveToScreen() async {
-    await repo.getPhotoAlbum().then((value) {
+    await repo.getPhotoAlbum().then((value) async {
       Constant.photoAlbum = value.photoAlbums!;
       for (int i = 0; i < Constant.photoAlbum.length; i++) {
         final fullImage =
             Image.network(Constant.photoAlbum[i].previewImage.toString());
-        precacheImage(fullImage.image, Get.context!);
+        await precacheImage(fullImage.image, Get.context!);
       }
     });
     await repo.getAudioAlbum().then((value) {

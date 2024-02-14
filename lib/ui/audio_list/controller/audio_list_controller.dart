@@ -44,21 +44,6 @@ class AudioListController extends GetxController {
         audioImage = Get.arguments[1];
       }
       getData();
-      List<AudioAlbumTracks> audioTracksList = [];
-      var stringList =
-          Preference.shared.getStringList(Preference.downloadedAudioList) ?? [];
-      if (stringList.isNotEmpty) {
-        for (var data in stringList) {
-          audioTracksList.add(AudioAlbumTracks.fromJson(jsonDecode(data)));
-        }
-        for (int i = 0; i < audioTracksList.length; i++) {
-          var index = audioTrack
-              .indexWhere((element) => element.name == audioTracksList[i].name);
-          if (index > -1) {
-            audioTrack[index].isDownload = true;
-          }
-        }
-      }
     }
     super.onInit();
   }
@@ -67,6 +52,22 @@ class AudioListController extends GetxController {
     await repo.getAudioTrack(audioListName).then((value) {
       if (value.audioAlbumTracks != null) {
         audioTrack = value.audioAlbumTracks!;
+        List<AudioAlbumTracks> audioTracksList = [];
+        var stringList =
+            Preference.shared.getStringList(Preference.downloadedAudioList) ?? [];
+        if (stringList.isNotEmpty) {
+          for (var data in stringList) {
+            audioTracksList.add(AudioAlbumTracks.fromJson(jsonDecode(data)));
+          }
+          for (int i = 0; i < audioTracksList.length; i++) {
+            var index = audioTrack
+                .indexWhere((element) => element.name == audioTracksList[i].name);
+            if (index > -1) {
+              audioTrack[index].isDownload = true;
+              update();
+            }
+          }
+        }
       }
       isLoading = false;
       update();
@@ -80,30 +81,25 @@ class AudioListController extends GetxController {
       await player.pause();
       await player.stop();
     }
-    Debug.printLog("-----=====>>>>> loader");
     player = AudioPlayer();
     await playAudio(audioTrack[index].url.toString());
     if (!audioTrack[index].isPlay) {
       var playIndex =
       audioTrack.indexWhere((element) => element.isPlay == true);
-      Debug.printLog("-----=====>>>>> loader start");
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
         audioTrack[playIndex].isPlayLoader = false;
         update([Constant.audioId]);
       }
-      Debug.printLog("-----=====>>>>> loader working");
       audioTrack[index].isPlay = true;
       await player.play().then((value) {
         audioTrack[index].isPlayLoader = false;
-        Debug.printLog("-----=====>>>>> fucking loader not off");
         update([Constant.audioId]);
       });
       audioTrack[index].isPlayLoader = false;
-      Debug.printLog("-----=====>>>>> loader  off");
+
       update([Constant.audioId]);
     } else {
-      Debug.printLog("-----=====>>>>> loader not off");
       var playIndex =
       audioTrack.indexWhere((element) => element.isPlay == true);
       if (playIndex > -1) {
@@ -238,6 +234,9 @@ class AudioListController extends GetxController {
     try {
       update();
       if (await outputFile.exists()) {
+        var download = audioTrack.where((element) => element.isDownload == true);
+        data = download.map((track) => jsonEncode(track.toJson())).toList();
+        Preference.shared.setStringList(Preference.downloadedAudioList, data);
         audioTrack[index].isLoader = false;
         audioTrack[index].isDownload = true;
         update();
@@ -403,4 +402,5 @@ class AudioListController extends GetxController {
     durationState.distinct();
     super.dispose();
   }
+
 }

@@ -127,6 +127,10 @@ class MagazineController extends GetxController {
     try {
       update();
       if (await outputFile.exists()) {
+        var download = Constant.magazines.where((element) => element.isDownload == true);
+        data = download.map((track) => jsonEncode(track.toJson())).toList();
+        Preference.shared.setStringList(Preference.downloadedMagazineList,
+            data);
         Constant.magazines[index].isLoader = false;
         Constant.magazines[index].isDownload = true;
         isCom = false;
@@ -135,7 +139,7 @@ class MagazineController extends GetxController {
         update();
       } else {
         Constant.magazines[index].isLoader = true;
-        var response = await dio.download(
+        await dio.download(
           url,
           savePath,
           onReceiveProgress: (count, total) {
@@ -295,21 +299,7 @@ class MagazineController extends GetxController {
   @override
   void onInit() {
     getData();
-    List<MurtiMagazines> magazineTracksList = [];
-    var stringList =
-    Preference.shared.getStringList(Preference.downloadedMagazineList) ?? [];
-    if (stringList.isNotEmpty) {
-      for(var data in stringList){
-        magazineTracksList.add(MurtiMagazines.fromJson(jsonDecode(data)));
-      }
-      for (int i = 0; i < magazineTracksList.length; i++) {
-        var index = Constant.magazines
-            .indexWhere((element) => element.name == magazineTracksList[i].name);
-        if (index > -1) {
-          Constant.magazines[index].isDownload = true;
-        }
-      }
-    }
+
     super.onInit();
   }
 
@@ -317,6 +307,22 @@ class MagazineController extends GetxController {
     isLoading = true;
     await repo.getMagazine().then((value) {
       Constant.magazines = value.murtiMagazines!;
+      List<MurtiMagazines> magazineTracksList = [];
+      var stringList =
+          Preference.shared.getStringList(Preference.downloadedMagazineList) ?? [];
+      if (stringList.isNotEmpty) {
+        for(var data in stringList){
+          magazineTracksList.add(MurtiMagazines.fromJson(jsonDecode(data)));
+        }
+        for (int i = 0; i < magazineTracksList.length; i++) {
+          var index = Constant.magazines
+              .indexWhere((element) => element.name == magazineTracksList[i].name);
+          if (index > -1) {
+            Constant.magazines[index].isDownload = true;
+            update();
+          }
+        }
+      }
     });
     isLoading = false;
     update();

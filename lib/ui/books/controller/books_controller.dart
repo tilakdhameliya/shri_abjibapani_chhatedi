@@ -131,6 +131,10 @@ class BookController extends GetxController {
     try {
       update();
       if (await outputFile.exists()) {
+        var download = Constant.eBooks.where((element) => element.isDownload == true);
+        data = download.map((track) => jsonEncode(track.toJson())).toList();
+        Preference.shared.setStringList(Preference.downloadedBooksList,
+            data);
         Constant.eBooks[index].isLoader = false;
         Constant.eBooks[index].isDownload = true;
         isCom = false;
@@ -301,21 +305,6 @@ class BookController extends GetxController {
 @override
   void onInit() {
     getData();
-  List<Ebooks> booksTracksList = [];
-  var stringList =
-  Preference.shared.getStringList(Preference.downloadedBooksList) ?? [];
-  if (stringList.isNotEmpty) {
-    for(var data in stringList){
-      booksTracksList.add(Ebooks.fromJson(jsonDecode(data)));
-    }
-    for (int i = 0; i < booksTracksList.length; i++) {
-      var index = Constant.eBooks
-          .indexWhere((element) => element.name == booksTracksList[i].name);
-      if (index > -1) {
-        Constant.eBooks[index].isDownload = true;
-      }
-    }
-  }
   super.onInit();
   }
 
@@ -323,6 +312,22 @@ class BookController extends GetxController {
     isLoading = true;
     await repo.getEBooks().then((value) {
       Constant.eBooks = value.ebooks!;
+      List<Ebooks> booksTracksList = [];
+      var stringList =
+          Preference.shared.getStringList(Preference.downloadedBooksList) ?? [];
+      if (stringList.isNotEmpty) {
+        for(var data in stringList){
+          booksTracksList.add(Ebooks.fromJson(jsonDecode(data)));
+        }
+        for (int i = 0; i < booksTracksList.length; i++) {
+          var index = Constant.eBooks
+              .indexWhere((element) => element.name == booksTracksList[i].name);
+          if (index > -1) {
+            Constant.eBooks[index].isDownload = true;
+            update();
+          }
+        }
+      }
     });
     isLoading = false;
     update();

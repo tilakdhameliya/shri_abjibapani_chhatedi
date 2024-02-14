@@ -1,23 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:satsang/model/photo/photo_album_model.dart';
 import 'package:satsang/utils/constant.dart';
-import 'package:share_plus/share_plus.dart';
-
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../utils/color.dart';
-import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
-import '../../../utils/preference.dart';
 import '../controller /photo_view_controller.dart';
 
 class PhotoViewScreen extends StatefulWidget {
@@ -98,6 +89,12 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                   color: Colors.white,
                 )),
           ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.transparent,
+              )),
           Expanded(
             child: Align(
               alignment: Alignment.center,
@@ -113,6 +110,35 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
             ),
           ),
           InkWell(
+            onTap: () {
+              logic.saveImage(logic.currentIndex);
+              setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: SvgPicture.asset(
+                "assets/image/download.svg",
+                height: 23,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              logic.shareImage(
+                  logic.images[logic.currentIndex].imageUrl.toString(),
+                  context);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: SvgPicture.asset(
+                "assets/image/share.svg",
+                height: 23,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          /*InkWell(
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
@@ -126,7 +152,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                 color: Colors.white,
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     );
@@ -140,6 +166,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
         itemCount: logic.images.length,
         onPageChanged: (index) {
           logic.currentIndex = index;
+          logic.imageController.scrollTo(index: index, duration: Duration(milliseconds: 200));
           setState(() {});
         },
         itemBuilder: (BuildContext context, int index) {
@@ -162,9 +189,9 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   _imageView(PhotoViewController logic) {
     return SizedBox(
       height: 90,
-      child: ListView.builder(
+      child: ScrollablePositionedList.builder(
         itemCount: logic.images.length,
-        controller: logic.imageController,
+        itemScrollController: logic.imageController,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
@@ -181,7 +208,11 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                   top: (logic.currentIndex == index) ? 5 : 10,
                   bottom: (logic.currentIndex == index) ? 5 : 10),
               decoration: BoxDecoration(
-                border: Border.all(color:(logic.currentIndex == index)? Colors.white:Colors.transparent,width: 2),
+                border: Border.all(
+                    color: (logic.currentIndex == index)
+                        ? Colors.white
+                        : Colors.transparent,
+                    width: 2),
                 image: DecorationImage(
                     image: NetworkImage(
                       logic.images[index].thumbUrl.toString(),
@@ -196,7 +227,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   }
 
   Future<void> imageDialog(
-      BuildContext context, PhotoViewController logic,int index) async {
+      BuildContext context, PhotoViewController logic, int index) async {
     return showDialog<void>(
       context: context,
       useSafeArea: true,
@@ -303,7 +334,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   }
 
   _loader(PhotoViewController logic) {
-    return  logic.isLoader
+    return logic.isLoader
         ? WillPopScope(
             onWillPop: () async {
               return false;

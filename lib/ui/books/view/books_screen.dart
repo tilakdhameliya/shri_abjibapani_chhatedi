@@ -78,7 +78,7 @@ class _BookScreenState extends State<BookScreen> {
             child: Center(
               child: Text(
                 "E-books",
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: Font.poppins,
                   fontWeight: FontWeight.w600,
@@ -86,7 +86,12 @@ class _BookScreenState extends State<BookScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(Icons.arrow_back_rounded
+                  ,color: Colors.transparent)
+          ),
         ],
       ),
     );
@@ -161,7 +166,7 @@ class _BookScreenState extends State<BookScreen> {
                     ),
                   ),
                 ),
-                (Constant.eBooks[index].isLoader == true)
+                (Constant.eBooks[index].isLoader)
                     ? const SizedBox(
                         height: 25,
                         width: 25,
@@ -170,7 +175,7 @@ class _BookScreenState extends State<BookScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    : (Constant.eBooks[index].isDownload == false)?SvgPicture.asset("assets/image/download.svg",
+                    : (!Constant.eBooks[index].isDownload)?SvgPicture.asset("assets/image/download.svg",
                         color: CColor.red):const SizedBox()
               ],
             ),

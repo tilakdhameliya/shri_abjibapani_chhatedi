@@ -59,12 +59,16 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
             onTap: () {
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(Icons.arrow_back_rounded)
+            ),
           ),
           Expanded(
             child: Center(
               child: Text(
-                "Daily Satsang",
+                "Tithi Calender",
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: Font.poppins,
@@ -73,6 +77,11 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
                 ),
               ),
             ),
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(Icons.arrow_back_rounded
+                  ,color: Colors.transparent)
           ),
         ],
       ),

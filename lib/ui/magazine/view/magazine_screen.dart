@@ -77,7 +77,8 @@ class _MagazineScreenState extends State<MagazineScreen> {
             child: Center(
               child: Text(
                 "Magazines",
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                // overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: Font.poppins,
                   fontWeight: FontWeight.w600,
@@ -85,7 +86,12 @@ class _MagazineScreenState extends State<MagazineScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(Icons.arrow_back_rounded
+                  ,color: Colors.transparent)
+          ),
         ],
       ),
     );
@@ -151,7 +157,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
                     ),
                   ),
                 ),
-                (Constant.magazines[index].isLoader == true)
+                (Constant.magazines[index].isLoader)
                     ? const SizedBox(
                         height: 25,
                         width: 25,
@@ -160,8 +166,8 @@ class _MagazineScreenState extends State<MagazineScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    :(Constant.magazines[index].isDownload == false)? SvgPicture.asset("assets/image/download.svg",
-                        color: CColor.red):const SizedBox()
+                    :(!Constant.magazines[index].isDownload)? SvgPicture.asset("assets/image/download.svg",
+                        color: CColor.theme):const SizedBox()
               ],
             ),
           ),

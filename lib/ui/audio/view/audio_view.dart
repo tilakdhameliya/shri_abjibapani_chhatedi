@@ -31,13 +31,15 @@ class _AudioViewScreenState extends State<AudioViewScreen> {
     return Column(
       children: [
         const SizedBox(height: 75),
-        ListView.builder(
-          itemCount: Constant.audioSection.length,
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return _listItem(logic,index);
-          },),
+        Expanded(
+          child: ListView.builder(
+            itemCount: Constant.audioSection.length,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return _listItem(logic,index);
+            },),
+        ),
       ],
     );
   }

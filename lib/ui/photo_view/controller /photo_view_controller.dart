@@ -4,14 +4,13 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:satsang/utils/constant.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../model/photo/photo_album_model.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import '../../../utils/debugs.dart';
 
 
 class PhotoViewController extends GetxController{
@@ -20,7 +19,7 @@ class PhotoViewController extends GetxController{
   int currentIndex = 0;
   bool isLoader = false;
   bool isSelected = false;
-  ScrollController imageController = ScrollController();
+  ItemScrollController imageController = ItemScrollController();
 
   @override
   void onInit() {
@@ -29,17 +28,7 @@ class PhotoViewController extends GetxController{
         index = Get.arguments[0];
       }
       if (Get.arguments[1] != null) {
-        // images = [];
         images = Get.arguments[1];
-/*        Debug.printLog("----->> image index ${images.length} ${Get.arguments[1]}");
-        images.insert(0, Images());
-        images.insert(1, Images());
-        Debug.printLog("----->> image index ${images.length}");
-        int index = images.length - 1;
-        images.insert(index + 1, Images());
-        int index2 = images.length - 1;
-        images.insert(index2 + 1, Images());
-        Debug.printLog("----->> image ${images.length} $index $index2");*/
       }
     }
     super.onInit();
@@ -48,7 +37,7 @@ class PhotoViewController extends GetxController{
   @override
   void onReady() {
     Constant.photoController.jumpToPage(index);
-    imageController.jumpTo(index.toDouble());
+    imageController.jumpTo(index: index);
     super.onReady();
   }
 

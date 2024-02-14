@@ -1,16 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:satsang/ui/photo/controller/photo_controller.dart';
-import 'package:satsang/utils/utils.dart';
-
 import '../../../routes/app_routes.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/font.dart';
 
 class PhotosScreen extends StatefulWidget {
-   PhotosScreen({super.key});
+  PhotosScreen({super.key});
 
   final PhotosController photoController = Get.put(PhotosController());
 
@@ -30,36 +27,39 @@ class _PhotosScreenState extends State<PhotosScreen> {
     });
   }
 
-  _centerView(PhotosController logic){
+  _centerView(PhotosController logic) {
     return MasonryGridView.count(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.only(top: 80, right: 15, left: 15, bottom: 15),
-      // shrinkWrap: true,
       itemCount: Constant.photoAlbum.length,
       itemBuilder: (BuildContext context, int index) {
-        return _gridItem(context, index,logic);
+        return _gridItem(context, index, logic);
       },
       crossAxisSpacing: 5,
-      mainAxisSpacing: 5, crossAxisCount: 2,
+      mainAxisSpacing: 5,
+      crossAxisCount: 2,
     );
   }
 
   _gridItem(BuildContext context, int index, PhotosController logic) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutes.subImage,
-            arguments: [Constant.photoAlbum[index].images,Constant.photoAlbum[index].name]);
+        Get.toNamed(AppRoutes.subImage, arguments: [
+          Constant.photoAlbum[index].images,
+          Constant.photoAlbum[index].name
+        ]);
       },
       child: Container(
         height: 150,
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage(Constant.photoAlbum[index].previewImage.toString()),
-            ),
-           ),
+          borderRadius: BorderRadius.circular(16),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(
+                Constant.photoAlbum[index].previewImage.toString()),
+          ),
+        ),
         child: Text(
           "${Constant.photoAlbum[index].name}",
           textAlign: TextAlign.center,

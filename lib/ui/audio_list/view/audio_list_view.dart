@@ -52,7 +52,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
 
   _header(AudioListController logic) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      // padding: const EdgeInsets.all(10),
       width: Get.width,
       height: 65,
       alignment: Alignment.centerLeft,
@@ -87,7 +87,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
             child: Center(
               child: Text(
                 logic.audioListName,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                // overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: Font.poppins,
                   fontWeight: FontWeight.w600,
@@ -95,7 +96,12 @@ class _AudioListScreenState extends State<AudioListScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(Icons.arrow_back_rounded
+                  ,color: Colors.transparent)
+          ),
         ],
       ),
     );
@@ -144,46 +150,9 @@ class _AudioListScreenState extends State<AudioListScreen> {
     return GetBuilder<AudioListController>(
         id: Constant.audioId,
         builder: (logic) {
-          Debug.printLog("-----=====>>>>> loader not off ${logic.audioTrack[index].isPlayLoader}");
           return InkWell(
             onTap: () async {
               logic.play(index);
-              // logic.playIndex = index;
-              // logic.audioTrack[index].isPlayLoader = true;
-              // setState(() {});
-              // Debug.printLog("-----=====>>>>> loader");
-              // await logic.playAudio(logic.audioTrack[index].url.toString());
-              // if (!logic.audioTrack[index].isPlay) {
-              //   var playIndex = logic.audioTrack
-              //       .indexWhere((element) => element.isPlay == true);
-              //   Debug.printLog("-----=====>>>>> loader start");
-              //   if (playIndex > -1) {
-              //     logic.audioTrack[playIndex].isPlay = false;
-              //     logic.audioTrack[playIndex].isPlayLoader = false;
-              //     await logic.player.pause();
-              //   }
-              //   Debug.printLog("-----=====>>>>> loader working");
-              //   logic.audioTrack[index].isPlay = true;
-              //   await logic.player.play().then((value) {
-              //     logic.audioTrack[index].isPlayLoader = false;
-              //     setState(() {});
-              //     // logic.audioTrack[index].isPlay = false;
-              //     Debug.printLog("-----=====>>>>> fucking loader not off");
-              //   });
-              //   logic.audioTrack[index].isPlayLoader = false;
-              //   setState(() {});
-              //   Debug.printLog("-----=====>>>>> loader  off${logic.audioTrack[index].isPlayLoader}");
-              // } else {
-              //   Debug.printLog("-----=====>>>>> loader not off");
-              //   var playIndex = logic.audioTrack
-              //       .indexWhere((element) => element.isPlay == true);
-              //   if (playIndex > -1) {
-              //     logic.audioTrack[playIndex].isPlay = false;
-              //     logic.audioTrack[playIndex].isPlayLoader = false;
-              //     await logic.player.pause();
-              //   }
-              // }
-              // audioTrack[index].isPlayLoader = false;
               setState(() {});
             },
             child: Container(
@@ -197,15 +166,20 @@ class _AudioListScreenState extends State<AudioListScreen> {
                 children: [
                   Row(
                     children: [
-                      // playButton(logic, index),
                       (logic.audioTrack[index].isPlayLoader)
-                          ? const SizedBox(height: 30,width: 30,child: CircularProgressIndicator(color: CColor.theme,strokeWidth: 1.5,))
+                          ? const SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                color: CColor.theme,
+                                strokeWidth: 1.5,
+                              ))
                           : SvgPicture.asset(
-                          (logic.audioTrack[index].isPlay)
-                              ? "assets/image/stop.svg"
-                              : "assets/image/play.svg",
-                          height: 35,
-                          color: CColor.theme),
+                              (logic.audioTrack[index].isPlay)
+                                  ? "assets/image/stop.svg"
+                                  : "assets/image/play.svg",
+                              height: 35,
+                              color: CColor.theme),
                       const SizedBox(width: 15),
                       Expanded(
                         child: Text(
@@ -256,7 +230,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
     return StreamBuilder<DurationState>(
       stream: logic.durationState,
       builder: (context, snapshot) {
-        if(snapshot.hasData){
+        if (snapshot.hasData) {
           final durationState = snapshot.data;
           final progress = durationState?.progress ?? Duration.zero;
           final buffered = durationState?.buffered ?? Duration.zero;

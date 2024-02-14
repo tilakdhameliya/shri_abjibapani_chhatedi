@@ -57,7 +57,10 @@ class _ContactScreenState extends State<ContactScreen> {
             onTap: () {
               Get.back();
             },
-            child: const Icon(Icons.arrow_back_rounded),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(Icons.arrow_back_rounded)
+            ),
           ),
           Expanded(
             child: Center(
@@ -70,7 +73,12 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(Icons.arrow_back_rounded
+                  ,color: Colors.transparent)
+          ),
         ],
       ),
     );

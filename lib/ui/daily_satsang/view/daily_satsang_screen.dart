@@ -86,7 +86,7 @@ class _DailySatsangScreenState extends State<DailySatsangScreen> {
               Share.share(Constant.dailyQuote);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 5),
+              padding: const EdgeInsets.all(10),
               child: SvgPicture.asset("assets/image/share.svg", height: 21),
             ),
           )

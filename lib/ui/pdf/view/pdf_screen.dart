@@ -69,7 +69,7 @@ class _PdfScreenState extends State<PdfScreen> {
             child: Center(
               child: Text(
                 logic.name,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: Font.poppins,
                   fontWeight: FontWeight.w600,
@@ -77,7 +77,12 @@ class _PdfScreenState extends State<PdfScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: const Icon(Icons.arrow_back_rounded
+                  ,color: Colors.transparent)
+          ),
         ],
       ),
     );

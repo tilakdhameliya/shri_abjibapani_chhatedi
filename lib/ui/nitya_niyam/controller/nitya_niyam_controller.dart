@@ -31,6 +31,7 @@ class NityaNiyamController extends GetxController {
 
   @override
   void onInit() {
+
     downloadPdf("Nitya_Niyam");
     super.onInit();
   }
@@ -94,7 +95,9 @@ class NityaNiyamController extends GetxController {
           update();
         }
       } else {
-        if (!Constant.isStorage) {
+        if (Constant.isStorage) {
+          showAlertDialogPermission("storagePermission", true, fileName);
+        } else {
           download(fileName);
         }
       }

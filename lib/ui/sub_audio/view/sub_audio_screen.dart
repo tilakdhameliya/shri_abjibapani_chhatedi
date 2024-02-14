@@ -67,13 +67,26 @@ class _SubAudioScreenState extends State<SubAudioScreen> {
           Expanded(
             child: Center(
               child: Text(logic.albumName,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                 fontFamily: Font.poppins,
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
               ),),
             ),
-          )
+          ),
+          InkWell(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            onTap: () {
+              Get.back();
+            },
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(Icons.arrow_back_rounded
+                    ,color: Colors.transparent)
+            ),
+          ),
         ],
       ),
     );
