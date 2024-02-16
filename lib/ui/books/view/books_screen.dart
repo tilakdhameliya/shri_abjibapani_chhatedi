@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
@@ -89,9 +90,8 @@ class _BookScreenState extends State<BookScreen> {
           ),
           Container(
               padding: const EdgeInsets.all(10),
-              child: const Icon(Icons.arrow_back_rounded
-                  ,color: Colors.transparent)
-          ),
+              child: const Icon(Icons.arrow_back_rounded,
+                  color: Colors.transparent)),
         ],
       ),
     );
@@ -134,8 +134,8 @@ class _BookScreenState extends State<BookScreen> {
     return Column(
       children: [
         InkWell(
-          onTap: ()  {
-            if(!logic.isCom) {
+          onTap: () {
+            if (!logic.isCom) {
               logic.downloadAudio(context, index, Constant.eBooks[index].url,
                   Constant.eBooks[index].name);
             }
@@ -167,16 +167,25 @@ class _BookScreenState extends State<BookScreen> {
                   ),
                 ),
                 (Constant.eBooks[index].isLoader)
-                    ? const SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: CircularProgressIndicator(
-                          color: CColor.theme,
-                          strokeWidth: 2,
+                    ? CircularPercentIndicator(
+                        radius: 18.0,
+                        lineWidth: 2.0,
+                        percent: logic.downloadPercentage,
+                        center: Text(
+                          logic.downloadingText,
+                          style: TextStyle(
+                            fontFamily: Font.poppins,
+                            fontWeight: FontWeight.w500,
+                            color: CColor.theme,
+                            fontSize: 11,
+                          ),
                         ),
+                        progressColor: CColor.theme,
                       )
-                    : (!Constant.eBooks[index].isDownload)?SvgPicture.asset("assets/image/download.svg",
-                        color: CColor.red):const SizedBox()
+                    : (!Constant.eBooks[index].isDownload)
+                        ? SvgPicture.asset("assets/image/download.svg",
+                            color: CColor.red)
+                        : const SizedBox()
               ],
             ),
           ),
@@ -193,5 +202,4 @@ class _BookScreenState extends State<BookScreen> {
       ],
     );
   }
-
 }

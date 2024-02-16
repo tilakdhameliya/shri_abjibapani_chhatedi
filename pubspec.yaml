@@ -62,6 +62,7 @@ dependencies:
   open_file: ^3.3.2
   audio_video_progress_bar: ^1.0.1
   scrollable_positioned_list: ^0.3.8
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

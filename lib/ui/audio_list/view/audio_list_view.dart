@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:satsang/ui/audio_list/controller/audio_list_controller.dart';
 import 'package:satsang/utils/color.dart';
 import 'package:satsang/utils/constant.dart';
-import 'package:satsang/utils/debugs.dart';
+import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
 
 class AudioListScreen extends StatefulWidget {
@@ -200,13 +201,20 @@ class _AudioListScreenState extends State<AudioListScreen> {
                               logic.audioTrack[index].name);
                         },
                         child: (logic.audioTrack[index].isLoader)
-                            ? const SizedBox(
-                                height: 25,
-                                width: 25,
-                                child: CircularProgressIndicator(
-                                  color: CColor.theme,
-                                  strokeWidth: 2,
+                            ? CircularPercentIndicator(
+                                radius: 18.0,
+                                lineWidth: 2.0,
+                                percent: logic.downloadPercentage,
+                                center: Text(
+                                  logic.downloadingText,
+                                  style: TextStyle(
+                                    fontFamily: Font.poppins,
+                                    fontWeight: FontWeight.w500,
+                                    color: CColor.theme,
+                                    fontSize: 11,
+                                  ),
                                 ),
+                                progressColor: CColor.theme,
                               )
                             : (!logic.audioTrack[index].isDownload)
                                 ? SvgPicture.asset("assets/image/download.svg",

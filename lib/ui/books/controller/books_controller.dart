@@ -27,6 +27,8 @@ class BookController extends GetxController {
   int nullResumeNumber = 0;
   String downloadedAudioName = "";
   repoData repo = repoData();
+  String downloadingText = "";
+  double downloadPercentage = 0;
 
 
   void showDownloadNotification(String savePath) async {
@@ -148,6 +150,11 @@ class BookController extends GetxController {
           url,
           savePath,
           onReceiveProgress: (count, total) {
+            var percentage = count / total;
+            downloadPercentage = percentage;
+            var shoeText = (percentage * 100).toInt();
+            downloadingText = "$shoeText%";
+            update();
             if (count != 33) {
               if (count == total) {
                 downloadAudioAndNotification(savePath, index);
