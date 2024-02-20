@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -163,10 +164,12 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
       child: PageView.builder(
         controller: Constant.photoController,
         scrollDirection: Axis.horizontal,
+        allowImplicitScrolling: true,
+        // physics: NeverScrollableScrollPhysics(),
         itemCount: logic.images.length,
         onPageChanged: (index) {
           logic.currentIndex = index;
-          logic.imageController.scrollTo(index: index, duration: Duration(milliseconds: 200));
+          logic.imageController.scrollTo(index: index, duration: const Duration(milliseconds: 200));
           setState(() {});
         },
         itemBuilder: (BuildContext context, int index) {
@@ -177,12 +180,16 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   }
 
   _itemList(int index, List<Images> images) {
-    return CachedNetworkImage(
-      imageUrl: images[index].imageUrl.toString(),
-      placeholder: (context, url) => const Center(
-        child: CircularProgressIndicator(color: Colors.white),
+    return InteractiveViewer(
+      panEnabled: true,
+      maxScale: 5,
+      child: CachedNetworkImage(
+        imageUrl: images[index].imageUrl.toString(),
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 

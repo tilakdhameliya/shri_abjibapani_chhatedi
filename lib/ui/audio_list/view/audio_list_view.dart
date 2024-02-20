@@ -98,11 +98,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
               ),
             ),
           ),
-          Container(
-              padding: const EdgeInsets.all(10),
-              child: const Icon(Icons.arrow_back_rounded
-                  ,color: Colors.transparent)
-          ),
+          const SizedBox(width: 28)
         ],
       ),
     );
@@ -201,9 +197,18 @@ class _AudioListScreenState extends State<AudioListScreen> {
                               logic.audioTrack[index].name);
                         },
                         child: (logic.audioTrack[index].isLoader)
-                            ? CircularPercentIndicator(
-                                radius: 18.0,
-                                lineWidth: 2.0,
+                            ? const SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  color: CColor.theme,
+                                  strokeWidth: 1.5,
+                                ),
+                              )
+                            : (logic.audioTrack[index].isIndicator)
+                            ?CircularPercentIndicator(
+                                radius: 15.0,
+                                lineWidth: 3.0,
                                 percent: logic.downloadPercentage,
                                 center: Text(
                                   logic.downloadingText,
@@ -211,7 +216,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
                                     fontFamily: Font.poppins,
                                     fontWeight: FontWeight.w500,
                                     color: CColor.theme,
-                                    fontSize: 11,
+                                    fontSize: 10,
                                   ),
                                 ),
                                 progressColor: CColor.theme,

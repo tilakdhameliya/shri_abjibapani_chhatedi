@@ -145,10 +145,12 @@ class MagazineController extends GetxController {
           url,
           savePath,
           onReceiveProgress: (count, total) {
+            Constant.magazines[index].isLoader = false;
+            Constant.magazines[index].isIndicator = true;
             var percentage = count / total;
             downloadPercentage = percentage;
             var shoeText = (percentage * 100).toInt();
-            downloadingText = "$shoeText%";
+            downloadingText = "$shoeText";
             update();
             if (count != 33) {
               if (count == total) {
@@ -299,7 +301,7 @@ class MagazineController extends GetxController {
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath, Constant.magazines[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
-    Constant.magazines[index].isLoader = false;
+    Constant.magazines[index].isIndicator = false;
     update();
   }
 

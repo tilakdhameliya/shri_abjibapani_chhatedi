@@ -146,14 +146,16 @@ class BookController extends GetxController {
         update();
       } else {
         Constant.eBooks[index].isLoader = true;
-        var response = await dio.download(
+         await dio.download(
           url,
           savePath,
           onReceiveProgress: (count, total) {
+            Constant.eBooks[index].isLoader = false;
+            Constant.eBooks[index].isIndicator = true;
             var percentage = count / total;
             downloadPercentage = percentage;
             var shoeText = (percentage * 100).toInt();
-            downloadingText = "$shoeText%";
+            downloadingText = "$shoeText";
             update();
             if (count != 33) {
               if (count == total) {
@@ -304,7 +306,7 @@ class BookController extends GetxController {
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath,Constant.eBooks[index].name]);
     Fluttertoast.showToast(msg: "Download pdf successfully");
-    Constant.eBooks[index].isLoader = false;
+    Constant.eBooks[index].isIndicator = false;
     isCom = false;
     update();
   }

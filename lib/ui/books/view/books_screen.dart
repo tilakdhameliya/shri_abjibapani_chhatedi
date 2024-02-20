@@ -88,10 +88,7 @@ class _BookScreenState extends State<BookScreen> {
               ),
             ),
           ),
-          Container(
-              padding: const EdgeInsets.all(10),
-              child: const Icon(Icons.arrow_back_rounded,
-                  color: Colors.transparent)),
+          SizedBox(width: 28)
         ],
       ),
     );
@@ -167,25 +164,34 @@ class _BookScreenState extends State<BookScreen> {
                   ),
                 ),
                 (Constant.eBooks[index].isLoader)
-                    ? CircularPercentIndicator(
-                        radius: 18.0,
-                        lineWidth: 2.0,
-                        percent: logic.downloadPercentage,
-                        center: Text(
-                          logic.downloadingText,
-                          style: TextStyle(
-                            fontFamily: Font.poppins,
-                            fontWeight: FontWeight.w500,
-                            color: CColor.theme,
-                            fontSize: 11,
-                          ),
-                        ),
-                        progressColor: CColor.theme,
-                      )
-                    : (!Constant.eBooks[index].isDownload)
-                        ? SvgPicture.asset("assets/image/download.svg",
-                            color: CColor.red)
-                        : const SizedBox()
+                    ? const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    color: CColor.theme,
+                    strokeWidth: 1.5,
+                  ),
+                )
+                    : (Constant.eBooks[index].isIndicator)
+                        ? CircularPercentIndicator(
+                            radius: 15.0,
+                            lineWidth: 3,
+                            percent: logic.downloadPercentage,
+                            center: Text(
+                              logic.downloadingText,
+                              style: TextStyle(
+                                fontFamily: Font.poppins,
+                                fontWeight: FontWeight.w500,
+                                color: CColor.theme,
+                                fontSize: 10,
+                              ),
+                            ),
+                            progressColor: CColor.theme,
+                          )
+                        : (!Constant.eBooks[index].isDownload)
+                            ? SvgPicture.asset("assets/image/download.svg",
+                                color: CColor.red)
+                            : const SizedBox()
               ],
             ),
           ),

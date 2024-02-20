@@ -95,8 +95,8 @@ class _PdfScreenState extends State<PdfScreen> {
         PDFView(
           filePath: logic.path,
           enableSwipe: true,
-          autoSpacing: true,
-          pageFling: true,
+          autoSpacing: false,
+          pageFling: false,
           onRender: (pages) {
             setState(() {
               pages = pages;

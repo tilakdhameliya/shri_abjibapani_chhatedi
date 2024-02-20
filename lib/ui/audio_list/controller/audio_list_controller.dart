@@ -243,14 +243,16 @@ class AudioListController extends GetxController {
         audioTrack[index].isDownload = true;
         update();
       } else {
-        /*var response =*/ await dio.download(
+         await dio.download(
           url,
           savePath,
           onReceiveProgress: (count, total) {
+            audioTrack[index].isLoader = false;
+            audioTrack[index].isIndicator = true;
             var percentage = count / total;
             downloadPercentage = percentage;
             var shoeText = (percentage * 100).toInt();
-            downloadingText = "$shoeText%";
+            downloadingText = "$shoeText";
             update([Constant.audioId]);
             if (count != 33) {
               // showDownloadProgress(count, total, savePath);
@@ -399,7 +401,7 @@ class AudioListController extends GetxController {
     Debug.printLog("------>>>> downloaded data $data");
     Debug.printLog(
         "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedAudioList)}");
-    audioTrack[index].isLoader = false;
+    audioTrack[index].isIndicator = false;
     update();
   }
 

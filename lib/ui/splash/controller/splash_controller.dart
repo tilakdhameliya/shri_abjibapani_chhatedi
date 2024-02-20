@@ -52,7 +52,7 @@ class SplashController extends GetxController {
       if (string == "Online" && isLoadData) {
         isLoadData = false;
         await initializeNotifications();
-        getPermission();
+        // getPermission();
         moveToScreen();
       } else if (string == "Offline" && Constant.isOffline) {
         isLoadData = true;

@@ -34,6 +34,7 @@ class AudioAlbumTracks {
   bool isLoader = false;
   bool isPlayLoader = false;
   bool isDownload = false;
+  bool isIndicator = false;
 
 
   AudioAlbumTracks({this.name, this.url});

@@ -26,6 +26,7 @@ class Ebooks {
   String? url;
   String? image;
   bool isLoader = false;
+  bool isIndicator = false;
   bool isDownload = false;
 
   Ebooks({this.name, this.url, this.image});

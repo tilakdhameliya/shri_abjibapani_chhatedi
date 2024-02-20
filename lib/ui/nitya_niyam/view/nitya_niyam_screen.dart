@@ -74,7 +74,8 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          SizedBox(width: 28)
         ],
       ),
     );
