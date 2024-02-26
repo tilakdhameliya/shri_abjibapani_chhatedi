@@ -1,3 +1,4 @@
+import 'package:auto_height_grid_view/auto_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,33 @@ class _PhotosScreenState extends State<PhotosScreen> {
   }
 
   _centerView(PhotosController logic) {
-    return MasonryGridView.count(
+    return  Container(
+      padding: const EdgeInsets.only(top: 75, right: 10, left: 10, bottom: 10),
+      child: MasonryGridView.builder(
+        itemCount: Constant.photoAlbum.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              Get.toNamed(AppRoutes.subImage, arguments: [
+                Constant.photoAlbum[index].images,
+                Constant.photoAlbum[index].name
+              ]);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.network(
+                  Constant.photoAlbum[index].previewImage.toString(),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          );
+        },
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      ),
+    );/*MasonryGridView.count(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.only(top: 80, right: 15, left: 15, bottom: 15),
       itemCount: Constant.photoAlbum.length,
@@ -38,7 +65,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
       crossAxisSpacing: 5,
       mainAxisSpacing: 5,
       crossAxisCount: 2,
-    );
+    );*/
   }
 
   _gridItem(BuildContext context, int index, PhotosController logic) {
@@ -50,9 +77,11 @@ class _PhotosScreenState extends State<PhotosScreen> {
         ]);
       },
       child: Container(
-        height: 150,
+        // width: Get.width,
+        // height: (index % 2 == 0 && index != 0) ? 140 : 250,
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
+          color: Colors.red,
           borderRadius: BorderRadius.circular(16),
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -60,15 +89,31 @@ class _PhotosScreenState extends State<PhotosScreen> {
                 Constant.photoAlbum[index].previewImage.toString()),
           ),
         ),
-        child: Text(
-          "${Constant.photoAlbum[index].name}",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: Font.poppins,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 11.5,
-          ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(colors: [
+                    Colors.black.withOpacity(0.7),
+                    Colors.black.withOpacity(0.001),
+                  ], begin: Alignment.bottomCenter, end: Alignment.center)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                "${Constant.photoAlbum[index].name}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

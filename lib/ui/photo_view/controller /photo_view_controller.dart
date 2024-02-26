@@ -63,17 +63,20 @@ class PhotoViewController extends GetxController{
   }
 
   saveImage(int index) {
-    isLoader = true;
+    images[index].isLoading  =true;
+    // isLoader = true;
     update();
     String url = images[index].imageUrl.toString();
     GallerySaver.saveImage(url).then((value) {
       if (value == true) {
         Fluttertoast.showToast(msg: "Image Save successfully");
-        isLoader = false;
+        images[index].isLoading  =false;
+        // isLoader = false;
         update();
       } else {
         Fluttertoast.showToast(msg: "Image not save");
-        isLoader = false;
+        images[index].isLoading  =false;
+        // isLoader = false;
         update();
       }
     });

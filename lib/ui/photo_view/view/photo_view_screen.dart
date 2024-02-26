@@ -115,14 +115,23 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
               logic.saveImage(logic.currentIndex);
               setState(() {});
             },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: SvgPicture.asset(
-                "assets/image/download.svg",
-                height: 23,
-                color: Colors.white,
-              ),
-            ),
+            child: (logic.images[logic.currentIndex].isLoading)
+                ? const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(
+                            color: Colors.white, strokeWidth: 2.5)),
+                  )
+                : Container(
+                    padding: const EdgeInsets.all(10),
+                    child: SvgPicture.asset(
+                      "assets/image/download.svg",
+                      height: 23,
+                      color: Colors.white,
+                    ),
+                  ),
           ),
           InkWell(
             onTap: () {
@@ -169,7 +178,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
         itemCount: logic.images.length,
         onPageChanged: (index) {
           logic.currentIndex = index;
-          logic.imageController.scrollTo(index: index, duration: const Duration(milliseconds: 200));
+          logic.imageController.scrollTo(
+              index: index, duration: const Duration(milliseconds: 200));
           setState(() {});
         },
         itemBuilder: (BuildContext context, int index) {
@@ -185,6 +195,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
       maxScale: 5,
       child: CachedNetworkImage(
         imageUrl: images[index].imageUrl.toString(),
+        filterQuality: FilterQuality.low,
         placeholder: (context, url) => const Center(
           child: CircularProgressIndicator(color: Colors.white),
         ),
