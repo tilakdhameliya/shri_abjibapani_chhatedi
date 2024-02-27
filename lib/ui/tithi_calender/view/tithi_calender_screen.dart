@@ -8,7 +8,9 @@ import 'package:satsang/utils/font.dart';
 import '../controller/tithi_calender_controller.dart';
 
 class TithiCalenderScreen extends StatefulWidget {
-  const TithiCalenderScreen({super.key});
+   TithiCalenderScreen({super.key});
+
+  final TithiCalenderController tithiCalenderController = Get.put(TithiCalenderController());
 
   @override
   State<TithiCalenderScreen> createState() => _TithiCalenderScreenState();

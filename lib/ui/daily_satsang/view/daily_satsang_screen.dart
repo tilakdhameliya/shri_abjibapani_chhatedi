@@ -8,7 +8,9 @@ import '../../../utils/font.dart';
 import '../controller/daily_satsang_controller.dart';
 
 class DailySatsangScreen extends StatefulWidget {
-  const DailySatsangScreen({super.key});
+   DailySatsangScreen({super.key});
+
+  final DailySatsangController dailySatsangController = Get.put(DailySatsangController());
 
   @override
   State<DailySatsangScreen> createState() => _DailySatsangScreenState();
@@ -100,6 +102,7 @@ class _DailySatsangScreenState extends State<DailySatsangScreen> {
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
+          // padding: const EdgeInsets.only(top: 70,right: 15,left: 15,bottom: 10),
           padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
           child: Text(Constant.dailyQuote,style: TextStyle(color: Colors.black,fontSize: 19,fontFamily: Font.poppins,height: 1.7,fontWeight: FontWeight.w600),),
         ),

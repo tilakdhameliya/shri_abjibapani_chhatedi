@@ -92,28 +92,35 @@ class _PdfScreenState extends State<PdfScreen> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        PDFView(
-          filePath: logic.path,
-          enableSwipe: true,
-          autoSpacing: false,
-          pageFling: false,
-          onRender: (pages) {
-            setState(() {
-              pages = pages;
-              logic.isReady = true;
-            });
-          },
-          onError: (error) {
-            print("helllooooo ${error.toString()}");
-          },
-          onPageError: (page, error) {
-            logic.errorMessage = '$page: ${error.toString()}';
-            print('$page: ${error.toString()}');
-          },
-          onViewCreated: (PDFViewController pdfViewController) {
-            logic.controller.complete(pdfViewController);
-          },
-          onPageChanged: (int? page, int? total) {},
+        Column(
+          children: [
+            const SizedBox(height: 70),
+            Expanded(
+              child: PDFView(
+                filePath: logic.path,
+                enableSwipe: true,
+                autoSpacing: false,
+                pageFling: false,
+                onRender: (pages) {
+                  setState(() {
+                    pages = pages;
+                    logic.isReady = true;
+                  });
+                },
+                onError: (error) {
+                  print("helllooooo ${error.toString()}");
+                },
+                onPageError: (page, error) {
+                  logic.errorMessage = '$page: ${error.toString()}';
+                  print('$page: ${error.toString()}');
+                },
+                onViewCreated: (PDFViewController pdfViewController) {
+                  logic.controller.complete(pdfViewController);
+                },
+                onPageChanged: (int? page, int? total) {},
+              ),
+            ),
+          ],
         ),
         logic.errorMessage.isEmpty
             ? !logic.isReady

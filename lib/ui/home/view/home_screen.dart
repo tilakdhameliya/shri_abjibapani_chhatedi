@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:satsang/ui/daily_satsang/view/daily_satsang_screen.dart';
 import 'package:satsang/ui/divya_darshan/view/divya_darshan_screen.dart';
 import 'package:satsang/ui/home/controller/home_controller.dart';
 import 'package:satsang/ui/news/view/news_screen.dart';
 import 'package:satsang/ui/photo/view/photo_screen.dart';
+import 'package:satsang/ui/tithi_calender/view/tithi_calender_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
@@ -88,10 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
           (logic.activePageIndex == 1)
               ? "Audio"
               : (logic.activePageIndex == 2)
-                  ? "News"
+                  ? "Photo"
                   : (logic.activePageIndex == 3)
-                      ? "Divya Darshan"
-                      : "Photo",
+                      ? "Calender"
+                      : "Daily Satsung",
           style: TextStyle(
             fontFamily: Font.poppins,
             color: Colors.black,
@@ -113,10 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
             logic.onPageChangeFromBody(index);
           },
           children: [
-            PhotosScreen(),
+            DailySatsangScreen(),
             AudioViewScreen(),
-            NewsScreen(),
-            DivyaDarshanScreen(),
+            PhotosScreen(),
+            TithiCalenderScreen(),
           ],
         );
       },
@@ -160,20 +162,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Constant.isShowBottomSheet = false;
                   setState(() {});
-                  logic.photoScreen(0);
+                  logic.dailySatsung(0);
                 },
                 child: SizedBox(
-                  width: 50,
+                  // width: 80,
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(2.0),
-                        child: SvgPicture.asset("assets/image/image.svg",
-                            height: 23),
+                        child: SvgPicture.asset("assets/image/satsang.svg",
+                            height: 24),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 5),
                       Text(
-                        "Photos",
+                        "Daily Satsung",
                         style: TextStyle(
                           decoration: (logic.isPhoto)
                               ? TextDecoration.underline
@@ -205,9 +207,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.all(2.0),
                         child: SvgPicture.asset("assets/image/audio.svg",
-                            height: 23),
+                            height: 24),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 5),
                       Text(
                         "Audio",
                         style: TextStyle(
@@ -233,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Constant.isShowBottomSheet = false;
                   setState(() {});
-                  logic.newsScreen(2);
+                  logic.photoScreen(2);
                 },
                 child: SizedBox(
                   width: 50,
@@ -241,12 +243,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(2.0),
-                        child: SvgPicture.asset("assets/image/news.svg",
-                            height: 23),
+                        child: SvgPicture.asset("assets/image/image.svg",
+                            height: 24),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 5),
                       Text(
-                        "News",
+                        "Photo",
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
                           decoration: (logic.isNews)
@@ -278,12 +280,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(2.0),
-                        child: SvgPicture.asset("assets/image/darshan.svg",
-                            height: 25),
+                        child: SvgPicture.asset("assets/image/calender.svg",
+                            height: 24),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 5),
                       Text(
-                        "Darshan",
+                        "Calender",
                         style: TextStyle(
                           decoration: (logic.isDivyaDarshan)
                               ? TextDecoration.underline
@@ -371,18 +373,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 onTap: () {
                   Get.back();
-                  Get.toNamed(AppRoutes.dailySatsangScreen);
+                  Get.toNamed(AppRoutes.newsScreen);
                 },
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/satsang.svg",
+                      child: SvgPicture.asset("assets/image/news.svg",
                           height: 23),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      "Daily Satsang",
+                      "News",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         decoration: TextDecoration.none,
@@ -556,18 +558,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 onTap: () {
                   Get.back();
-                  Get.toNamed(AppRoutes.tithiCalenderScreen);
+                  Get.toNamed(AppRoutes.divyaDarshanScreen);
                 },
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/calender.svg",
+                      child: SvgPicture.asset("assets/image/darshan.svg",
                           height: 23),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      "Calender",
+                      "Darshan",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         decoration: TextDecoration.none,

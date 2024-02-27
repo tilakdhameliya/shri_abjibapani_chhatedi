@@ -49,32 +49,24 @@ class SplashController extends GetxController {
       update();
       // 3.
       Debug.printLog("connection status=====>>>>>>>$string");
-      if (string == "Online" && isLoadData) {
-        isLoadData = false;
-        await initializeNotifications();
-        // getPermission();
-        moveToScreen();
-      } else if (string == "Offline" && Constant.isOffline) {
-        isLoadData = true;
-        Constant.isOffline = false;
-        showOfflineDialog();
-      }
+      // if (string == "Online" && isLoadData) {
+      //   isLoadData = false;
+      //   await initializeNotifications();
+      //   getPermission();
+      //   moveToScreen();
+      // } else if (string == "Offline" && Constant.isOffline) {
+      //   isLoadData = true;
+      //   Constant.isOffline = false;
+      //   // showOfflineDialog();
+      // }
+      moveToScreen();
     });
   }
 
   moveToScreen() async {
-    await repo.getPhotoAlbum().then((value) async {
-      Constant.photoAlbum = value.photoAlbums!;
-      for (int i = 0; i < Constant.photoAlbum.length; i++) {
-        final fullImage =
-            Image.network(Constant.photoAlbum[i].previewImage.toString());
-        await precacheImage(fullImage.image, Get.context!);
-      }
-    });
-    await repo.getAudioAlbum().then((value) {
-      Constant.audioSection = value.audioSections!;
-      Constant.audioAlbum = value.audioAlbums!;
-    });
+    await initializeNotifications();
+    await getJsonData();
+    getPermission();
     Get.offAllNamed(AppRoutes.homeScreen);
   }
 

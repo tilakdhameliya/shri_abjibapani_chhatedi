@@ -84,8 +84,8 @@ class AppPages {
       name: AppRoutes.tithiCalenderScreen,
       page: () => Sizer(
         builder: (context, orientation, deviceType) {
-          return  const AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
+          return   AnnotatedRegion<SystemUiOverlayStyle>(
+            value: const SystemUiOverlayStyle(
               // statusBarColor: isDarkMode ? CColor.black : CColor.white12,
             ),
             child: TithiCalenderScreen(),
@@ -159,8 +159,8 @@ class AppPages {
       name: AppRoutes.dailySatsangScreen,
       page: () => Sizer(
         builder: (context, orientation, deviceType) {
-          return  const AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
+          return   AnnotatedRegion<SystemUiOverlayStyle>(
+            value: const SystemUiOverlayStyle(
               // statusBarColor: isDarkMode ? CColor.black : CColor.white12,
             ),
             child: DailySatsangScreen(),

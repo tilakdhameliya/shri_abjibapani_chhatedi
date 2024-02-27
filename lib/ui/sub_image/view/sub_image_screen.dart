@@ -116,7 +116,28 @@ class _SubImageScreenState extends State<SubImageScreen> {
             ),
           )
         : Expanded(
-            child: MasonryGridView.count(
+            child: MasonryGridView.builder(
+              itemCount: logic.subImages.length,
+              itemBuilder: (BuildContext context, int index) {
+                return  InkWell(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.photoView,
+                        arguments: [index,logic.subImages]);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Image.network(
+                        logic.subImages[index].thumbUrl.toString(),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            ),/*MasonryGridView.count(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(
                   top: 15, right: 15, left: 15, bottom: 15),
@@ -128,7 +149,7 @@ class _SubImageScreenState extends State<SubImageScreen> {
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
               crossAxisCount: 2,
-            ),
+            ),*/
           );
   }
 

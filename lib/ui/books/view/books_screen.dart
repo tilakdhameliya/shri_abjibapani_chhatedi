@@ -88,7 +88,7 @@ class _BookScreenState extends State<BookScreen> {
               ),
             ),
           ),
-          SizedBox(width: 28)
+          const SizedBox(width: 28)
         ],
       ),
     );
@@ -142,13 +142,13 @@ class _BookScreenState extends State<BookScreen> {
             child: Row(
               children: [
                 Container(
-                  height: 70,
+                  height: 80,
                   width: 95,
                   margin: const EdgeInsets.only(right: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
-                        fit: BoxFit.cover,
+                        // fit: BoxFit.cover,
                         image: NetworkImage(
                             Constant.eBooks[index].image.toString()),
                       )),

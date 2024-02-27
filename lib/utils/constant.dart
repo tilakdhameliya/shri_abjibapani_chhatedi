@@ -2,6 +2,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../audio_handler/audio_handler.dart';
 import '../model/audio/audio_album_model.dart';
 import '../model/books/books_model.dart';
@@ -51,7 +52,7 @@ class Constant {
   static HeaderLines tithiCalender = HeaderLines();
   static String dailyQuote = "";
 
-
+  static WebViewController darshanController = WebViewController();
   static PageController photoController = PageController(initialPage: 0,keepPage: true);
   static TextEditingController mobileNoController = TextEditingController();
   static TextEditingController birthDateController = TextEditingController();
