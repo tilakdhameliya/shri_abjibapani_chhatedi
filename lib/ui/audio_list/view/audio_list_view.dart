@@ -154,7 +154,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
             onTap: () async {
               // if(!logic.isFirst) {
               //   logic.isFirst = true;
-                logic.play(index);
+                logic.play(index,!logic.audioTrack[index].isPlayIconShow);
                 setState(() {});
               // }
               // if(logic.audioTrack[index].isPlay){
@@ -184,7 +184,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
                                 strokeWidth: 1.5,
                               ))
                           : SvgPicture.asset(
-                              (logic.audioTrack[index].isPlay)
+                              (!logic.audioTrack[index].isPlayIconShow)
                                   ? "assets/image/stop.svg"
                                   : "assets/image/play.svg",
                               height: 35,

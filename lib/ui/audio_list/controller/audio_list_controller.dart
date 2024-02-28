@@ -30,7 +30,7 @@ class AudioListController extends GetxController {
   AudioPlayer player = AudioPlayer();
   List<AudioAlbumTracks> audioTrack = [];
   late Stream<DurationState> durationState;
-  int playIndex = 0;
+  int currentPlayIndex = 0;
   String downloadingText = "";
   double downloadPercentage = 0;
 
@@ -77,14 +77,30 @@ class AudioListController extends GetxController {
     });
   }
 
-  play(int index) async {
-    audioTrack[index].isPlayLoader = true;
-    update([Constant.audioId]);
+  play(int index,bool isPause) async {
+    if(!isPause) {
+      audioTrack[index].isPlayLoader = true;
+      audioTrack[index].isPlayIconShow = false;
+      update([Constant.audioId]);
+    }
     if(player.playing){
       await player.pause();
-      await player.stop();
+    }
+    if(isPause) {
+      // audioTrack[index].isPlay = false;
+      audioTrack[index].isPlayLoader = false;
+      audioTrack[index].isPlayIconShow = true;
+      update([Constant.audioId]);
+      return;
+    }else if(currentPlayIndex == index){
+      audioTrack[index].isPlayIconShow = false;
+      audioTrack[index].isPlayLoader = false;
+      update([Constant.audioId]);
+      await player.play();
+      return;
     }
     player = AudioPlayer();
+    currentPlayIndex  = index;
     await playAudio(audioTrack[index].url.toString());
     if (!audioTrack[index].isPlay) {
       var playIndex =
@@ -92,9 +108,11 @@ class AudioListController extends GetxController {
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
         audioTrack[playIndex].isPlayLoader = false;
+        audioTrack[playIndex].isPlayIconShow = true;
         update([Constant.audioId]);
       }
       audioTrack[index].isPlay = true;
+      audioTrack[index].isPlayIconShow = false;
       await player.play().then((value) {
         audioTrack[index].isPlayLoader = false;
         update([Constant.audioId]);
@@ -107,6 +125,7 @@ class AudioListController extends GetxController {
       audioTrack.indexWhere((element) => element.isPlay == true);
       if (playIndex > -1) {
         audioTrack[playIndex].isPlay = false;
+        audioTrack[playIndex].isPlayIconShow = true;
         audioTrack[playIndex].isPlayLoader = false;
         await player.pause();
         update([Constant.audioId]);
@@ -131,11 +150,12 @@ class AudioListController extends GetxController {
     var playIndex =
     audioTrack.indexWhere((element) => element.isPlay == true);
     if(playIndex > -1) {
-      audioTrack[playIndex].isPlay = false;
+      audioTrack[playIndex].isPlayIconShow = true;
+      audioTrack[index].isPlay = false;
       if (player.playing) {
         await player.stop();
       }
-      play(playIndex + 1);
+      play(playIndex + 1,false);
       update([Constant.audioId]);
     }
   }
