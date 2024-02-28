@@ -87,7 +87,7 @@ Future<void> showOfflineDialog() async {
                     splashColor: CColor.transparent,
                     onTap: () {
                       Get.back();
-                      Constant.isOffline = true;
+                      
                       Utils.networkConnection(string, networkConnectivity);
                     },
                     child: Container(

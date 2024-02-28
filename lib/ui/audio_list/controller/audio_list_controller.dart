@@ -26,6 +26,7 @@ class AudioListController extends GetxController {
   String audioImage = "";
   bool isPlay = false;
   bool isLoading = true;
+  bool isFirst = false;
   AudioPlayer player = AudioPlayer();
   List<AudioAlbumTracks> audioTrack = [];
   late Stream<DurationState> durationState;
@@ -66,13 +67,13 @@ class AudioListController extends GetxController {
                 .indexWhere((element) => element.name == audioTracksList[i].name);
             if (index > -1) {
               audioTrack[index].isDownload = true;
-              update();
+              update([Constant.audioId]);
             }
           }
         }
       }
       isLoading = false;
-      update();
+      update([Constant.audioId]);
     });
   }
 
@@ -124,6 +125,19 @@ class AudioListController extends GetxController {
       update([Constant.audioId]);
     }
     update([Constant.audioId]);
+  }
+
+  stopAfterCom(int index) async {
+    var playIndex =
+    audioTrack.indexWhere((element) => element.isPlay == true);
+    if(playIndex > -1) {
+      audioTrack[playIndex].isPlay = false;
+      if (player.playing) {
+        await player.stop();
+      }
+      play(playIndex + 1);
+      update([Constant.audioId]);
+    }
   }
 
   playAudio(String url) {

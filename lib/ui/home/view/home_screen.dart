@@ -3,11 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:satsang/ui/daily_satsang/view/daily_satsang_screen.dart';
-import 'package:satsang/ui/divya_darshan/view/divya_darshan_screen.dart';
 import 'package:satsang/ui/home/controller/home_controller.dart';
-import 'package:satsang/ui/news/view/news_screen.dart';
 import 'package:satsang/ui/photo/view/photo_screen.dart';
 import 'package:satsang/ui/tithi_calender/view/tithi_calender_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,16 +26,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return  GetBuilder<HomeController>(
-        builder: (logic) {
-          return AnnotatedRegion(
-              value: SystemUiOverlayStyle(
+    return GetBuilder<HomeController>(
+      builder: (logic) {
+        return AnnotatedRegion(
+            value: SystemUiOverlayStyle(
                 statusBarColor: (Constant.isShowBottomSheet)
                     ? Colors.black.withOpacity(0.3)
                     : CColor.white,
                 systemNavigationBarColor: CColor.white,
                 statusBarIconBrightness: (Constant.isShowBottomSheet)
-                  ? Brightness.light:Brightness.dark,
+                    ? Brightness.light
+                    : Brightness.dark,
                 systemNavigationBarIconBrightness: Brightness.dark),
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -373,18 +373,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 onTap: () {
                   Get.back();
-                  Get.toNamed(AppRoutes.newsScreen);
+                  Get.toNamed(AppRoutes.divyaDarshanScreen);
                 },
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/news.svg",
+                      child: SvgPicture.asset("assets/image/darshan.svg",
                           height: 23),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      "News",
+                      "Daily Darshan",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         decoration: TextDecoration.none,
@@ -439,8 +439,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child:
-                          SvgPicture.asset("assets/image/cell-phone.svg", height: 25),
+                      child: SvgPicture.asset("assets/image/cell-phone.svg",
+                          height: 25),
                     ),
                     const SizedBox(height: 3),
                     Text(
@@ -496,7 +496,7 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onTap: ()  {
+                onTap: () {
                   Constant.isShowBottomSheet = false;
                   setState(() {});
                   Get.toNamed(AppRoutes.magazineScreen);
@@ -558,18 +558,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 onTap: () {
                   Get.back();
-                  Get.toNamed(AppRoutes.divyaDarshanScreen);
+                  Get.toNamed(AppRoutes.newsScreen);
                 },
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/darshan.svg",
-                          height: 23),
+                      child:
+                          SvgPicture.asset("assets/image/news.svg", height: 23),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      "Darshan",
+                      "News",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         decoration: TextDecoration.none,
@@ -586,11 +586,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () async {
-                  Constant.isShowBottomSheet = false;
-                  setState(() {});
-                  String url =
-                      'https://youtube.com/@AbjibapaniChhatedi?si=REwY4mPKMgLfHjs_';
-                  await launch(url);
+                  logic.checkConnection(false);
+                  // if (logic.isOffline) {
+                  //   Fluttertoast.showToast(msg: "Please Check your connection");
+                  // } else {
+                    Constant.isShowBottomSheet = false;
+                    setState(() {});
+                    String url =
+                        'https://youtube.com/@AbjibapaniChhatedi?si=REwY4mPKMgLfHjs_';
+                    await launch(url);
+                  // }
                 },
                 child: Column(
                   children: [
@@ -617,11 +622,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
-                  Constant.isShowBottomSheet = false;
-                  setState(() {});
-                  String url =
-                      'https://www.facebook.com/abjibapanichhatedi?mibextid=ZbWKwL';
-                  await launch(url);
+                  logic.checkConnection(false);
+                  if (logic.isOffline) {
+                    Fluttertoast.showToast(msg: "Please Check your connection");
+                  } else {
+                    Constant.isShowBottomSheet = false;
+                    setState(() {});
+                    String url =
+                        'https://www.facebook.com/abjibapanichhatedi?mibextid=ZbWKwL';
+                    await launch(url);
+                  }
                 },
                 child: Column(
                   children: [

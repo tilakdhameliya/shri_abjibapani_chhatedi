@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,10 +8,11 @@ import '../../../utils/constant.dart';
 class NewsController extends GetxController{
   repoData repo = repoData();
   bool isLoading = false;
+  bool isOffline = false;
 
 @override
   void onInit() {
-  getData();
+  checkConnection();
     super.onInit();
   }
 
@@ -26,4 +28,16 @@ class NewsController extends GetxController{
     isLoading = false;
     update();
   }
+
+  checkConnection() async {
+    var result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      isOffline = true;
+      update();
+    } else{
+      isOffline = false;
+      getData();
+    }
+  }
+
 }

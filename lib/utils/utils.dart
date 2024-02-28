@@ -35,6 +35,9 @@ class Utils {
     }
   }
 
+
+
+
   static networkConnection(
       String string, NetworkConnectivity networkConnectivity) {
     networkConnectivity.initialise();

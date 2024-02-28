@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -25,15 +26,26 @@ class NityaNiyamController extends GetxController {
   String path = "";
   bool isReady = false;
   String errorMessage = '';
+  bool isOffline = false;
 
   final Completer<PDFViewController> controller =
       Completer<PDFViewController>();
 
   @override
   void onInit() {
-
-    downloadPdf("Nitya_Niyam");
+    checkConnection();
     super.onInit();
+  }
+
+  checkConnection() async {
+    var result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      isOffline = true;
+      update();
+    } else{
+      isOffline = false;
+      downloadPdf("Nitya_Niyam");
+    }
   }
 
   void showDownloadNotification(String savePath) async {
@@ -117,7 +129,7 @@ class NityaNiyamController extends GetxController {
       var dir = await getApplicationDocumentsDirectory();
       savePath = "${dir.path}/$filename.pdf";
     } else {
-      savePath = '/storage/emulated/0/download/$filename.pdf';
+      savePath = '/storage/emulated/0/download/abjibapani chhatedi/$filename.pdf';
     }
     downloadFilePah = savePath;
     outputFile = File(savePath);

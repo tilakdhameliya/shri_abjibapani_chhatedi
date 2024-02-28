@@ -176,7 +176,7 @@ class _AudioViewScreenState extends State<AudioViewScreen> {
           InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              Constant.isOffline = true;
+
               logic.checkConnection();
             },
             child: Container(

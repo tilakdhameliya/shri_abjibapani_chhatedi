@@ -31,6 +31,7 @@ class AudioAlbumTracks {
   String? name;
   String? url;
   bool isPlay = false;
+  bool isShowBar = false;
   bool isLoader = false;
   bool isPlayLoader = false;
   bool isDownload = false;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -29,6 +30,7 @@ class MagazineController extends GetxController {
   repoData repo = repoData();
   String downloadingText = "";
   double downloadPercentage = 0;
+  bool isOffline = false;
 
   void showDownloadNotification(String savePath) async {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -307,9 +309,20 @@ class MagazineController extends GetxController {
 
   @override
   void onInit() {
-    getData();
+    checkConnection();
 
     super.onInit();
+  }
+
+  checkConnection() async {
+    var result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      isOffline = true;
+      update();
+    } else{
+      isOffline = false;
+      getData();
+    }
   }
 
   getData() async {

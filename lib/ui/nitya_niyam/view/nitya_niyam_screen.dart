@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
+import '../../../utils/color.dart';
 import '../../../utils/debugs.dart';
 import '../../../utils/font.dart';
 import '../controller/nitya_niyam_controller.dart';
@@ -75,14 +76,16 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
               ),
             ),
           ),
-          SizedBox(width: 28)
+          const SizedBox(width: 28)
         ],
       ),
     );
   }
 
   _centerView(NityaNiyamController logic) {
-    return Stack(
+    return (logic.isOffline)
+        ? _offLine(logic)
+        : Stack(
       alignment: Alignment.center,
       children: [
         (logic.isLoading)
@@ -122,6 +125,94 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
                 child: Text(logic.errorMessage),
               )
       ],
+    );
+  }
+
+  _offLine(NityaNiyamController logic){
+    return Container(
+      width: Get.width,
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            "assets/image/no_internet.svg",
+            // ignore: deprecated_member_use
+            color:  CColor.black,
+            height: 110,
+            width: 150,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Get.height * 0.02),
+            child: Text(
+              "OOPS!",
+              style: TextStyle(
+                color:  CColor.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w500,
+                fontFamily: Font.poppins,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Get.height * 0.01),
+            child: Text(
+              "No Internet Connection",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                fontFamily: Font.poppins,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Get.height * 0.01),
+            child: Text(
+              "Please check your connection",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+                fontFamily: Font.poppins,
+              ),
+            ),
+          ),
+          SizedBox(height: Get.height * 0.05),
+          InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () {
+              
+              logic.checkConnection();
+            },
+            child: Container(
+              height: Get.height * 0.06,
+              width: Get.width * 0.4,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                border: Border.all(
+                  color:  CColor.black,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "RETRY",
+                  style: TextStyle(
+                    color:  CColor.black,
+                    fontFamily: Font.poppins,
+                    fontSize: 19,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

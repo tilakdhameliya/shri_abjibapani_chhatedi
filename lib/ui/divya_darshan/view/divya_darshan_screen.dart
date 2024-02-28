@@ -168,7 +168,7 @@ class DivyaDarshanScreen extends StatelessWidget {
           InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              Constant.isOffline = true;
+              
               logic.checkConnection(true);
             },
             child: Container(

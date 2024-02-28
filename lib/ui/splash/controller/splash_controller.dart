@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ class SplashController extends GetxController {
   String string = '';
   bool isLoadData = true;
   repoData repo = repoData();
+  int version = 0;
 
   @override
   void onInit() {
@@ -70,7 +72,21 @@ class SplashController extends GetxController {
     Get.offAllNamed(AppRoutes.homeScreen);
   }
 
+  Future<dynamic> getAndroidVersion() async {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.version.sdkInt;
+    }
+    throw UnsupportedError("Platform is not Android");
+  }
+
   getPermission() async {
+    if (Platform.isAndroid) {
+      await getAndroidVersion().then((value) {
+        version = value;
+      });
+    }
     Constant.isGetNotificationPermission =
         Preference.shared.getBool(Preference.isGetNotificationPermission)!;
     Constant.isGetStoragePermission =
@@ -93,25 +109,28 @@ class SplashController extends GetxController {
           Preference.shared.getBool(Preference.isGetNotificationPermission)!;
     }
 
-    if (!Constant.isGetStoragePermission) {
-      var storagePermission = await Permission.storage.request();
-      Constant.isStorage = storagePermission.isDenied;
-      Preference.shared.setBool(Preference.isStorage, Constant.isStorage);
-      Preference.shared.setBool(
-          Preference.isGetStoragePermission, !Constant.isGetStoragePermission);
-      Constant.isGetStoragePermission =
-          Preference.shared.getBool(Preference.isGetStoragePermission)!;
+    if(version < 32) {
+      if (!Constant.isGetStoragePermission) {
+        var storagePermission = await Permission.storage.request();
+        Constant.isStorage = storagePermission.isDenied;
+        Preference.shared.setBool(Preference.isStorage, Constant.isStorage);
+        Preference.shared.setBool(
+            Preference.isGetStoragePermission,
+            !Constant.isGetStoragePermission);
+        Constant.isGetStoragePermission =
+        Preference.shared.getBool(Preference.isGetStoragePermission)!;
+      }
     }
 
-    if (!Constant.isGetPhotoPermission) {
-      var storagePermission = await Permission.photos.request();
-      Constant.isPhoto = storagePermission.isDenied;
-      Preference.shared.setBool(Preference.isPhoto, Constant.isPhoto);
-      Preference.shared.setBool(
-          Preference.isGetPhotoPermission, !Constant.isGetPhotoPermission);
-      Constant.isGetPhotoPermission =
-          Preference.shared.getBool(Preference.isGetPhotoPermission)!;
-    }
+    // if (!Constant.isGetPhotoPermission) {
+    //   var storagePermission = await Permission.photos.request();
+    //   Constant.isPhoto = storagePermission.isDenied;
+    //   Preference.shared.setBool(Preference.isPhoto, Constant.isPhoto);
+    //   Preference.shared.setBool(
+    //       Preference.isGetPhotoPermission, !Constant.isGetPhotoPermission);
+    //   Constant.isGetPhotoPermission =
+    //       Preference.shared.getBool(Preference.isGetPhotoPermission)!;
+    // }
   }
 
   Future<void> initializeNotifications() async {

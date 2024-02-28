@@ -28,6 +28,7 @@ class HomeController extends GetxController {
   bool isNews = false;
   bool isDivyaDarshan = false;
   bool isMore = false;
+  bool isOffline = false;
   Map source = {ConnectivityResult.none: false};
   final NetworkConnectivity networkConnectivity = NetworkConnectivity.instance;
   String string = '';
@@ -88,18 +89,22 @@ class HomeController extends GetxController {
     update();
   }
 
-  checkConnection() async {
+  checkConnection(bool bool) async {
     var result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
+      isOffline = true;
       update();
     } else {
-      webViewPreLoad();
+      isOffline = false;
+      if(bool) {
+        webViewPreLoad();
+      }
     }
   }
 
   more(int i, BuildContext context) {
     Constant.isShowBottomSheet = !Constant.isShowBottomSheet;
-    checkConnection();
+    checkConnection(true);
   }
 
   webViewPreLoad() {

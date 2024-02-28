@@ -1,16 +1,12 @@
-import 'package:auto_height_grid_view/auto_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:satsang/ui/photo/controller/photo_controller.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/color.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/font.dart';
-import '../../../utils/loader.dart';
-import '../../../utils/utils.dart';
 
 class PhotosScreen extends StatefulWidget {
   PhotosScreen({super.key});
@@ -22,6 +18,7 @@ class PhotosScreen extends StatefulWidget {
 }
 
 class _PhotosScreenState extends State<PhotosScreen> {
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<PhotosController>(
         builder: (logic) {
@@ -37,7 +34,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
 
   _centerView(PhotosController logic) {
     return  (logic.isLoader)
-        ? Center(
+        ? const Center(
           child: SizedBox(
             height: 45,
             width: 45,
@@ -74,7 +71,6 @@ class _PhotosScreenState extends State<PhotosScreen> {
         height: (index % 2 == 0 && index != 0) ? 140 : 250,
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
-          color: Colors.red,
           borderRadius: BorderRadius.circular(16),
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -146,7 +142,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
               "No Internet Connection",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.grey,
+                color: CColor.grayText,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
                 fontFamily: Font.poppins,
@@ -159,17 +155,17 @@ class _PhotosScreenState extends State<PhotosScreen> {
               "Please check your connection",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.grey,
+                color: CColor.grayText,
                 fontSize: 14,
                 fontFamily: Font.poppins,
               ),
             ),
           ),
-          SizedBox(height: Get.height * 0.05),
+          SizedBox(height: Get.height * 0.02),
           InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              Constant.isOffline = true;
+              
               logic.checkConnection();
             },
             child: Container(

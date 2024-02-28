@@ -26,6 +26,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: GetBuilder<AudioListController>(
+          id: Constant.audioId,
           builder: (logic) {
             return WillPopScope(
               onWillPop: () async {
@@ -128,6 +129,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
                   children: [
                     Image.network(logic.audioImage),
                     const SizedBox(height: 15),
+                    // (logic.audioTrack[logic.playIndex].isPlay)?_playBar(logic, logic.playIndex):const SizedBox(),
+                    // const SizedBox(height: 15),
                     ListView.builder(
                       itemCount: logic.audioTrack.length,
                       shrinkWrap: true,
@@ -149,8 +152,17 @@ class _AudioListScreenState extends State<AudioListScreen> {
         builder: (logic) {
           return InkWell(
             onTap: () async {
-              logic.play(index);
-              setState(() {});
+              // if(!logic.isFirst) {
+              //   logic.isFirst = true;
+                logic.play(index);
+                setState(() {});
+              // }
+              // if(logic.audioTrack[index].isPlay){
+              //  logic.player.pause();
+              //  logic.audioTrack[index].isPlay = false;
+              // }else {
+              //   logic.play(index);
+              // }
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -206,25 +218,26 @@ class _AudioListScreenState extends State<AudioListScreen> {
                                 ),
                               )
                             : (logic.audioTrack[index].isIndicator)
-                            ?CircularPercentIndicator(
-                                radius: 15.0,
-                                lineWidth: 3.0,
-                                percent: logic.downloadPercentage,
-                                center: Text(
-                                  logic.downloadingText,
-                                  style: TextStyle(
-                                    fontFamily: Font.poppins,
-                                    fontWeight: FontWeight.w500,
-                                    color: CColor.theme,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                progressColor: CColor.theme,
-                              )
-                            : (!logic.audioTrack[index].isDownload)
-                                ? SvgPicture.asset("assets/image/download.svg",
-                                    color: CColor.theme)
-                                : const SizedBox(),
+                                ? CircularPercentIndicator(
+                                    radius: 15.0,
+                                    lineWidth: 3.0,
+                                    percent: logic.downloadPercentage,
+                                    center: Text(
+                                      logic.downloadingText,
+                                      style: TextStyle(
+                                        fontFamily: Font.poppins,
+                                        fontWeight: FontWeight.w500,
+                                        color: CColor.theme,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    progressColor: CColor.theme,
+                                  )
+                                : (!logic.audioTrack[index].isDownload)
+                                    ? SvgPicture.asset(
+                                        "assets/image/download.svg",
+                                        color: CColor.theme)
+                                    : const SizedBox(),
                       ),
                     ],
                   ),
@@ -246,35 +259,71 @@ class _AudioListScreenState extends State<AudioListScreen> {
         if (snapshot.hasData) {
           final durationState = snapshot.data;
           final progress = durationState?.progress ?? Duration.zero;
+          var start = formatDuration(progress);
           final buffered = durationState?.buffered ?? Duration.zero;
           final total = durationState?.total ?? Duration.zero;
+          var end = formatDuration(total);
+          if(start != "00:00" && start == end){
+            // var playIndex =
+            // logic.audioTrack.indexWhere((element) => element.isPlay == true);
+            // logic.audioTrack[playIndex].isPlay = false;
+            Future.delayed(Duration.zero, () {
+              // Call the function that contains setState
+              logic.stopAfterCom(index);
+            });
+            Debug.printLog("------>>>> $start ");
+          }
           return Padding(
-            padding: const EdgeInsets.only(right: 50, left: 50, top: 10),
-            child: ProgressBar(
-              progress: progress,
-              buffered: buffered,
-              total: total,
-              onSeek: (duration) {
-                logic.player.seek(duration);
-              },
-              onDragUpdate: (details) {
-                debugPrint(
-                    ' details--=-=-]]]  ${details.timeStamp}, ${details.localPosition}');
-                setState(() {});
-              },
-              barHeight: 5.0,
-              baseBarColor: Colors.grey.withOpacity(0.2),
-              progressBarColor: CColor.theme,
-              thumbColor: CColor.theme,
-              barCapShape: BarCapShape.round,
-              thumbRadius: 10.0,
-              thumbCanPaintOutsideBar: true,
-              timeLabelLocation: TimeLabelLocation.none,
-              timeLabelType: TimeLabelType.totalTime,
-              timeLabelTextStyle: TextStyle(
-                  fontSize: 8,
-                  color: Theme.of(context).textTheme.bodyLarge?.color),
-              timeLabelPadding: 10,
+            padding: const EdgeInsets.only(top: 15),
+            child: Row(
+              children: [
+                Text(
+                  start,
+                  style: TextStyle(
+                    fontFamily: Font.poppins,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ProgressBar(
+                    progress: progress,
+                    buffered: buffered,
+                    total: total,
+                    onSeek: (duration) {
+                      logic.player.seek(duration);
+                    },
+                    onDragUpdate: (details) {
+                      debugPrint(
+                          ' details--=-=-]]]  ${details.timeStamp}, ${details.localPosition}');
+                      setState(() {});
+                    },
+                    barHeight: 5.0,
+                    baseBarColor: Colors.grey.withOpacity(0.2),
+                    progressBarColor: CColor.theme,
+                    thumbColor: CColor.theme,
+                    barCapShape: BarCapShape.round,
+                    thumbRadius: 10.0,
+                    thumbCanPaintOutsideBar: true,
+                    timeLabelLocation: TimeLabelLocation.none,
+                    timeLabelType: TimeLabelType.totalTime,
+                    timeLabelTextStyle: TextStyle(
+                        fontSize: 8,
+                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    timeLabelPadding: 10,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  end,
+                  style: TextStyle(
+                    fontFamily: Font.poppins,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           );
         } else if (snapshot.hasError) {
@@ -286,34 +335,17 @@ class _AudioListScreenState extends State<AudioListScreen> {
     );
   }
 
-  StreamBuilder<PlayerState> playButton(AudioListController logic, int index) {
-    return StreamBuilder<PlayerState>(
-      stream: logic.player.playerStateStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final playerState = snapshot.data;
-          final processingState = playerState?.processingState;
-          final playing = playerState?.playing;
-          if (logic.audioTrack[index].isPlayLoader == true) {
-            return const SizedBox(
-                height: 25,
-                width: 25,
-                child: CircularProgressIndicator(
-                    color: CColor.theme, strokeWidth: 1.5));
-          } else if (logic.audioTrack[index].isPlay == true) {
-            return SvgPicture.asset("assets/image/stop.svg",
-                height: 35, color: CColor.theme);
-          } else {
-            return SvgPicture.asset("assets/image/play.svg",
-                height: 35, color: CColor.theme);
-          }
-        } else if (snapshot.hasError) {
-          return const SizedBox();
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
-    );
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return "$minutes:$seconds";
   }
 }
 

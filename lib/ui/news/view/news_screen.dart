@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:satsang/routes/app_routes.dart';
 import 'package:satsang/utils/constant.dart';
@@ -21,25 +22,26 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NewsController>(builder: (logic) {
-      return  Scaffold(
-            backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: CColor.white,
-          elevation: 0,
-          toolbarHeight: 0,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark
+      return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: CColor.white,
+            elevation: 0,
+            toolbarHeight: 0,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.white,
+                statusBarIconBrightness: Brightness.dark),
           ),
-        ),
-            body: Stack(
-              children: [ _centerView(logic),_header(logic)],
-            ));
+          body: Stack(
+            children: [_centerView(logic), _header(logic)],
+          ));
     });
   }
 
   _centerView(NewsController logic) {
-    return (logic.isLoading)
+    return (logic.isOffline)
+        ? _offLine(logic)
+        : (logic.isLoading)
         ? const Expanded(
             child: Center(
               child: SizedBox(
@@ -192,6 +194,94 @@ class _NewsScreenState extends State<NewsScreen> {
                     ,color: Colors.transparent)
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  _offLine(NewsController logic){
+    return Container(
+      width: Get.width,
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            "assets/image/no_internet.svg",
+            // ignore: deprecated_member_use
+            color:  CColor.black,
+            height: 110,
+            width: 150,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Get.height * 0.02),
+            child: Text(
+              "OOPS!",
+              style: TextStyle(
+                color:  CColor.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w500,
+                fontFamily: Font.poppins,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Get.height * 0.01),
+            child: Text(
+              "No Internet Connection",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                fontFamily: Font.poppins,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Get.height * 0.01),
+            child: Text(
+              "Please check your connection",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+                fontFamily: Font.poppins,
+              ),
+            ),
+          ),
+          SizedBox(height: Get.height * 0.05),
+          InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () {
+              
+              logic.checkConnection();
+            },
+            child: Container(
+              height: Get.height * 0.06,
+              width: Get.width * 0.4,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                border: Border.all(
+                  color:  CColor.black,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "RETRY",
+                  style: TextStyle(
+                    color:  CColor.black,
+                    fontFamily: Font.poppins,
+                    fontSize: 19,
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
