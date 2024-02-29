@@ -14,12 +14,6 @@ import 'debugs.dart';
 import 'network_connectivity.dart';
 
 class Utils {
-  // static GuestResult? getUserData() {
-  //   var loggedUserData = Preference.shared.getString(Preference.keyUserData);
-  //   Map<String, dynamic> valueMap = json.decode(loggedUserData!);
-  //   return GuestResult.fromJson(valueMap);
-  // }
-
   static showToast(BuildContext context, String msg) {
     return Fluttertoast.showToast(
       msg: msg,
@@ -33,31 +27,6 @@ class Utils {
     } on PlatformException catch (e) {
       Debug.printLog("e.message....${e.message}");
     }
-  }
-
-
-
-
-  static networkConnection(
-      String string, NetworkConnectivity networkConnectivity) {
-    networkConnectivity.initialise();
-    networkConnectivity.myStream.listen((source) async {
-      source = source;
-      // 1.
-      switch (source.keys.toList()[0]) {
-        case ConnectivityResult.mobile:
-          string = source.values.toList()[0] ? 'Online' : 'Offline';
-          break;
-        case ConnectivityResult.wifi:
-          string = source.values.toList()[0] ? 'Online' : 'Offline';
-          break;
-        case ConnectivityResult.none:
-        default:
-          string = 'Offline';
-      }
-      // 3.
-      Debug.printLog("connection status=====>>>>>>>$string");
-    });
   }
 
   static String get getBaseUrl {

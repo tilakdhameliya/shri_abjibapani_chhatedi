@@ -87,7 +87,6 @@ class AudioListController extends GetxController {
       await player.pause();
     }
     if(isPause) {
-      // audioTrack[index].isPlay = false;
       audioTrack[index].isPlayLoader = false;
       audioTrack[index].isPlayIconShow = true;
       update([Constant.audioId]);

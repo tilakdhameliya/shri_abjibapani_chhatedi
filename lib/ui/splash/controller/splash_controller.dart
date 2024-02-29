@@ -16,8 +16,6 @@ import '../../../../utils/constant.dart';
 import '../../../../utils/debugs.dart';
 import '../../../../utils/network_connectivity.dart';
 import '../../../new_resume_data_model/new_resume_data_model.dart';
-import '../../../utils/offline_popup.dart';
-import 'package:flutter/services.dart' as root_bundle;
 import '../../../utils/preference.dart';
 import '../../../utils/utils.dart';
 

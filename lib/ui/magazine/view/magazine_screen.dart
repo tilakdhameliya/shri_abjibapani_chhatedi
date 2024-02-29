@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -23,6 +24,14 @@ class _MagazineScreenState extends State<MagazineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: CColor.white,
+        elevation: 0,
+        toolbarHeight: 0,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
+            statusBarIconBrightness: Brightness.dark),
+      ),
       body: SafeArea(
         child: GetBuilder<MagazineController>(
           builder: (logic) {

@@ -384,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      "Daily Darshan",
+                      "Divya Darshan",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         decoration: TextDecoration.none,
@@ -431,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
-                  Constant.isShowBottomSheet = false;
+                  // Constant.isShowBottomSheet = false;
                   setState(() {});
                   Get.toNamed(AppRoutes.contactScreen);
                 },
@@ -461,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
-                  Constant.isShowBottomSheet = false;
+                  // Constant.isShowBottomSheet = false;
                   setState(() {});
                   Get.toNamed(AppRoutes.nityaNiyamScreen);
                 },
@@ -497,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  Constant.isShowBottomSheet = false;
+                  // Constant.isShowBottomSheet = false;
                   setState(() {});
                   Get.toNamed(AppRoutes.magazineScreen);
                 },
@@ -527,7 +527,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
-                  Constant.isShowBottomSheet = false;
+                  // Constant.isShowBottomSheet = false;
                   setState(() {});
                   Get.toNamed(AppRoutes.eBooks);
                 },
@@ -590,7 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // if (logic.isOffline) {
                   //   Fluttertoast.showToast(msg: "Please Check your connection");
                   // } else {
-                    Constant.isShowBottomSheet = false;
+                  //   Constant.isShowBottomSheet = false;
                     setState(() {});
                     String url =
                         'https://youtube.com/@AbjibapaniChhatedi?si=REwY4mPKMgLfHjs_';
@@ -626,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (logic.isOffline) {
                     Fluttertoast.showToast(msg: "Please Check your connection");
                   } else {
-                    Constant.isShowBottomSheet = false;
+                    // Constant.isShowBottomSheet = false;
                     setState(() {});
                     String url =
                         'https://www.facebook.com/abjibapanichhatedi?mibextid=ZbWKwL';

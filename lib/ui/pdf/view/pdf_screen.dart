@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:satsang/utils/color.dart';
-
 import '../../../utils/font.dart';
 import '../controller /pdf_controller.dart';
 
@@ -38,7 +35,7 @@ class _PdfScreenState extends State<PdfScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       width: Get.width,
-      height: 65,
+      height: 70,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -50,38 +47,40 @@ class _PdfScreenState extends State<PdfScreen> {
               spreadRadius: 0.5),
         ],
       ),
-      child: Row(
+      child: Wrap(
         children: [
-          InkWell(
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            onTap: () {
-              Get.back();
-            },
-            child: Container(
-                padding: const EdgeInsets.all(10),
-                child: const Icon(
-                  Icons.arrow_back_rounded,
-                  color: Colors.black,
-                )),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                logic.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: Font.poppins,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+          Row(
+            children: [
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Get.back();
+                },
+                child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: const Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.black,
+                    )),
+              ),
+              Expanded(
+                child: Text(
+                  logic.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: Font.poppins,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
                 ),
               ),
-            ),
-          ),
-          Container(
-              padding: const EdgeInsets.all(10),
-              child: const Icon(Icons.arrow_back_rounded
-                  ,color: Colors.transparent)
+              // Container(
+              //     padding: const EdgeInsets.all(10),
+              //     child: const Icon(Icons.arrow_back_rounded
+              //         ,color: Colors.transparent)
+              // ),
+            ],
           ),
         ],
       ),

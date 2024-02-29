@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:satsang/utils/color.dart';
@@ -21,6 +22,14 @@ class _ContactScreenState extends State<ContactScreen> {
     return GetBuilder<ContactController>(builder: (logic) {
       return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: CColor.white,
+          elevation: 0,
+          toolbarHeight: 0,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.white,
+              statusBarIconBrightness: Brightness.dark),
+        ),
         body: SafeArea(
           child: Stack(
             children: [

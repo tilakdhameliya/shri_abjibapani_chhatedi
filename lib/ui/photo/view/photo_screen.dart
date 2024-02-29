@@ -150,7 +150,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: Get.height * 0.01),
+            padding: EdgeInsets.only(top: Get.height * 0.05),
             child: Text(
               "Please check your connection",
               textAlign: TextAlign.center,
@@ -165,7 +165,6 @@ class _PhotosScreenState extends State<PhotosScreen> {
           InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              
               logic.checkConnection();
             },
             child: Container(
