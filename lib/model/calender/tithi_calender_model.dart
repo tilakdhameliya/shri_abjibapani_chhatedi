@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TithiCalender {
   HeaderLines? headerLines;
 
@@ -44,13 +46,17 @@ class HeaderLines {
 class HeaderLine {
   String? date;
   String? tithi;
+  List<String>? subTithi;
+  String? year;
   String? suvichar;
 
-  HeaderLine({this.date, this.tithi, this.suvichar});
+  HeaderLine({this.date, this.tithi, this.subTithi, this.year, this.suvichar});
 
   HeaderLine.fromJson(Map<String, dynamic> json) {
     date = json['Date'];
     tithi = json['Tithi'];
+    subTithi = json['SubTithi'].cast<String>();
+    year = json['Year'];
     suvichar = json['Suvichar'];
   }
 
@@ -58,6 +64,8 @@ class HeaderLine {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Date'] = date;
     data['Tithi'] = tithi;
+    data['SubTithi'] = subTithi;
+    data['Year'] = year;
     data['Suvichar'] = suvichar;
     return data;
   }

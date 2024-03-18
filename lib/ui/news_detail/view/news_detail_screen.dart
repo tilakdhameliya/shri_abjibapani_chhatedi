@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:satsang/ui/news_detail/controller/news_details_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/color.dart';
@@ -58,6 +59,8 @@ class _NewsDetailState extends State<NewsDetail> {
   }
 
   _centerView(NewsDetailController logic){
+    HtmlUnescape htmlUnescape = HtmlUnescape();
+    String text = htmlUnescape.convert(logic.newsData.title.toString());
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -75,7 +78,7 @@ class _NewsDetailState extends State<NewsDetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            logic.newsData.title.toString(),
+                            text,
                             style: TextStyle(
                               fontFamily: Font.poppins,
                               fontWeight: FontWeight.w700,

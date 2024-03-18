@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:satsang/utils/color.dart';
 import 'package:satsang/utils/constant.dart';
 import 'package:satsang/utils/font.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../controller/tithi_calender_controller.dart';
 
 class TithiCalenderScreen extends StatefulWidget {
-   TithiCalenderScreen({super.key});
+  TithiCalenderScreen({super.key});
 
-  final TithiCalenderController tithiCalenderController = Get.put(TithiCalenderController());
+  final TithiCalenderController tithiCalenderController =
+      Get.put(TithiCalenderController());
 
   @override
   State<TithiCalenderScreen> createState() => _TithiCalenderScreenState();
@@ -18,8 +19,16 @@ class TithiCalenderScreen extends StatefulWidget {
 
 class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
   @override
+
+  void initState() {
+    widget.tithiCalenderController.calenderController = ItemScrollController();
+    widget.tithiCalenderController.gotoIndex();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -56,15 +65,12 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
       child: Row(
         children: [
           InkWell(
-            // highlightColor: Colors.transparent,
-            // splashColor: Colors.transparent,
             onTap: () {
               Get.back();
             },
             child: Container(
                 padding: const EdgeInsets.all(10),
-                child: const Icon(Icons.arrow_back_rounded)
-            ),
+                child: const Icon(Icons.arrow_back_rounded)),
           ),
           Expanded(
             child: Center(
@@ -82,15 +88,149 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
           ),
           Container(
               padding: const EdgeInsets.all(10),
-              child: const Icon(Icons.arrow_back_rounded
-                  ,color: Colors.transparent)
-          ),
+              child: const Icon(Icons.arrow_back_rounded,
+                  color: Colors.transparent)),
         ],
       ),
     );
   }
 
   _centerView(TithiCalenderController logic) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              Constant.tithiCalender.headerLine![logic.yearIndex].year.toString(),
+              style: TextStyle(
+                  color: CColor.theme,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontFamily: Font.poppins),
+            ),
+          ),
+          Expanded(
+            child: ScrollablePositionedList.builder(
+              itemCount: Constant.tithiCalender.headerLine!.length,
+              shrinkWrap: true,
+              itemScrollController: logic.calenderController,
+              itemBuilder: (BuildContext context, int index) {
+                if(logic.yearBool(index)){
+                  logic.yearIndex = index;
+                }
+                return Column(
+                  children: [
+                    (logic.yearBool(index))
+                        ? Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              Constant.tithiCalender.headerLine![index].year
+                                  .toString(),
+                              style: TextStyle(
+                                  color: CColor.theme,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                  fontFamily: Font.poppins),
+                            ),
+                          )
+                        : const SizedBox(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 50,
+                          margin: const EdgeInsets.only(top: 5),
+                          alignment: Alignment.center,
+                          child: Text(
+                            logic.tithiDate(index),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: CColor.grayText.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                fontFamily: Font.poppins),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Card(
+                                margin: const EdgeInsets.only(
+                                    top: 2, bottom: 5, left: 2, right: 5),
+                                color: (logic.isNow(index))
+                                    ? CColor.theme
+                                    : CColor.viewGray,
+                                child: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  width: Get.width,
+                                  child: Text(
+                                    Constant
+                                        .tithiCalender.headerLine![index].tithi
+                                        .toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: Font.poppins),
+                                  ),
+                                ),
+                              ),
+                              ListView.builder(
+                                itemCount: Constant.tithiCalender
+                                    .headerLine![index].subTithi!.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int i) {
+                                  return (Constant
+                                          .tithiCalender
+                                          .headerLine![index]
+                                          .subTithi![i]
+                                          .isNotEmpty)
+                                      ? Card(
+                                          margin: const EdgeInsets.only(
+                                              top: 2,
+                                              bottom: 5,
+                                              left: 2,
+                                              right: 5),
+                                          color: logic.isNow(index)
+                                              ? CColor.theme
+                                              : CColor.viewGray,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(15),
+                                            child: Text(
+                                              Constant
+                                                  .tithiCalender
+                                                  .headerLine![index]
+                                                  .subTithi![i]
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                  fontFamily: Font.poppins),
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox();
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+/*  _centerView(TithiCalenderController logic) {
     List<String> string = [];
     List<String> stringDate = [];
     for (int i = 0; i < Constant.tithiCalender.headerLine!.length; i++) {
@@ -133,5 +273,5 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
             color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w800, fontSize: 12,fontFamily: Font.poppins),
       ),
     );
-  }
+  }*/
 }

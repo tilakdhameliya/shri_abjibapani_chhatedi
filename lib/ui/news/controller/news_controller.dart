@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../utils/constant.dart';
@@ -9,6 +10,7 @@ class NewsController extends GetxController{
   repoData repo = repoData();
   bool isLoading = false;
   bool isOffline = false;
+  HtmlUnescape htmlUnescape = HtmlUnescape();
 
 @override
   void onInit() {

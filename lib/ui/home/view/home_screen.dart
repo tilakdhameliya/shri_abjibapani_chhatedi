@@ -377,11 +377,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/darshan.svg",
-                          height: 23),
-                    ),
+                    SvgPicture.asset("assets/image/darshan.svg",
+                        height: 25),
                     const SizedBox(height: 3),
                     Text(
                       "Divya Darshan",
