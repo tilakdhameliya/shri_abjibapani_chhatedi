@@ -428,20 +428,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
-                  // Constant.isShowBottomSheet = false;
-                  setState(() {});
-                  Get.toNamed(AppRoutes.contactScreen);
+                  Get.back();
+                  Get.toNamed(AppRoutes.newsScreen);
                 },
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: SvgPicture.asset("assets/image/cell-phone.svg",
-                          height: 25),
+                      child:
+                      SvgPicture.asset("assets/image/news.svg", height: 23),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      "Contact Us",
+                      "News",
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         decoration: TextDecoration.none,
@@ -553,35 +552,6 @@ class _HomeScreenState extends State<HomeScreen> {
               InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
-                onTap: () {
-                  Get.back();
-                  Get.toNamed(AppRoutes.newsScreen);
-                },
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child:
-                          SvgPicture.asset("assets/image/news.svg", height: 23),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      "News",
-                      style: TextStyle(
-                        overflow: TextOverflow.ellipsis,
-                        decoration: TextDecoration.none,
-                        fontFamily: Font.poppins,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 11,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
                 onTap: () async {
                   logic.checkConnection(false);
                   // if (logic.isOffline) {
@@ -641,6 +611,36 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       "Facebook",
                       style: TextStyle(
+                        fontFamily: Font.poppins,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  // Constant.isShowBottomSheet = false;
+                  setState(() {});
+                  Get.toNamed(AppRoutes.contactScreen);
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset("assets/image/cell-phone.svg",
+                          height: 25),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "Contact Us",
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none,
                         fontFamily: Font.poppins,
                         color: Colors.black,
                         fontWeight: FontWeight.w400,

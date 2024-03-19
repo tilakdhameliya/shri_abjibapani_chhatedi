@@ -9,6 +9,8 @@ class TithiCalenderController extends GetxController{
   ItemScrollController? calenderController;
   String year = "";
  int  yearIndex = 0;
+
+
   gotoIndex() async {
     var todayIndex = Constant.tithiCalender.headerLine!
         .indexWhere((element) =>
