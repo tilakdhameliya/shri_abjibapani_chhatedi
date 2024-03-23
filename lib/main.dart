@@ -1,23 +1,20 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:satsang/routes/app_pages.dart';
 import 'package:satsang/routes/app_routes.dart';
-import 'package:satsang/utils/constant.dart';
 import 'package:satsang/utils/preference.dart';
-import 'package:satsang/utils/utils.dart';
 import 'connectivitymanager/connectivitymanager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Preference().instance();
   await InternetConnectivity().instance();
+  AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
+    return true;
+  });
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());

@@ -154,6 +154,7 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
                           Container(
                             width: 50,
                             margin: const EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.only(right: 5),
                             alignment: Alignment.center,
                             child: Text(
                               logic.tithiDate(index),

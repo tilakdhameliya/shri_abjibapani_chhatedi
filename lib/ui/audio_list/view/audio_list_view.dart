@@ -1,15 +1,15 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:satsang/player/PositionSeekWidget.dart';
 import 'package:satsang/ui/audio_list/controller/audio_list_controller.dart';
 import 'package:satsang/utils/color.dart';
 import 'package:satsang/utils/constant.dart';
-import '../../../utils/debugs.dart';
+import '../../../player/PlayingControls.dart';
 import '../../../utils/font.dart';
 
 class AudioListScreen extends StatefulWidget {
@@ -129,8 +129,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
                   children: [
                     Image.network(logic.audioImage),
                     const SizedBox(height: 15),
-                    // (logic.audioTrack[logic.playIndex].isPlay)?_playBar(logic, logic.playIndex):const SizedBox(),
-                    // const SizedBox(height: 15),
+                    audioBar(logic),
                     ListView.builder(
                       itemCount: logic.audioTrack.length,
                       shrinkWrap: true,
@@ -152,17 +151,18 @@ class _AudioListScreenState extends State<AudioListScreen> {
         builder: (logic) {
           return InkWell(
             onTap: () async {
-              // if(!logic.isFirst) {
-              //   logic.isFirst = true;
-                logic.play(index,!logic.audioTrack[index].isPlayIconShow);
-                setState(() {});
-              // }
-              // if(logic.audioTrack[index].isPlay){
-              //  logic.player.pause();
-              //  logic.audioTrack[index].isPlay = false;
-              // }else {
-              //   logic.play(index);
-              // }
+                await logic.assetsAudioPlayer.open(
+                  logic.audios[index],
+                  showNotification: true,
+                  playInBackground: PlayInBackground.enabled,
+                  audioFocusStrategy: const AudioFocusStrategy.request(
+                      resumeAfterInterruption: true,
+                      resumeOthersPlayersAfterDone: true),
+                  headPhoneStrategy: HeadPhoneStrategy.pauseOnUnplug,
+                  notificationSettings: const NotificationSettings(
+                  ),
+                );
+              setState(() {});
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -175,21 +175,6 @@ class _AudioListScreenState extends State<AudioListScreen> {
                 children: [
                   Row(
                     children: [
-                      (logic.audioTrack[index].isPlayLoader)
-                          ? const SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: CircularProgressIndicator(
-                                color: CColor.theme,
-                                strokeWidth: 1.5,
-                              ))
-                          : SvgPicture.asset(
-                              (!logic.audioTrack[index].isPlayIconShow)
-                                  ? "assets/image/stop.svg"
-                                  : "assets/image/play.svg",
-                              height: 35,
-                              color: CColor.theme),
-                      const SizedBox(width: 15),
                       Expanded(
                         child: Text(
                           logic.audioTrack[index].name.toString(),
@@ -241,9 +226,9 @@ class _AudioListScreenState extends State<AudioListScreen> {
                       ),
                     ],
                   ),
-                  (logic.audioTrack[index].isPlay)
-                      ? audioProgressBar(logic, index)
-                      : const SizedBox()
+                  // (logic.audioTrack[index].isPlay)
+                  //     ? audioProgressBar(logic, index)
+                  //     : const SizedBox()
                 ],
               ),
             ),
@@ -251,108 +236,92 @@ class _AudioListScreenState extends State<AudioListScreen> {
         });
   }
 
-  StreamBuilder<DurationState> audioProgressBar(
-      AudioListController logic, index) {
-    return StreamBuilder<DurationState>(
-      stream: logic.durationState,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final durationState = snapshot.data;
-          final progress = durationState?.progress ?? Duration.zero;
-          var start = formatDuration(progress);
-          final buffered = durationState?.buffered ?? Duration.zero;
-          final total = durationState?.total ?? Duration.zero;
-          var end = formatDuration(total);
-          if(start != "00:00" && start == end){
-            // var playIndex =
-            // logic.audioTrack.indexWhere((element) => element.isPlay == true);
-            // logic.audioTrack[playIndex].isPlay = false;
-            Future.delayed(Duration.zero, () {
-              // Call the function that contains setState
-              logic.stopAfterCom(index);
-            });
-            Debug.printLog("------>>>> $start ");
-          }
-          return Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
-              children: [
-                Text(
-                  start,
-                  style: TextStyle(
-                    fontFamily: Font.poppins,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ProgressBar(
-                    progress: progress,
-                    buffered: buffered,
-                    total: total,
-                    onSeek: (duration) {
-                      logic.player.seek(duration);
+  audioBar(AudioListController logic) {
+    return Column(
+      children: <Widget>[
+        logic.assetsAudioPlayer.builderLoopMode(
+          builder: (context, loopMode) {
+            return PlayerBuilder.isPlaying(
+                player: logic.assetsAudioPlayer,
+                builder: (context, isPlaying) {
+                  return PlayingControls(
+                    loopMode: loopMode,
+                    isPlaying: isPlaying,
+                    isPlaylist: true,
+                    onStop: () {
+                      setState(() {
+                        logic.assetsAudioPlayer.stop().then((value) {
+                          setState(() {});
+                        })  ;
+                      });
                     },
-                    onDragUpdate: (details) {
-                      debugPrint(
-                          ' details--=-=-]]]  ${details.timeStamp}, ${details.localPosition}');
-                      setState(() {});
+                    toggleLoop: () {
+                      setState(() {
+                        logic.assetsAudioPlayer.toggleLoop().then((value) {
+                          setState(() {});
+                        });
+                      });
                     },
-                    barHeight: 5.0,
-                    baseBarColor: Colors.grey.withOpacity(0.2),
-                    progressBarColor: CColor.theme,
-                    thumbColor: CColor.theme,
-                    barCapShape: BarCapShape.round,
-                    thumbRadius: 10.0,
-                    thumbCanPaintOutsideBar: true,
-                    timeLabelLocation: TimeLabelLocation.none,
-                    timeLabelType: TimeLabelType.totalTime,
-                    timeLabelTextStyle: TextStyle(
-                        fontSize: 8,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
-                    timeLabelPadding: 10,
-                  ),
+                    onPlay: () {
+                      setState(() {
+                        logic.assetsAudioPlayer.playOrPause().then((value) {
+                          setState(() {});
+                        });
+                      });
+                    },
+                    onNext: () {
+                      setState(() {
+                        logic.assetsAudioPlayer.next().then((value) {
+                          setState(() {});
+                        });
+                      });
+                    },
+                    onPrevious: () {
+                      setState(() {
+                        logic.assetsAudioPlayer.previous().then((value) {
+                          setState(() {});
+                        });
+                      });
+                    },
+                  );
+                });
+          },
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 8),
+              child: Text(
+                logic.assetsAudioPlayer.getCurrentAudioArtist,
+                style: TextStyle(
+                  fontFamily: Font.poppins,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.5,
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  end,
-                  style: TextStyle(
-                    fontFamily: Font.poppins,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
+              ),
             ),
+            logic.assetsAudioPlayer.builderRealtimePlayingInfos(
+                builder: (context, RealtimePlayingInfos? infos) {
+              if (infos == null) {
+                return const SizedBox();
+              }
+              return Column(
+                children: [
+                  PositionSeekWidget(
+                    currentPosition: infos.currentPosition,
+                    duration: infos.duration,
+                              seekTo: (to) {
+                                logic.assetsAudioPlayer.seek(to);
+                              },
+                            ),
+                          ],
+                        );
+                      }),
+                ],
+              ),
+
+            ],
           );
-        } else if (snapshot.hasError) {
-          return const SizedBox();
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
-    );
   }
-
-
-  String formatDuration(Duration duration) {
-    String twoDigits(int n) {
-      if (n >= 10) return "$n";
-      return "0$n";
-    }
-
-    String minutes = twoDigits(duration.inMinutes.remainder(60));
-    String seconds = twoDigits(duration.inSeconds.remainder(60));
-
-    return "$minutes:$seconds";
-  }
-}
-
-class DurationState {
-  const DurationState({this.progress, this.buffered, this.total});
-
-  final Duration? progress;
-  final Duration? buffered;
-  final Duration? total;
 }

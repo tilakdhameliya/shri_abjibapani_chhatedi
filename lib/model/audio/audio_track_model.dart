@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 
-import '../../ui/audio_list/view/audio_list_view.dart';
 
 class AudioTrackModel {
   List<AudioAlbumTracks>? audioAlbumTracks;
@@ -30,10 +27,7 @@ class AudioTrackModel {
 class AudioAlbumTracks {
   String? name;
   String? url;
-  bool isPlay = false;
-  bool isPlayIconShow = true;
   bool isLoader = false;
-  bool isPlayLoader = false;
   bool isDownload = false;
   bool isIndicator = false;
 
