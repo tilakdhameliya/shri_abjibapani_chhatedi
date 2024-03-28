@@ -157,7 +157,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: Font.poppins,
-                          color: CColor.grayText,
+                          color: Colors.black,
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
                         ),
@@ -193,7 +193,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: Font.poppins,
-                          color: CColor.grayText,
+                          color: Colors.black,
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
                         ),
@@ -229,7 +229,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: Font.poppins,
-                          color: CColor.grayText,
+                          color: Colors.black,
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
                         ),
@@ -266,7 +266,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: Font.poppins,
-                          color: CColor.grayText,
+                          color: Colors.black,
                           fontWeight: FontWeight.w400,
                           fontSize: 13,
                         ),
@@ -301,7 +301,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: Font.poppins,
-                          color: CColor.grayText,
+                          color: Colors.black,
                           fontWeight: FontWeight.w400,
                           fontSize: 13,
                         ),

@@ -42,12 +42,12 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8,left: 8,bottom: 8),
+      padding: const EdgeInsets.only(right: 8,left: 8,bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 40,
+            width: 45,
             child: Text(durationToString(widget.currentPosition)),
           ),
           Expanded(
@@ -77,7 +77,7 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
             ),
           ),
           SizedBox(
-            width: 40,
+            width: 45,
             child: Text(durationToString(widget.duration)),
           ),
         ],

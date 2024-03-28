@@ -307,7 +307,7 @@ class BookController extends GetxController {
         "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedBooksList)}");
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath,Constant.eBooks[index].name]);
-    Fluttertoast.showToast(msg: "Download pdf successfully");
+    Fluttertoast.showToast(msg: "Pdf downloaded successfully");
     Constant.eBooks[index].isIndicator = false;
     isCom = false;
     update();
@@ -332,8 +332,11 @@ class BookController extends GetxController {
 
   getData() async {
     isLoading = true;
+    update();
     await repo.getEBooks().then((value) {
       Constant.eBooks = value.ebooks!;
+      isLoading = false;
+      update();
       List<Ebooks> booksTracksList = [];
       var stringList =
           Preference.shared.getStringList(Preference.downloadedBooksList) ?? [];
@@ -346,12 +349,10 @@ class BookController extends GetxController {
               .indexWhere((element) => element.name == booksTracksList[i].name);
           if (index > -1) {
             Constant.eBooks[index].isDownload = true;
-            update();
           }
         }
       }
     });
-    isLoading = false;
     update();
   }
 

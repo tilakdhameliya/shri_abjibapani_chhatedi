@@ -32,7 +32,7 @@ class _PlayingControlsState extends State<PlayingControls> {
   Widget _loopIcon(BuildContext context) {
     double screenWidthSize = Get.width;
     bool isSmallDeviceWidth = screenWidthSize <= 350;
-    final iconSize = (isSmallDeviceWidth)?25.0:45.0;
+    final iconSize = (isSmallDeviceWidth)?25.0:43.0;
     if (widget.loopMode == LoopMode.none) {
       return Icon(
         Icons.loop,

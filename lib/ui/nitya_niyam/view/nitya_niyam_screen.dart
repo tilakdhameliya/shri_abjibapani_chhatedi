@@ -79,6 +79,7 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: Font.poppins,
+                  color: Colors.black,
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
                 ),
@@ -98,8 +99,8 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
       alignment: Alignment.center,
       children: [
         (logic.isLoading)
-            ? const Center(
-                child: CircularProgressIndicator(color: Colors.black),
+            ?  const Center(
+                child: CircularProgressIndicator(color: Colors.black,),
               )
             : PDFView(
                 filePath: logic.path,

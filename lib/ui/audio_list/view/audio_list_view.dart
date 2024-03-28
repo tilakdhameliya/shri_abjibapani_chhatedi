@@ -4,12 +4,13 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:satsang/player/PositionSeekWidget.dart';
+import 'package:satsang/player/position_seek_widget.dart';
 import 'package:satsang/ui/audio_list/controller/audio_list_controller.dart';
 import 'package:satsang/utils/color.dart';
 import 'package:satsang/utils/constant.dart';
-import '../../../player/PlayingControls.dart';
+import '../../../player/playing_controls.dart';
 import '../../../utils/font.dart';
 
 class AudioListScreen extends StatefulWidget {
@@ -43,6 +44,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
                     ],
                   ),
                   _header(logic),
+                  _loaderOpacity(logic),
+                  _loader(logic)
                 ],
               ),
             );
@@ -106,7 +109,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
   }
 
   _centerView(AudioListController logic) {
-    return (logic.isLoading)
+    return (logic.isLoadData)
         ? const Expanded(
             child: Center(
               child: SizedBox(
@@ -120,48 +123,75 @@ class _AudioListScreenState extends State<AudioListScreen> {
             ),
           )
         : Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                child: Column(
-                  children: [
-                    Image.network(logic.audioImage),
-                    const SizedBox(height: 15),
-                    audioBar(logic),
-                    ListView.builder(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              child: Column(
+                children: [
+                  Image.network(logic.audioImage,height: Get.height * 0.25),
+                  const SizedBox(height: 15),
+                  audioBar(logic),
+                  Expanded(
+                    child: ListView.builder(
                       itemCount: logic.audioTrack.length,
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         return _listItem(logic, index, context);
                       },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
   }
 
   _listItem(AudioListController logic, int index, BuildContext context) {
+    bool nextDone = true;
+    bool previousDone = true;
     return GetBuilder<AudioListController>(
         id: Constant.audioId,
         builder: (logic) {
           return InkWell(
             onTap: () async {
+              logic.isLoading.value = true;
                 await logic.assetsAudioPlayer.open(
-                  logic.audios[index],
+                  Playlist(audios: logic.audios, startIndex: index),
                   showNotification: true,
-                  playInBackground: PlayInBackground.enabled,
-                  audioFocusStrategy: const AudioFocusStrategy.request(
-                      resumeAfterInterruption: true,
-                      resumeOthersPlayersAfterDone: true),
-                  headPhoneStrategy: HeadPhoneStrategy.pauseOnUnplug,
-                  notificationSettings: const NotificationSettings(
+                  notificationSettings: NotificationSettings(
+                    customNextAction: (player) async {
+                      if(nextDone) {
+                        nextDone = false;
+                        await player.next().then((value) {
+                          nextDone = true;
+                          setState(() {});
+                        });
+                      }
+                    },
+                    customPlayPauseAction: (player) {
+                      player.playOrPause().then((value) {
+                        setState(() {});
+                      });
+                    },
+                    customStopAction: (player) {
+                      player.stop().then((value) {
+                        setState(() {});
+                      });
+                    },
+                    customPrevAction: (player) async {
+                      if(previousDone) {
+                        previousDone = false;
+                        await player.previous().then((
+                            value) {
+                          previousDone = true;
+                          setState(() {});
+                        });
+                      }
+                    },
                   ),
                 );
+              logic.isLoading.value = false;
               setState(() {});
             },
             child: Container(
@@ -237,6 +267,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
   }
 
   audioBar(AudioListController logic) {
+    bool nextDone = true;
+    bool previousDone = true;
     return Column(
       children: <Widget>[
         logic.assetsAudioPlayer.builderLoopMode(
@@ -252,7 +284,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
                       setState(() {
                         logic.assetsAudioPlayer.stop().then((value) {
                           setState(() {});
-                        })  ;
+                        });
                       });
                     },
                     toggleLoop: () {
@@ -269,19 +301,28 @@ class _AudioListScreenState extends State<AudioListScreen> {
                         });
                       });
                     },
-                    onNext: () {
-                      setState(() {
-                        logic.assetsAudioPlayer.next().then((value) {
-                          setState(() {});
-                        });
-                      });
+                    onNext: ()async {
+                      logic.isLoading.value = true;
+                        if(nextDone) {
+                          nextDone = false;
+                          await logic.assetsAudioPlayer.next().then((value) {
+                            nextDone = true;
+                            logic.isLoading.value = false;
+                            setState(() {});
+                          });
+                        }
                     },
-                    onPrevious: () {
-                      setState(() {
-                        logic.assetsAudioPlayer.previous().then((value) {
-                          setState(() {});
-                        });
-                      });
+                    onPrevious: () async{
+                      logic.isLoading.value = true;
+                        if(previousDone) {
+                          previousDone = false;
+                          await logic.assetsAudioPlayer.previous().then((
+                              value) {
+                            previousDone = true;
+                            logic.isLoading.value = false;
+                            setState(() {});
+                          });
+                        }
                     },
                   );
                 });
@@ -291,7 +332,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 15, left: 8),
+              padding: const EdgeInsets.only(top: 10, left: 8),
               child: Text(
                 logic.assetsAudioPlayer.getCurrentAudioArtist,
                 style: TextStyle(
@@ -306,16 +347,12 @@ class _AudioListScreenState extends State<AudioListScreen> {
               if (infos == null) {
                 return const SizedBox();
               }
-              return Column(
-                children: [
-                  PositionSeekWidget(
-                    currentPosition: infos.currentPosition,
-                    duration: infos.duration,
-                              seekTo: (to) {
-                                logic.assetsAudioPlayer.seek(to);
-                              },
-                            ),
-                          ],
+              return PositionSeekWidget(
+                currentPosition: infos.currentPosition,
+                duration: infos.duration,
+                          seekTo: (to) {
+                            logic.assetsAudioPlayer.seek(to);
+                          },
                         );
                       }),
                 ],
@@ -323,5 +360,39 @@ class _AudioListScreenState extends State<AudioListScreen> {
 
             ],
           );
+  }
+
+  _loaderOpacity(AudioListController logic) {
+    return Obx(() => logic.isLoading.value
+        ? const Opacity(
+      opacity: 0.6,
+      child: ModalBarrier(dismissible: false, color: Colors.black),
+    )
+        : Container());
+  }
+
+  _loader(AudioListController logic) {
+    return Obx(() => logic.isLoading.value
+        ? WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.all(35),
+          height: 88,
+          width: 88,
+          child: const CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2,
+          ),
+        ),
+      ),
+    )
+        : Container());
   }
 }

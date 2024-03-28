@@ -302,7 +302,7 @@ class MagazineController extends GetxController {
         "------>>>> downloaded List ${Preference.shared.getStringList(Preference.downloadedMagazineList)}");
     Get.toNamed(AppRoutes.pdfView,
         arguments: [savePath, Constant.magazines[index].name]);
-    Fluttertoast.showToast(msg: "Download pdf successfully");
+    Fluttertoast.showToast(msg: "Pdf downloaded successfully");
     Constant.magazines[index].isIndicator = false;
     update();
   }
@@ -327,6 +327,7 @@ class MagazineController extends GetxController {
 
   getData() async {
     isLoading = true;
+    update();
     await repo.getMagazine().then((value) {
       Constant.magazines = value.murtiMagazines!;
       List<MurtiMagazines> magazineTracksList = [];
@@ -341,12 +342,12 @@ class MagazineController extends GetxController {
               .indexWhere((element) => element.name == magazineTracksList[i].name);
           if (index > -1) {
             Constant.magazines[index].isDownload = true;
+            isLoading = false;
             update();
           }
         }
       }
     });
-    isLoading = false;
     update();
   }
 }

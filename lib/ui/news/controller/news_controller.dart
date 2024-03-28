@@ -5,6 +5,7 @@ import 'package:html_unescape/html_unescape.dart';
 
 import '../../../new_resume_data_model/new_resume_data_model.dart';
 import '../../../utils/constant.dart';
+import '../../../utils/debugs.dart';
 
 class NewsController extends GetxController{
   repoData repo = repoData();
@@ -19,16 +20,22 @@ class NewsController extends GetxController{
   }
 
   getData() async {
+  try {
     isLoading = true;
+    update();
     await repo.getNews().then((value) {
       Constant.newsList = value.news!;
       for (int i = 0; i < Constant.newsList.length; i++) {
         final newsPhoto = Image.network(Constant.newsList[i].thumb.toString());
         precacheImage(newsPhoto.image, Get.context!);
+        isLoading = false;
+        update();
       }
     });
-    isLoading = false;
-    update();
+      update();
+    } catch (e) {
+      Debug.printLog("----------->>>> $e");
+    }
   }
 
   checkConnection() async {

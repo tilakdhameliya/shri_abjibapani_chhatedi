@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? "Photo"
                   : (logic.activePageIndex == 3)
                       ? "Calender"
-                      : "Daily Satsung",
+                      : "Daily Satsang",
           style: TextStyle(
             fontFamily: Font.poppins,
             color: Colors.black,
@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Daily Satsung",
+                        "Daily Satsang",
                         style: TextStyle(
                           decoration: (logic.isPhoto)
                               ? TextDecoration.underline

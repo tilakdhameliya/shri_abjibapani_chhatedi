@@ -284,7 +284,7 @@ class NityaNiyamController extends GetxController {
     Debug.printLog("downloadFilePah downloadFilePah........$savePath");
     // showDownloadNotification(savePath);
     path = savePath;
-    Fluttertoast.showToast(msg: "Download pdf successfully");
+    Fluttertoast.showToast(msg: "Pdf downloaded successfully");
     isLoading = false;
     update();
   }

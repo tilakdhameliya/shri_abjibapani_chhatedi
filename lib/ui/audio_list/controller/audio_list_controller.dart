@@ -22,7 +22,7 @@ import '../../../utils/preference.dart';
 class AudioListController extends GetxController {
   String audioListName = "";
   String audioImage = "";
-  bool isLoading = true;
+  bool isLoadData = true;
   List<AudioAlbumTracks> audioTrack = [];
   String downloadingText = "";
   double downloadPercentage = 0;
@@ -30,6 +30,7 @@ class AudioListController extends GetxController {
   final List<StreamSubscription> subscriptions = [];
   final audios = <Audio>[];
   repoData repo = repoData();
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
@@ -108,7 +109,7 @@ class AudioListController extends GetxController {
           }
         }
       }
-      isLoading = false;
+      isLoadData = false;
       update([Constant.audioId]);
     });
   }

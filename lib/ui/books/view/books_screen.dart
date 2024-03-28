@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -36,18 +37,28 @@ class _BookScreenState extends State<BookScreen> {
       body: SafeArea(
         child: GetBuilder<BookController>(
           builder: (logic) {
-            return Stack(
-              children: [
-                (logic.isOffline)
-                    ? _offLine(logic)
-                    : Column(
-                  children: [
-                    const SizedBox(height: 65),
-                    _centerView(logic),
-                  ],
-                ),
-                _header(logic),
-              ],
+            return WillPopScope(
+              onWillPop: ()async {
+                if (!logic.isCom) {
+                  return true;
+                }else {
+                  Fluttertoast.showToast(msg: "Pdf Downloading...");
+                  return false;
+                }
+              },
+              child: Stack(
+                children: [
+                  (logic.isOffline)
+                      ? _offLine(logic)
+                      : Column(
+                    children: [
+                      const SizedBox(height: 65),
+                      _centerView(logic),
+                    ],
+                  ),
+                  _header(logic),
+                ],
+              ),
             );
           },
         ),
@@ -77,7 +88,11 @@ class _BookScreenState extends State<BookScreen> {
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () {
-              Get.back();
+              if (!logic.isCom) {
+                Get.back();
+              }else{
+                Fluttertoast.showToast(msg: "Pdf Downloading...");
+              }
             },
             child: Container(
                 padding: const EdgeInsets.all(10),

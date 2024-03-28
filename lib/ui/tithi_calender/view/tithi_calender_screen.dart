@@ -152,9 +152,8 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 50,
-                            margin: const EdgeInsets.only(top: 5),
-                            padding: const EdgeInsets.only(right: 5),
+                            width: 45,
+                            margin: const EdgeInsets.only(top: 5,right: 5,left: 5),
                             alignment: Alignment.center,
                             child: Text(
                               logic.tithiDate(index),

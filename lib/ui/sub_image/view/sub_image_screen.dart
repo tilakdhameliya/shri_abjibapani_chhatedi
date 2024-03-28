@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -128,9 +129,8 @@ class _SubImageScreenState extends State<SubImageScreen> {
                     padding: const EdgeInsets.all(4),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(14),
-                      child: Image.network(
-                        logic.subImages[index].thumbUrl.toString(),
-                        fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover, imageUrl:  logic.subImages[index].thumbUrl.toString(),
                       ),
                     ),
                   ),
