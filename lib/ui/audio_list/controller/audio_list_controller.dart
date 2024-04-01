@@ -57,7 +57,7 @@ class AudioListController extends GetxController {
     List<Map<String, String>> audioTracks = [];
     for (var element in audioTrack) {
       audioTracks.add({
-        'url': element.url!,
+        'url': (Platform.isIOS)?Uri.encodeFull(element.url!):element.url!,
         'title': element.name!,
         'album': audioListName
       });
@@ -81,7 +81,9 @@ class AudioListController extends GetxController {
 
   openPlayer() async {
     await assetsAudioPlayer.open(Playlist(audios: audios, startIndex: 0),
-        showNotification: true, autoStart: false);
+        showNotification: true, autoStart: false).then((value) {
+      update([Constant.audioId]);
+    });
     update([Constant.audioId]);
   }
 
@@ -117,6 +119,10 @@ class AudioListController extends GetxController {
   stop() async {
     await assetsAudioPlayer.stop();
     update([Constant.audioId]);
+  }
+
+  RxString audioPlayerName(){
+    return assetsAudioPlayer.getCurrentAudioTitle.obs;
   }
 
   void showDownloadNotification(String savePath) async {

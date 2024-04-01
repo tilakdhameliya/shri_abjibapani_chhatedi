@@ -28,9 +28,16 @@ class TithiCalenderController extends GetxController{
   }
 
   String tithiDate(int index) {
-    return DateFormat('dd EEE')
+    return DateFormat('dd')
         .format(DateTime.parse(
             Constant.tithiCalender.headerLine![index].date.toString()))
+        .toUpperCase();
+  }
+
+  String tithiDay(int index) {
+    return DateFormat('EEE')
+        .format(DateTime.parse(
+        Constant.tithiCalender.headerLine![index].date.toString()))
         .toUpperCase();
   }
 

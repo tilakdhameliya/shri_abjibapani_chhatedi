@@ -95,50 +95,63 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
   _centerView(NityaNiyamController logic) {
     return (logic.isOffline)
         ? _offLine(logic)
-        : Stack(
-      alignment: Alignment.center,
-      children: [
-        (logic.isLoading)
-            ?  const Center(
-                child: CircularProgressIndicator(color: Colors.black,),
+        : (logic.isLoading)
+            ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                    const SizedBox(height: 10),
+                    Text("Downloading...",style: TextStyle(
+                      fontFamily: Font.poppins,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),)
+                  ],
+                ),
               )
-            : PDFView(
-                filePath: logic.path,
-                enableSwipe: true,
-                autoSpacing: true,
-                pageFling: true,
-                onRender: (pages) {
-                  setState(() {
-                    pages = pages;
-                    logic.isReady = true;
-                  });
-                },
-                onError: (error) {
-                  Debug.printLog(" error  ${error.toString()}");
-                },
-                onPageError: (page, error) {
-                  logic.errorMessage = '$page: ${error.toString()}';
-                  Debug.printLog('$page: ${error.toString()}');
-                },
-                onViewCreated: (PDFViewController pdfViewController) {
-                  logic.controller.complete(pdfViewController);
-                },
-                onPageChanged: (int? page, int? total) {},
-              ),
-        logic.errorMessage.isEmpty
-            ? !logic.isReady
-                ? const Center(
-                    child: CircularProgressIndicator(color: Colors.black),
-                  )
-                : Container()
-            : Center(
-                child: Text(logic.errorMessage),
-              )
-      ],
-    );
+            : Stack(
+              children: [
+                PDFView(
+                    filePath: logic.path,
+                    enableSwipe: true,
+                    autoSpacing: true,
+                    pageFling: true,
+                    onRender: (pages) {
+                      setState(() {
+                        pages = pages;
+                        logic.isReady = true;
+                      });
+                    },
+                    onError: (error) {
+                      Debug.printLog(" error  ${error.toString()}");
+                    },
+                    onPageError: (page, error) {
+                      logic.errorMessage = '$page: ${error.toString()}';
+                      Debug.printLog('$page: ${error.toString()}');
+                    },
+                    onViewCreated: (PDFViewController pdfViewController) {
+                      // logic.controller.complete(pdfViewController);
+                    },
+                    onPageChanged: (int? page, int? total) {},
+                  ),
+                logic.errorMessage.isEmpty
+                    ? !logic.isReady
+                        ? const Center(
+                            child: CircularProgressIndicator(color: Colors.black),
+                          )
+                        : Container()
+                    : Center(
+                        child: Text(logic.errorMessage),
+                      )
+              ],
+            );
   }
 
-  _offLine(NityaNiyamController logic){
+  _offLine(NityaNiyamController logic) {
     return Container(
       width: Get.width,
       decoration: const BoxDecoration(
@@ -150,7 +163,7 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
           SvgPicture.asset(
             "assets/image/no_internet.svg",
             // ignore: deprecated_member_use
-            color:  CColor.black,
+            color: CColor.black,
             height: 110,
             width: 150,
           ),
@@ -159,7 +172,7 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
             child: Text(
               "OOPS!",
               style: TextStyle(
-                color:  CColor.black,
+                color: CColor.black,
                 fontSize: 25,
                 fontWeight: FontWeight.w500,
                 fontFamily: Font.poppins,
@@ -195,7 +208,6 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
           InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: () {
-              
               logic.checkConnection();
             },
             child: Container(
@@ -206,14 +218,14 @@ class _NityaNiyamScreenState extends State<NityaNiyamScreen> {
                   Radius.circular(10),
                 ),
                 border: Border.all(
-                  color:  CColor.black,
+                  color: CColor.black,
                 ),
               ),
               child: Center(
                 child: Text(
                   "RETRY",
                   style: TextStyle(
-                    color:  CColor.black,
+                    color: CColor.black,
                     fontFamily: Font.poppins,
                     fontSize: 19,
                   ),

@@ -152,19 +152,42 @@ class _TithiCalenderScreenState extends State<TithiCalenderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 45,
+                            width: 42,
                             margin: const EdgeInsets.only(top: 5,right: 5,left: 5),
                             alignment: Alignment.center,
-                            child: Text(
-                              logic.tithiDate(index),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: (logic.isNow(index))
-                                      ? CColor.theme
-                                      : CColor.grayText.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  fontFamily: Font.poppins),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: 42,
+                                  // color: Colors.red,
+                                  child: Text(
+                                    logic.tithiDate(index),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: (logic.isNow(index))
+                                            ? CColor.theme
+                                            : CColor.grayText.withOpacity(0.8),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        fontFamily: Font.poppins),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 42,
+                                  // color: Colors.blue,
+                                  child: Text(
+                                    logic.tithiDay(index),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: (logic.isNow(index))
+                                            ? CColor.theme
+                                            : CColor.grayText.withOpacity(0.8),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        fontFamily: Font.poppins),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Expanded(

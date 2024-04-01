@@ -30,15 +30,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      theme: ThemeData(
-          bottomSheetTheme:
-              const BottomSheetThemeData(backgroundColor: Colors.transparent)),
-      debugShowCheckedModeBanner: false,
-      title: 'Abjibapani Chhatedi',
-      locale: Get.deviceLocale,
-      getPages: AppPages.list,
-      initialRoute: AppRoutes.splashScreen,
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(textScaleFactor: 1.1),
+      child: GetMaterialApp(
+        theme: ThemeData(
+            bottomSheetTheme:
+                const BottomSheetThemeData(backgroundColor: Colors.transparent)),
+        debugShowCheckedModeBanner: false,
+        title: 'Abjibapani Chhatedi',
+        locale: Get.deviceLocale,
+        getPages: AppPages.list,
+        initialRoute: AppRoutes.splashScreen,
+      ),
     );
   }
 }

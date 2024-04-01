@@ -111,40 +111,40 @@ class _AudioListScreenState extends State<AudioListScreen> {
   _centerView(AudioListController logic) {
     return (logic.isLoadData)
         ? const Expanded(
-            child: Center(
-              child: SizedBox(
-                height: 45,
-                width: 45,
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                  strokeWidth: 3,
-                ),
-              ),
-            ),
-          )
+      child: Center(
+        child: SizedBox(
+          height: 45,
+          width: 45,
+          child: CircularProgressIndicator(
+            color: Colors.black,
+            strokeWidth: 3,
+          ),
+        ),
+      ),
+    )
         : Expanded(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: Column(
-                children: [
-                  Image.network(logic.audioImage,height: Get.height * 0.25),
-                  const SizedBox(height: 15),
-                  audioBar(logic),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: logic.audioTrack.length,
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return _listItem(logic, index, context);
-                      },
-                    ),
-                  ),
-                ],
+      child: Padding(
+        padding:
+        const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: Column(
+          children: [
+            Image.network(logic.audioImage, height: Get.height * 0.25),
+            const SizedBox(height: 15),
+            audioBar(logic),
+            Expanded(
+              child: ListView.builder(
+                itemCount: logic.audioTrack.length,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return _listItem(logic, index, context);
+                },
               ),
             ),
-          );
+          ],
+        ),
+      ),
+    );
   }
 
   _listItem(AudioListController logic, int index, BuildContext context) {
@@ -156,41 +156,40 @@ class _AudioListScreenState extends State<AudioListScreen> {
           return InkWell(
             onTap: () async {
               logic.isLoading.value = true;
-                await logic.assetsAudioPlayer.open(
-                  Playlist(audios: logic.audios, startIndex: index),
-                  showNotification: true,
-                  notificationSettings: NotificationSettings(
-                    customNextAction: (player) async {
-                      if(nextDone) {
-                        nextDone = false;
-                        await player.next().then((value) {
-                          nextDone = true;
-                          setState(() {});
-                        });
-                      }
-                    },
-                    customPlayPauseAction: (player) {
-                      player.playOrPause().then((value) {
+              await logic.assetsAudioPlayer.open(
+                Playlist(audios: logic.audios,startIndex: index),
+                showNotification: true,
+                notificationSettings: NotificationSettings(
+                  customNextAction: (player) async {
+                    if (nextDone) {
+                      nextDone = false;
+                      await player.next().then((value) {
+                        nextDone = true;
                         setState(() {});
                       });
-                    },
-                    customStopAction: (player) {
-                      player.stop().then((value) {
+                    }
+                  },
+                  customPlayPauseAction: (player) {
+                    player.playOrPause().then((value) {
+                      setState(() {});
+                    });
+                  },
+                  customStopAction: (player) {
+                    player.stop().then((value) {
+                      setState(() {});
+                    });
+                  },
+                  customPrevAction: (player) async {
+                    if (previousDone) {
+                      previousDone = false;
+                      await player.previous().then((value) {
+                        previousDone = true;
                         setState(() {});
                       });
-                    },
-                    customPrevAction: (player) async {
-                      if(previousDone) {
-                        previousDone = false;
-                        await player.previous().then((
-                            value) {
-                          previousDone = true;
-                          setState(() {});
-                        });
-                      }
-                    },
-                  ),
-                );
+                    }
+                  },
+                ),
+              );
               logic.isLoading.value = false;
               setState(() {});
             },
@@ -301,69 +300,53 @@ class _AudioListScreenState extends State<AudioListScreen> {
                         });
                       });
                     },
-                    onNext: ()async {
+                    onNext: () async {
                       logic.isLoading.value = true;
-                        if(nextDone) {
-                          nextDone = false;
-                          await logic.assetsAudioPlayer.next().then((value) {
-                            nextDone = true;
-                            logic.isLoading.value = false;
-                            setState(() {});
-                          });
-                        }
+                      if (nextDone) {
+                        nextDone = false;
+                        await logic.assetsAudioPlayer.next().then((value) {
+                          nextDone = true;
+                          logic.isLoading.value = false;
+                          setState(() {});
+                        });
+                      }
                     },
-                    onPrevious: () async{
+                    onPrevious: () async {
                       logic.isLoading.value = true;
-                        if(previousDone) {
-                          previousDone = false;
-                          await logic.assetsAudioPlayer.previous().then((
-                              value) {
-                            previousDone = true;
-                            logic.isLoading.value = false;
-                            setState(() {});
-                          });
-                        }
+                      if (previousDone) {
+                        previousDone = false;
+                        await logic.assetsAudioPlayer.previous().then((value) {
+                          previousDone = true;
+                          logic.isLoading.value = false;
+                          setState(() {});
+                        });
+                      }
                     },
                   );
                 });
           },
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, left: 8),
-              child: Text(
-                logic.assetsAudioPlayer.getCurrentAudioArtist,
-                style: TextStyle(
-                  fontFamily: Font.poppins,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.5,
-                ),
-              ),
-            ),
-            logic.assetsAudioPlayer.builderRealtimePlayingInfos(
-                builder: (context, RealtimePlayingInfos? infos) {
+        logic.assetsAudioPlayer.builderRealtimePlayingInfos(
+            builder: (context, RealtimePlayingInfos? infos) {
               if (infos == null) {
                 return const SizedBox();
               }
               return PositionSeekWidget(
                 currentPosition: infos.currentPosition,
                 duration: infos.duration,
-                          seekTo: (to) {
-                            logic.assetsAudioPlayer.seek(to);
-                          },
-                        );
-                      }),
-                ],
-              ),
+                seekTo: (to) {
+                  logic.assetsAudioPlayer.seek(to);
+                }, assetsAudioPlayer: logic.assetsAudioPlayer,
+              );
+            }),
 
-            ],
-          );
+      ],
+    );
   }
 
   _loaderOpacity(AudioListController logic) {
-    return Obx(() => logic.isLoading.value
+    return Obx(() =>
+    logic.isLoading.value
         ? const Opacity(
       opacity: 0.6,
       child: ModalBarrier(dismissible: false, color: Colors.black),
@@ -372,7 +355,8 @@ class _AudioListScreenState extends State<AudioListScreen> {
   }
 
   _loader(AudioListController logic) {
-    return Obx(() => logic.isLoading.value
+    return Obx(() =>
+    logic.isLoading.value
         ? WillPopScope(
       onWillPop: () async {
         return false;
