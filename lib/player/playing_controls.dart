@@ -35,8 +35,8 @@ class _PlayingControlsState extends State<PlayingControls> {
   Widget _loopIcon(BuildContext context) {
     double screenWidthSize = Get.width;
     Debug.printLog("------>>> ${screenWidthSize <= 420}");
-    bool isSmallDeviceWidth = (defaultTargetPlatform == TargetPlatform.iOS)?screenWidthSize <= 420:screenWidthSize <= 350;
-    final iconSize = (isSmallDeviceWidth)?(defaultTargetPlatform == TargetPlatform.iOS)?30.0:25.0:43.0;
+    bool isSmallDeviceWidth = (defaultTargetPlatform == TargetPlatform.iOS)?screenWidthSize <= 450:screenWidthSize <= 350;
+    final iconSize = (isSmallDeviceWidth)?(defaultTargetPlatform == TargetPlatform.iOS)?38.0:25.0:43.0;
     if (widget.loopMode == LoopMode.none) {
       return Icon(
         Icons.loop,
@@ -73,8 +73,8 @@ class _PlayingControlsState extends State<PlayingControls> {
   @override
   Widget build(BuildContext context) {
     double screenWidthSize = Get.width;
-    bool isSmallDeviceWidth = (defaultTargetPlatform == TargetPlatform.iOS)?screenWidthSize <= 420:screenWidthSize <= 350;
-    final iconSize = (isSmallDeviceWidth)?(defaultTargetPlatform == TargetPlatform.iOS)?30.0:25.0:43.0;
+    bool isSmallDeviceWidth = (defaultTargetPlatform == TargetPlatform.iOS)?screenWidthSize <= 450:screenWidthSize <= 350;
+    final iconSize = (isSmallDeviceWidth)?(defaultTargetPlatform == TargetPlatform.iOS)?38.0:25.0:43.0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,

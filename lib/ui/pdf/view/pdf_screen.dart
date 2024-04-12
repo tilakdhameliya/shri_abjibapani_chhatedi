@@ -99,7 +99,7 @@ class _PdfScreenState extends State<PdfScreen> {
                 filePath: logic.path,
                 enableSwipe: true,
                 autoSpacing: false,
-                pageFling: false,
+                pageFling: true,
                 onRender: (pages) {
                   setState(() {
                     pages = pages;

@@ -29,6 +29,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
         backgroundColor: CColor.white,
         elevation: 0,
         toolbarHeight: 0,
+        surfaceTintColor: Colors.white,
         systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark),

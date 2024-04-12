@@ -42,12 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: CColor.white,
+                backgroundColor: Constant.isShowBottomSheet?Colors.black.withOpacity(0.3): CColor.white,
                 elevation: 0,
                 toolbarHeight: 0,
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                    statusBarColor: Colors.white,
-                    statusBarIconBrightness: Brightness.dark),
+                surfaceTintColor: Colors.white,
+                systemOverlayStyle:  SystemUiOverlayStyle(
+                    statusBarColor:Constant.isShowBottomSheet?Colors.black.withOpacity(0.3): Colors.white,
+                    statusBarIconBrightness: (Constant.isShowBottomSheet)
+                        ? Brightness.light
+                        :Brightness.dark),
               ),
               bottomSheet: (Constant.isShowBottomSheet)
                   ? _bottomSheet(logic, context)

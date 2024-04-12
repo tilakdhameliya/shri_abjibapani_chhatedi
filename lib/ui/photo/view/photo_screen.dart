@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,16 @@ class _PhotosScreenState extends State<PhotosScreen> {
         builder: (logic) {
       return Scaffold(
           backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor:
+            Colors.white,
+            elevation: 0,
+            toolbarHeight: 0,
+            surfaceTintColor: Colors.white,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.white,
+            ),
+          ),
           body: SafeArea(
             child: (logic.isOffline)
                 ? _offLine(logic)

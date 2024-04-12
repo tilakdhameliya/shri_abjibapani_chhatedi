@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -21,6 +22,16 @@ class _NewsDetailState extends State<NewsDetail> {
     {
       return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: CColor.white,
+          elevation: 0,
+          toolbarHeight: 0,
+          surfaceTintColor: Colors.white,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.white,
+              statusBarIconBrightness: Brightness.dark
+          ),
+        ),
         body: SafeArea(
           child: Stack(
             children: [
