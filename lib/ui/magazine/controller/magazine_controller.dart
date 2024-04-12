@@ -71,7 +71,7 @@ class MagazineController extends GetxController {
 
   int? version;
 
-  downloadAudio(context, int index, url, fileName) async {
+  downloadMagazine(context, int index, url, fileName) async {
     isCom = true;
 
     update();
@@ -252,19 +252,19 @@ class MagazineController extends GetxController {
                             Constant.magazines[index].isLoader = false;
                             Get.back();
                             await Permission.storage.request().then(
-                                  (value) => downloadAudio(
+                                  (value) => downloadMagazine(
                                       context, index, url, fileName),
                                 );
                           } else if (permission == "notificationPermission") {
                             Constant.magazines[index].isLoader = false;
                             await Permission.notification.request().then(
-                                  (value) => downloadAudio(
+                                  (value) => downloadMagazine(
                                       context, index, url, fileName),
                                 );
                           } else if (isPermanentlyDenied) {
                             openAppSettings();
                           } else {
-                            downloadAudio(context, index, url, fileName);
+                            downloadMagazine(context, index, url, fileName);
                           }
                         },
                         child: Text(
@@ -310,7 +310,6 @@ class MagazineController extends GetxController {
   @override
   void onInit() {
     checkConnection();
-
     super.onInit();
   }
 
@@ -333,6 +332,8 @@ class MagazineController extends GetxController {
       List<MurtiMagazines> magazineTracksList = [];
       var stringList =
           Preference.shared.getStringList(Preference.downloadedMagazineList) ?? [];
+      isLoading = false;
+      update();
       if (stringList.isNotEmpty) {
         for(var data in stringList){
           magazineTracksList.add(MurtiMagazines.fromJson(jsonDecode(data)));
@@ -342,8 +343,6 @@ class MagazineController extends GetxController {
               .indexWhere((element) => element.name == magazineTracksList[i].name);
           if (index > -1) {
             Constant.magazines[index].isDownload = true;
-            isLoading = false;
-            update();
           }
         }
       }

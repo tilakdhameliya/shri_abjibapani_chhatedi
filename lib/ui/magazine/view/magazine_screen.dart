@@ -162,7 +162,7 @@ class _MagazineScreenState extends State<MagazineScreen> {
         InkWell(
           onTap: () {
             if (!logic.isCom) {
-              logic.downloadAudio(context, index, Constant.magazines[index].url,
+              logic.downloadMagazine(context, index, Constant.magazines[index].url,
                   Constant.magazines[index].name);
             }
           },

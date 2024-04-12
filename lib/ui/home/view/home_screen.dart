@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,6 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 systemNavigationBarIconBrightness: Brightness.dark),
             child: Scaffold(
               backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: CColor.white,
+                elevation: 0,
+                toolbarHeight: 0,
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarColor: Colors.white,
+                    statusBarIconBrightness: Brightness.dark),
+              ),
               bottomSheet: (Constant.isShowBottomSheet)
                   ? _bottomSheet(logic, context)
                   : const SizedBox(),
@@ -136,7 +145,13 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             color: CColor.white,
             boxShadow: [
-              BoxShadow(
+              (defaultTargetPlatform == TargetPlatform.iOS)? BoxShadow( color: Colors.black12.withOpacity(0.2),
+                  offset: const Offset(
+                    0.0,
+                     -2.5,
+                  ),
+                  blurRadius: 2)
+                  : BoxShadow(
                   color: Colors.black12.withOpacity(0.2),
                   offset: const Offset(
                     0.0,

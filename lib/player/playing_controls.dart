@@ -1,7 +1,10 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
+import '../utils/debugs.dart';
 
 class PlayingControls extends StatefulWidget {
   final bool isPlaying;
@@ -13,7 +16,7 @@ class PlayingControls extends StatefulWidget {
   final Function()? toggleLoop;
   final Function()? onStop;
 
-  PlayingControls({
+  const PlayingControls({super.key,
     required this.isPlaying,
     this.isPlaylist = false,
     this.loopMode,
@@ -31,8 +34,9 @@ class PlayingControls extends StatefulWidget {
 class _PlayingControlsState extends State<PlayingControls> {
   Widget _loopIcon(BuildContext context) {
     double screenWidthSize = Get.width;
-    bool isSmallDeviceWidth = screenWidthSize <= 350;
-    final iconSize = (isSmallDeviceWidth)?25.0:43.0;
+    Debug.printLog("------>>> ${screenWidthSize <= 420}");
+    bool isSmallDeviceWidth = (defaultTargetPlatform == TargetPlatform.iOS)?screenWidthSize <= 420:screenWidthSize <= 350;
+    final iconSize = (isSmallDeviceWidth)?(defaultTargetPlatform == TargetPlatform.iOS)?30.0:25.0:43.0;
     if (widget.loopMode == LoopMode.none) {
       return Icon(
         Icons.loop,
@@ -69,7 +73,8 @@ class _PlayingControlsState extends State<PlayingControls> {
   @override
   Widget build(BuildContext context) {
     double screenWidthSize = Get.width;
-    bool isSmallDeviceWidth = screenWidthSize <= 350;
+    bool isSmallDeviceWidth = (defaultTargetPlatform == TargetPlatform.iOS)?screenWidthSize <= 420:screenWidthSize <= 350;
+    final iconSize = (isSmallDeviceWidth)?(defaultTargetPlatform == TargetPlatform.iOS)?30.0:25.0:43.0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
@@ -89,7 +94,7 @@ class _PlayingControlsState extends State<PlayingControls> {
               backgroundColor: MaterialStatePropertyAll(Colors.white),
               shadowColor: MaterialStatePropertyAll(Colors.transparent)),
           onPressed: widget.isPlaylist ? widget.onPrevious : null,
-          child: SvgPicture.asset("assets/image/previous.svg", height: (isSmallDeviceWidth)?25.0:45),
+          child: SvgPicture.asset("assets/image/previous.svg", height: iconSize),
         ),
         ElevatedButton(
           style: const ButtonStyle(
@@ -98,8 +103,8 @@ class _PlayingControlsState extends State<PlayingControls> {
               shadowColor: MaterialStatePropertyAll(Colors.transparent)),
           onPressed: widget.onPlay,
           child: widget.isPlaying
-              ? SvgPicture.asset("assets/image/pause.svg", height: (isSmallDeviceWidth)?25.0:45)
-              : SvgPicture.asset("assets/image/play.svg", height: (isSmallDeviceWidth)?25.0:45),
+              ? SvgPicture.asset("assets/image/pause.svg", height: iconSize)
+              : SvgPicture.asset("assets/image/play.svg", height: iconSize),
         ),
         ElevatedButton(
           style: const ButtonStyle(
@@ -107,7 +112,7 @@ class _PlayingControlsState extends State<PlayingControls> {
               backgroundColor: MaterialStatePropertyAll(Colors.white),
               shadowColor: MaterialStatePropertyAll(Colors.transparent)),
           onPressed: widget.isPlaylist ? widget.onNext : null,
-          child: SvgPicture.asset("assets/image/next.svg", height: (isSmallDeviceWidth)?25.0:45),
+          child: SvgPicture.asset("assets/image/next.svg", height: iconSize),
         ),
         if (widget.onStop != null)
           ElevatedButton(
@@ -117,7 +122,7 @@ class _PlayingControlsState extends State<PlayingControls> {
                   shadowColor: MaterialStatePropertyAll(Colors.transparent)),
               // padding: const EdgeInsets.all(16),
               onPressed: widget.onStop,
-              child: SvgPicture.asset("assets/image/stop.svg", height: (isSmallDeviceWidth)?25.0:45)),
+              child: SvgPicture.asset("assets/image/stop.svg", height:iconSize)),
       ],
     );
   }
