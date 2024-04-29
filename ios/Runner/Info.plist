@@ -62,5 +62,7 @@
 &lt;/plist&gt;
 </key>
 	<string>DarwinInitializationSettings</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

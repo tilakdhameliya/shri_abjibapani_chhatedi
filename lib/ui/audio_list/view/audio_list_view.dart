@@ -129,8 +129,9 @@ class _AudioListScreenState extends State<AudioListScreen> {
         child: Column(
           children: [
             Image.network(logic.audioImage, height: Get.height * 0.25),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             audioBar(logic),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: logic.audioTrack.length,
